@@ -1,0 +1,57 @@
+{
+  "id": "smart-blind-v1",
+  "name": "Smart Blind",
+  "description": "Motorized window blinds",
+  "category": "actuator",
+  "type": "smart-blind",
+  "capabilities": [
+    {
+      "name": "set-position",
+      "type": "write",
+      "description": "Set blind position (open/close percentage)",
+      "parameters": [
+        {
+          "name": "position",
+          "type": "number",
+          "required": true,
+          "description": "Position percentage (0=closed, 100=open)"
+        }
+      ]
+    },
+    {
+      "name": "open",
+      "type": "write",
+      "description": "Fully open the blinds",
+      "parameters": []
+    },
+    {
+      "name": "close",
+      "type": "write",
+      "description": "Fully close the blinds",
+      "parameters": []
+    },
+    {
+      "name": "read-position",
+      "type": "read",
+      "description": "Read current blind position",
+      "parameters": [],
+      "outputUnit": "percentage"
+    }
+  ],
+  "defaultState": {
+    "status": "active",
+    "position": 100,
+    "moving": false
+  },
+  "physicalEffects": [
+    {
+      "parameter": "light",
+      "effect": "light",
+      "magnitude": -0.5,
+      "radius": 5,
+      "condition": "position < 50"
+    }
+  ],
+  "semanticDescription": "Motorized window blinds that can be controlled to adjust light and privacy. Useful for daylight harvesting and energy saving.",
+  "tags": ["lighting", "smart-home", "actuator", "window"]
+}

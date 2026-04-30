@@ -1,0 +1,2149 @@
+{
+  "config": {
+    "id": "exp2-coverage-aware-apartment",
+    "name": "Exp 2 RQ2 Mechanism: coverage-aware",
+    "rq": "RQ2",
+    "scenario": "apartment",
+    "condition": "coverage-aware",
+    "iterations": 5,
+    "llmModel": "qwen3-14b-q4:latest",
+    "timeoutMs": 120000,
+    "multiAgentEval": true,
+    "realisticRouting": true
+  },
+  "iteration": 1,
+  "timestamp": "2026-04-26T21:04:37.090Z",
+  "events": [
+    {
+      "eventId": "evt-apt-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Initiated cooling in living-room to address high temperature.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 9124.398699999787,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerDeviceIds": [
+        "dev-living-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Initiating cooling in living-room to mitigate high temperature alert. Direct actuation possible via HVAC system.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 9124.487499999814,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Initiated cooling and temperature control in living-room to address high-temperature anomaly detected. Actuators engaged directly due to zone coverage.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 9124.588100000285,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "The required services [cooling, temperature-control] are missing, and there are no available partner services to propagate the solution through adjacent zones.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 9124.65219999943,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-2",
+      "eventZoneId": "server-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerDeviceIds": [
+        "dev-sr-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "emergency-response"
+      ],
+      "llmReasoning": "Emergency cooling initiated in server-room to address critical temperature rise. HVAC systems activated at maximum capacity, and alerts sent to monitoring services to ensure rapid intervention.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.25,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 3233.0729000000283,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-2",
+      "eventZoneId": "server-room",
+      "decisionMade": "defer",
+      "agentId": "security-monitor",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "Event in zone server-room is outside agent's actuator coverage (actuator zones: living-room, bedroom, bathroom, entrance-hall, garage). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 3233.241299999878,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-3",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Humidity control actuation failed in bedroom due to missing control mechanism or actuator unavailability despite direct coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7805.761900000274,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-3",
+      "eventZoneId": "bedroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Initiated humidity regulation in bedroom by adjusting HVAC settings to maintain optimal moisture levels.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7805.827600000426,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-3",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Humidity control is required but not active in the bedroom zone. The parameter change event (evt-apt-3) may indicate a sensor malfunction or actuator failure preventing humidity regulation.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7805.853800000623,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-4",
+      "eventZoneId": "bathroom",
+      "decisionMade": "handle_independently",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "Low severity event detected in bathroom; no immediate action required. Parameter change is within acceptable limits for a non-critical zone.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12074.39120000042,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-4",
+      "eventZoneId": "bathroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "The environment parameter in the bathroom has changed with a medium signal and low severity. No immediate action required; monitoring ongoing to ensure comfort and efficiency.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12074.550400000066,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-4",
+      "eventZoneId": "bathroom",
+      "decisionMade": "handle_independently",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Low severity parameter change detected in bathroom; no immediate threat identified. Monitoring continued.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12074.649100000039,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-4",
+      "eventZoneId": "bathroom",
+      "decisionMade": "handle_independently",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "The event zone (bathroom) is not in the actuator zones list, which is empty. No physical actuators are available to respond to the event in this zone.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12074.675100000575,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-5",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "env-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Low severity parameter change detected in the living-room. No immediate action required; continue monitoring the environment for further changes.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 13559.591599999927,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-5",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Low severity event detected; no immediate action required. Monitoring the living-room environment parameters for further changes.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 13559.631099999882,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-5",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Low severity parameter change detected in living-room; no immediate action required. Monitor for further changes.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 13559.645500000566,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-5",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "Low severity event with insufficient data to trigger action.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 13559.659400000237,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-6",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated for critical high signal in kitchen zone. Actuators in kitchen are engaged to address the environmental parameter change.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 8310.873399999924,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-6",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Initiated emergency cooling and HVAC adjustment in kitchen due to critical environmental parameter change. Monitoring system activated to track parameter stability.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 8310.93759999983,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-6",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Critical event detected in kitchen (high severity). Initiating emergency response: activating fire suppression system, gas shut-off, and air purification. Propagating monitoring to adjacent zones (living-room, bathroom) to check for fire/gas spread. Alerting occupants via emergency broadcast.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 8311.043899999931,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-7",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Critical high parameter detected in kitchen (e.g., fire/CO leak). Initiating emergency response: alerting occupants, disabling heat sources, and contacting emergency services to mitigate risk.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 10234.400600000285,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-7",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency cooling and air purification initiated in the kitchen to address critical environmental parameter changes. HVAC systems activated to stabilize temperature and improve air quality.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 10234.56510000024,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-7",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Initiated emergency response protocols for critical kitchen event (fire/gas leak). Activated air purification, alerted occupants, and began continuous monitoring of kitchen and adjacent zones (living-room, bathroom) via physical propagation. No partner services available; handling incident autonomously.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 10234.698099999689,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-8",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "water-shutoff"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response is required but not available for the bathroom zone. The system lacks the necessary configuration or actuation capability to handle high-severity environmental changes in this zone.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12328.655900000595,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-8",
+      "eventZoneId": "bathroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "water-shutoff"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Initiated emergency response by shutting down bathroom heating and activating humidity extraction to mitigate high environment parameter risk. Monitoring sensors in the zone for real-time updates.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12328.908300000243,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-8",
+      "eventZoneId": "bathroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "water-shutoff"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Initiated emergency response protocol for bathroom zone due to high-severity parameter change. Activated motion detection and presence detection in bathroom. Notified monitoring system to prioritize real-time tracking of environmental parameters in the zone. Lighting control adjusted to full brightness for visibility, and access control locked the bathroom door to prevent unauthorized entry during incident resolution.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12329.120800000615,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-8",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "The event zone 'bathroom' is not in the agent's actuator zones, preventing physical intervention despite being a monitored zone. Emergency response and monitoring cannot be fulfilled.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12329.158900000155,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-9",
+      "eventZoneId": "garage",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "High temperature detected in the garage. Initiating cooling system to prevent overheating and potential damage to equipment.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 8361.073800000362,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-9",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Cooling and temperature-control systems are not active in the garage zone. Activate cooling actuators immediately to address the high-severity parameter change. Check for faults in temperature sensors or HVAC units within the zone.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8361.131400000304,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-9",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "agentId": "maintenance-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "The required services [cooling, temperature-control] are missing, and the maintenance-agent cannot act alone to resolve the high-severity parameter change in the garage zone. Coordination with external partners or additional resources is needed.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8361.1576000005,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-10",
+      "eventZoneId": "home-office",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-ho-co2-1",
+        "dev-ho-co2-2"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "High severity environment parameter change detected in home-office. Emergency response not available; monitoring initiated with available actuators in the zone.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 5708.674899999984,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-10",
+      "eventZoneId": "home-office",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerDeviceIds": [
+        "dev-ho-co2-1",
+        "dev-ho-co2-2"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated for home-office zone: Adjusted HVAC to stabilize temperature, activated air purification, and started continuous monitoring of environmental parameters to prevent further escalation.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 5708.739800000563,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-11",
+      "eventZoneId": "utility-room",
+      "decisionMade": "handle_independently",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "The event zone 'utility-room' is not in the safety-agent's actuator zones [living-room, bathroom, kitchen].",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 2165.7745000002906,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-11",
+      "eventZoneId": "utility-room",
+      "decisionMade": "ignore",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "Event in zone utility-room is outside agent's actuator coverage (actuator zones: garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 2165.8256000000983,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-11",
+      "eventZoneId": "utility-room",
+      "decisionMade": "ignore",
+      "agentId": "maintenance-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "Event in zone utility-room is outside agent's actuator coverage (actuator zones: garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 2165.845999999903,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-12",
+      "eventZoneId": "bedroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Actuator available in bedroom zone to adjust humidity levels directly.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 9155.794400000013,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-12",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Humidity change in bedroom is within acceptable limits; no action required.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 9155.844100000337,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-12",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "The required humidity-control service is missing, preventing direct action in the bedroom zone despite available actuators.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 9155.865300000645,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-13",
+      "eventZoneId": "balcony",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "hvac-control",
+        "heating"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-balc-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Propagate cooling from adjacent zones (e.g., home-office or entrance-hall) to the balcony via physical coverage. Use temperature-control actuators in nearby zones to indirectly address the balcony's high severity event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 16503.688199999742,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-13",
+      "eventZoneId": "balcony",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 0.5,
+      "selectedPartnerDeviceIds": [
+        "dev-balc-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Activated cooling in adjacent zones (e.g., living-room) to propagate temperature reduction to the balcony via physical propagation, addressing the high-temperature event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 16503.79069999978,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-13",
+      "eventZoneId": "balcony",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "hvac-control",
+        "heating"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-balc-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Propagate cooling from adjacent entrance-hall to balcony via physical propagation as balcony is adjacent to entrance-hall (per COVERAGE rule). Temperature control can be indirectly managed by adjusting temperature in adjacent zones.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 16503.83219999913,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-13",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "heating"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-balc-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Required services (cooling, temperature-control) are missing, but adjacent zones can be used for propagation to address the high severity parameter change in the balcony.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 16503.888099999167,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-14",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Critical parameter change detected in entrance-hall; initiating emergency response to address potential environmental hazard.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6264.610799999908,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-14",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Critical motion detected in entrance-hall. Activating emergency response protocol: triggering audible alarm, notifying security team, and initiating lighting control to illuminate the zone for visual verification. Monitoring system now in heightened alert mode.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6264.75820000004,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-15",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "Low severity parameter change detected in living-room; no immediate corrective action required. Monitoring ongoing for further developments.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 13062.655600000173,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-15",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "Low severity parameter change detected in living-room (experiment:evt-apt-15). No immediate action required; system is monitoring the environment for further adjustments.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 13062.85560000036,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-15",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "Low severity parameter change detected in living-room (experiment:evt-apt-15). No immediate action required as the event falls within normal operational parameters and does not trigger emergency thresholds.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 13062.9888000004,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-15",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "Low severity parameter change detected in living room. No immediate action required; monitoring ongoing.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 13063.063699999824,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Initiated emergency response for critical environmental parameter change in living-room. Activating alert systems and notifying occupants of potential hazard.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 12685.210999999195,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Initiating emergency temperature control in living-room due to critical environmental parameter change. Activating HVAC override to stabilize conditions and monitoring adjacent zones for potential cascading effects.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 1,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 12686.54069999978,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated for living-room due to critical parameter change. Activating alarms and notifying security team.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 12687.290199999698,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated via propagation from adjacent zones (bathroom/kitchen) to monitor living-room critical event. Air-purification and fire-detection systems are active to mitigate risks while awaiting manual intervention.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 12688.17959999945,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "defer",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "Event in zone living-room is outside agent's actuator coverage (actuator zones: garage). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12688.458499999717,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "defer",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "Event in zone living-room is outside agent's actuator coverage (actuator zones: garage). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12688.575899999589,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated for entrance-hall due to high-severity environment parameter change (e.g., sudden temperature/humidity spike, toxic air quality, or extreme light levels). Actuators in zone are being used to address the issue (e.g., activating HVAC, air purifiers, or emergency lighting).",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 21326.0131000001,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "agentId": "climate-controller",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "The entrance-hall is outside the climate-controller's actuator zones (living-room, bedroom, kitchen, bathroom, home-office, server-room). Emergency response and monitoring cannot be executed directly here. Propagation via adjacent zones is possible, but requires coordination with external systems or manual intervention.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 21327.67100000009,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Initiated emergency response and monitoring in entrance-hall due to high severity parameter change. Activated lighting-control and access-control actuators to secure the zone while investigating the environmental anomaly.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 21327.848400000483,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "The safety-agent can respond to the entrance-hall event via physical propagation from adjacent zones (e.g., living-room). Emergency response and monitoring are achievable through cross-zone alert propagation, even though the entrance-hall is not directly monitored.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 21329.40710000042,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "energy-agent",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated via garage actuator to propagate alerts to adjacent zones due to high-severity parameter change in entrance-hall. Load-balancing and monitoring protocols are engaged to mitigate risks from experiment 'evt-apt-broadcast-2'.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 21329.5513000004,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "maintenance-agent",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated by propagating from adjacent garage zone to entrance-hall. Activated equipment monitoring to assess parameter change and prepared water-shutoff capability as needed.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 21329.66289999988,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "Adjust living-room environment parameters to restore optimal conditions following the detected change.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12191.652900000103,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Adjusting HVAC settings in the living-room to stabilize the environment following the parameter change detected in the experiment event.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12192.566599999554,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "Parameter change detected in living-room, initiating lighting control adjustment.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12192.76370000001,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "The safety-agent can address the medium-severity environment parameter change in the living-room zone by leveraging its gas-detection, fire-detection, and air-purification capabilities. Since the zone is adjacent to other monitored areas (bathroom, kitchen), propagation coverage allows cross-zone verification and response coordination.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12192.865199999884,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "Event in zone living-room is outside agent's actuator coverage (actuator zones: garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12193.014700000174,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "Event in zone living-room is outside agent's actuator coverage (actuator zones: garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12193.112700000405,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-16",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "llmReasoning": "Medium severity parameter change detected in the living-room. Please check temperature, humidity, air quality, or light levels in the area and adjust settings as needed.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 11175.906999999657,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-16",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Adjusting HVAC in living-room to stabilize environment parameters.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 11175.962700000033,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-16",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "llmReasoning": "Detected medium severity parameter change in living-room. Activating lighting control to adjust ambient light levels and checking presence detection to ensure no unauthorized access. Emergency alert systems remain on standby.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 11175.98649999965,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-16",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "The medium severity event in the living room does not require immediate action, but monitoring is advised due to potential propagation from adjacent zones.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 11176.00849999953,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-17",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Medium severity parameter change detected in the bedroom. Please check the environment parameters (temperature, humidity, air quality, or light level) in the bedroom for adjustments.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8258.623599999584,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-17",
+      "eventZoneId": "bedroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Adjusted bedroom HVAC to stabilize temperature and improve comfort following medium-severity environmental parameter change.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8258.656700000167,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-17",
+      "eventZoneId": "bedroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Medium severity parameter change in bedroom detected; verifying presence and motion to ensure security",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 8258.67100000009,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-18",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "High severity environment parameter change detected in entrance-hall. Immediate emergency response required due to potential safety risk in monitored zone.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6263.379199999385,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-18",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "High severity parameter change detected in entrance-hall requires immediate emergency response and monitoring. Actuators available in this zone allow direct activation of emergency protocols (e.g., alarms, lockdown, alert notifications).",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6263.50289999973,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-19",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Initiated emergency response for critical environmental parameter change in the kitchen zone. Activated actuators to address high-level threat (e.g., ventilation, alerts, or shutdown protocols).",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 8888.491000000387,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-19",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "High critical parameter detected in kitchen. Initiating emergency cooling and monitoring to stabilize the environment.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 8888.646399999969,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-19",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Initiating emergency response for critical kitchen event (environment.param_changed). Propagating alerts to adjacent zones (living-room, bathroom) for monitoring. Activating air-purification and fire-detection systems in kitchen. No partner services available, relying on zone propagation for coverage.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 8888.74420000054,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-20",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "No available partner to assist with humidity control in the bathroom.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10367.305800000206,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-20",
+      "eventZoneId": "bathroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Adjusting bathroom humidity to optimal levels using direct actuation in response to environmental parameter change (experiment: evt-apt-20).",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10367.447600000538,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-20",
+      "eventZoneId": "bathroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Humidity control is required but missing in the bathroom zone. Activating humidity control to address the parameter change.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 10367.542500000447,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-20",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "The event zone (bathroom) is not within the agent's actuator zones [living-room, bathroom, kitchen], and the required task (humidity-control) cannot be executed due to physical unreachability. No partner services are available to assist.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10367.560100000352,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    }
+  ],
+  "decisionQuality": {
+    "meanZoneTargetingAccuracy": 0.2926829268292683,
+    "meanCapabilityAppropriateness": 0.2266260162601626,
+    "meanSideEffectAwareness": 0.3780487804878049,
+    "meanPhysicalPlausibility": 0.2926829268292683,
+    "meanCorrectDecisionRate": 0.524390243902439
+  },
+  "collaboration": {
+    "initiationRate": 0.6219512195121951,
+    "formationSuccessRate": 0,
+    "goalAchievementRate": 0.5975609756097561,
+    "optimalPerformanceRatio": 0.3780487804878049
+  },
+  "efficiency": {
+    "totalEvents": 82,
+    "layer1Filtered": 0,
+    "layer1FilterRate": 0,
+    "llmCallCount": 82,
+    "totalTokens": 40752,
+    "promptTokens": 11708,
+    "completionTokens": 29044,
+    "avgAssessmentTimeMs": 11006.41122560981,
+    "totalWallTimeMs": 229096.40850000083
+  },
+  "rawDualTriggerStats": {
+    "totalEventsProcessed": 20,
+    "filteredByLayer1": 0,
+    "passedToLayer2": 0,
+    "acDecisionMade": 13,
+    "acInitiated": 13,
+    "handledIndependently": 4,
+    "deferred": 3,
+    "layer2DecisionDistribution": {
+      "initiate_ac": 13,
+      "handle_independently": 4,
+      "defer": 0,
+      "ignore": 3
+    },
+    "totalAssessmentTimeMs": 65731,
+    "assessmentCount": 20,
+    "totalConfidence": 16.000000000000004,
+    "confidenceCount": 20,
+    "layer1Stats": {
+      "totalEventsProcessed": 0,
+      "clustersCreated": 0,
+      "passedToLayer2": 0,
+      "filteredByLayer1": 0,
+      "simpleAggregationUsed": 0,
+      "filteringRate": 0,
+      "layer2Rate": 0
+    },
+    "layer2Stats": {
+      "assessor": {
+        "totalAssessments": 20,
+        "acInitiated": 13,
+        "handledIndependently": 4,
+        "deferred": 0,
+        "ignored": 3,
+        "llmErrors": 0
+      },
+      "negotiator": {
+        "totalSelections": 13,
+        "partnersFound": 45,
+        "proposalsSent": 0,
+        "proposalsAccepted": 0,
+        "proposalsRejected": 0
+      },
+      "goalEngine": {
+        "totalFormulations": 13,
+        "goalsCreated": 26,
+        "simpleGoals": 0,
+        "moderateGoals": 0,
+        "complexGoals": 13
+      }
+    },
+    "layer1FilterRate": 0,
+    "avgAssessmentTimeMs": 3286.55,
+    "avgConfidence": 0.8000000000000002
+  },
+  "classification": {
+    "perClass": [
+      {
+        "className": "initiate_ac",
+        "precision": 0.8333333333333334,
+        "recall": 0.7142857142857143,
+        "f1": 0.7692307692307693,
+        "tp": 40,
+        "fp": 8,
+        "fn": 16,
+        "support": 56
+      },
+      {
+        "className": "handle_independently",
+        "precision": 0.5333333333333333,
+        "recall": 0.42105263157894735,
+        "f1": 0.47058823529411764,
+        "tp": 8,
+        "fp": 7,
+        "fn": 11,
+        "support": 19
+      },
+      {
+        "className": "defer",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 3,
+        "fn": 0,
+        "support": 0
+      },
+      {
+        "className": "ignore",
+        "precision": 0.0625,
+        "recall": 0.14285714285714285,
+        "f1": 0.08695652173913043,
+        "tp": 1,
+        "fp": 15,
+        "fn": 6,
+        "support": 7
+      }
+    ],
+    "macroPrecision": 0.3572916666666667,
+    "macroRecall": 0.31954887218045114,
+    "macroF1": 0.3316938815660043,
+    "collaborationTriggerF1": {
+      "precision": 0.8333333333333334,
+      "recall": 0.7142857142857143,
+      "f1": 0.7692307692307693,
+      "tp": 40,
+      "fp": 8,
+      "tn": 18,
+      "fn": 16,
+      "support": 56
+    },
+    "confusionMatrix": [
+      [
+        40,
+        2,
+        3,
+        11
+      ],
+      [
+        7,
+        8,
+        0,
+        4
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        5,
+        0,
+        1
+      ]
+    ],
+    "partnerSelection": {
+      "partnerPrecision": 0,
+      "partnerRecall": 0,
+      "partnerF1": 0,
+      "support": 56
+    },
+    "capabilityMatch": {
+      "precision": 0.2,
+      "recall": 0.18556701030927836,
+      "f1": 0.1925133689839572,
+      "support": 75
+    }
+  }
+}

@@ -1,0 +1,1419 @@
+{
+  "config": {
+    "id": "exp1-full-ac-apartment",
+    "name": "Exp 1 RQ1 Effectiveness: full-ac",
+    "rq": "RQ1",
+    "scenario": "apartment",
+    "condition": "full-ac",
+    "iterations": 5,
+    "llmModel": "qwen3-14b-q4:latest",
+    "timeoutMs": 120000,
+    "multiAgentEval": true,
+    "realisticRouting": true
+  },
+  "iteration": 0,
+  "timestamp": "2026-04-25T15:59:26.410Z",
+  "events": [
+    {
+      "eventId": "evt-apt-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 18.451000000000022,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 19.32340000000022,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-2",
+      "eventZoneId": "server-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-ups-1",
+        "dev-sr-ups-2",
+        "dev-sr-ups-3",
+        "dev-sr-ups-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 3.7854999999999563,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-2",
+      "eventZoneId": "server-room",
+      "decisionMade": "defer",
+      "agentId": "security-monitor",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "Event in zone server-room is outside agent's actuator coverage (actuator zones: bathroom, entrance-hall, garage). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 3.9697000000001026,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-3",
+      "eventZoneId": "bedroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Adjust living room HVAC to stabilize adjacent bedroom environment via propagation. Medium severity parameter change in bedroom may be mitigated by modulating temperature/humidity controls in connected zones.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 5903.9274000000005,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-4",
+      "eventZoneId": "bathroom",
+      "decisionMade": "handle_independently",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Low severity parameter change detected in bathroom; no immediate action required. Event is part of experiment evt-apt-4.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 29804.4165,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-4",
+      "eventZoneId": "bathroom",
+      "decisionMade": "handle_independently",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "Actuator zones are empty; cannot physically reach the bathroom zone to act on the event.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 29804.6043,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-5",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "env-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Minor environmental fluctuation detected; no immediate action required.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 28375.611100000002,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-5",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "The parameter change in the living-room zone is of low severity and within acceptable limits; no immediate action is required.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 28375.677600000003,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-6",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 15.586900000009337,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-6",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 15.683900000003632,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-6",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 16.014999999999418,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-7",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 16.15219999999681,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-7",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 16.36579999999958,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-7",
+      "eventZoneId": "kitchen",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 16.4146999999939,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-8",
+      "eventZoneId": "bathroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "water-shutoff"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 9.47599999999511,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-8",
+      "eventZoneId": "bathroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 9.602100000003702,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-9",
+      "eventZoneId": "garage",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-garage-energy-1",
+        "dev-garage-energy-2",
+        "dev-garage-energy-3",
+        "dev-garage-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 14.117299999998068,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-9",
+      "eventZoneId": "garage",
+      "decisionMade": "initiate_ac",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-garage-energy-1",
+        "dev-garage-energy-2",
+        "dev-garage-energy-3",
+        "dev-garage-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 14.179900000002817,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-9",
+      "eventZoneId": "garage",
+      "decisionMade": "initiate_ac",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-garage-energy-1",
+        "dev-garage-energy-2",
+        "dev-garage-energy-3",
+        "dev-garage-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 14.221000000005006,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-10",
+      "eventZoneId": "home-office",
+      "decisionMade": "defer",
+      "agentId": "env-monitor",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "llmReasoning": "Event in zone home-office is outside agent's actuator coverage (actuator zones: living-room). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.1431999999913387,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-11",
+      "eventZoneId": "utility-room",
+      "decisionMade": "handle_independently",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "The event zone 'utility-room' is not within the agent's actuator zones [bathroom, kitchen], so no physical action can be taken.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 39976.573399999994,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-11",
+      "eventZoneId": "utility-room",
+      "decisionMade": "handle_independently",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "The event zone 'utility-room' is not within the agent's actuator zones, so no action can be taken. The agent cannot physically reach or interact with this zone to address the parameter change.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 39976.64,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-11",
+      "eventZoneId": "utility-room",
+      "decisionMade": "handle_independently",
+      "agentId": "maintenance-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "The event zone 'utility-room' is not in the agent's actuator zones, so the agent cannot physically reach it to act on the event.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 39976.667799999996,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-12",
+      "eventZoneId": "bedroom",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "A",
+      "coverage": 0.5,
+      "llmReasoning": "Adjusted living room HVAC to propagate temperature/humidity balance to adjacent bedroom zone, mitigating low-severity environmental parameter changes via adjacent zone actuation.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12674.136400000003,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-13",
+      "eventZoneId": "balcony",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "hvac-control",
+        "heating"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-balc-airq-1",
+        "dev-balc-noise-1"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 13.273000000001048,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-13",
+      "eventZoneId": "balcony",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 0.5,
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-balc-airq-1",
+        "dev-balc-noise-1"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 13.342300000003888,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-14",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6.702099999994971,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-15",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "The environment parameter change in the living room is of low severity and medium signal strength, indicating a minor fluctuation that does not require immediate corrective action. Continuous monitoring is ongoing to ensure conditions remain within acceptable thresholds.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 33413.62310000001,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-15",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "Low severity parameter change detected in living-room; no immediate action required.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 33413.6939,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 510.80139999999665,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 511.0048999999999,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "defer",
+      "agentId": "security-monitor",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "Event in zone living-room is outside agent's actuator coverage (actuator zones: bathroom, entrance-hall, garage). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 511.1091000000015,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 511.1650999999838,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 511.2128999999841,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 511.2563000000082,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 513.6332999999868,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 513.778399999981,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 513.820000000007,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response, monitoring] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 513.8500000000058,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 513.873900000006,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "initiate_ac",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Agent is missing required capabilities [emergency-response] for task requiring [emergency-response, monitoring]. Collaboration is REQUIRED.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 513.9029999999912,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "Adjusting living-room HVAC and air purification systems to stabilize environmental parameters following the detected change.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 49061.27859999999,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Adjusting HVAC settings in living-room to stabilize temperature and humidity levels following detected parameter changes.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 49061.37769999998,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "agentId": "security-monitor",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "Event in zone living-room is outside agent's actuator coverage (actuator zones: bathroom, entrance-hall, garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 49061.41990000001,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "The event is in the living room, which is not under the safety agent's direct coverage (bathroom, kitchen), and the parameter change does not relate to the agent's capabilities (gas, water leak, fire, emergency alerts).",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 49061.4491,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "The event zone is not in the agent's actuator zones, so no action can be taken.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 49061.471699999995,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "The event zone 'living-room' is not within the maintenance-agent's actuator zones [utility-room, garage], so physical intervention is not possible.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 49061.4927,
+      "goalAchieved": false,
+      "eventCategory": "agent-directed"
+    }
+  ],
+  "decisionQuality": {
+    "meanZoneTargetingAccuracy": 0.3958333333333333,
+    "meanCapabilityAppropriateness": 0.125,
+    "meanSideEffectAwareness": 0.08333333333333333,
+    "meanPhysicalPlausibility": 0.3958333333333333,
+    "meanCorrectDecisionRate": 0.625
+  },
+  "collaboration": {
+    "initiationRate": 0.7291666666666666,
+    "formationSuccessRate": 0.8,
+    "goalAchievementRate": 0.2708333333333333,
+    "optimalPerformanceRatio": 0.22916666666666666
+  },
+  "efficiency": {
+    "totalEvents": 48,
+    "layer1Filtered": 0,
+    "layer1FilterRate": 0,
+    "llmCallCount": 48,
+    "totalTokens": 37979,
+    "promptTokens": 31147,
+    "completionTokens": 6832,
+    "avgAssessmentTimeMs": 12967.714052083335,
+    "totalWallTimeMs": 200338.3486
+  },
+  "rawDualTriggerStats": {
+    "totalEventsProcessed": 12,
+    "filteredByLayer1": 0,
+    "passedToLayer2": 0,
+    "acDecisionMade": 9,
+    "acInitiated": 9,
+    "handledIndependently": 2,
+    "deferred": 1,
+    "layer2DecisionDistribution": {
+      "initiate_ac": 9,
+      "handle_independently": 2,
+      "defer": 1,
+      "ignore": 0
+    },
+    "totalAssessmentTimeMs": 66099,
+    "assessmentCount": 12,
+    "totalConfidence": 11,
+    "confidenceCount": 12,
+    "layer1Stats": {
+      "totalEventsProcessed": 0,
+      "clustersCreated": 0,
+      "passedToLayer2": 0,
+      "filteredByLayer1": 0,
+      "simpleAggregationUsed": 0,
+      "filteringRate": 0,
+      "layer2Rate": 0
+    },
+    "layer2Stats": {
+      "assessor": {
+        "totalAssessments": 12,
+        "acInitiated": 9,
+        "handledIndependently": 2,
+        "deferred": 1,
+        "ignored": 0,
+        "llmErrors": 0
+      },
+      "negotiator": {
+        "totalSelections": 9,
+        "partnersFound": 33,
+        "proposalsSent": 0,
+        "proposalsAccepted": 0,
+        "proposalsRejected": 0
+      },
+      "goalEngine": {
+        "totalFormulations": 9,
+        "goalsCreated": 15,
+        "simpleGoals": 0,
+        "moderateGoals": 0,
+        "complexGoals": 9
+      }
+    },
+    "layer1FilterRate": 0,
+    "avgAssessmentTimeMs": 5508.25,
+    "avgConfidence": 0.9166666666666666
+  },
+  "classification": {
+    "perClass": [
+      {
+        "className": "initiate_ac",
+        "precision": 0.90625,
+        "recall": 0.90625,
+        "f1": 0.90625,
+        "tp": 29,
+        "fp": 3,
+        "fn": 3,
+        "support": 32
+      },
+      {
+        "className": "handle_independently",
+        "precision": 0.8333333333333334,
+        "recall": 0.7692307692307693,
+        "f1": 0.8,
+        "tp": 10,
+        "fp": 2,
+        "fn": 3,
+        "support": 13
+      },
+      {
+        "className": "defer",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 3,
+        "fn": 0,
+        "support": 0
+      },
+      {
+        "className": "ignore",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 1,
+        "fn": 3,
+        "support": 3
+      }
+    ],
+    "macroPrecision": 0.43489583333333337,
+    "macroRecall": 0.4188701923076923,
+    "macroF1": 0.4265625,
+    "collaborationTriggerF1": {
+      "precision": 0.90625,
+      "recall": 0.90625,
+      "f1": 0.90625,
+      "tp": 29,
+      "fp": 3,
+      "tn": 13,
+      "fn": 3,
+      "support": 32
+    },
+    "confusionMatrix": [
+      [
+        29,
+        0,
+        3,
+        0
+      ],
+      [
+        2,
+        10,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        2,
+        0,
+        0
+      ]
+    ],
+    "partnerSelection": {
+      "partnerPrecision": 0.39285714285714285,
+      "partnerRecall": 0.3548387096774194,
+      "partnerF1": 0.3728813559322034,
+      "support": 32
+    },
+    "capabilityMatch": {
+      "precision": 0.10714285714285714,
+      "recall": 0.09523809523809523,
+      "f1": 0.10084033613445378,
+      "support": 45
+    }
+  }
+}

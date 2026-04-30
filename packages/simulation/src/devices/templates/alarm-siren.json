@@ -1,0 +1,64 @@
+{
+  "id": "alarm-siren-v1",
+  "name": "Alarm Siren",
+  "description": "Loud alarm siren for security alerts",
+  "category": "actuator",
+  "type": "alarm-siren",
+  "capabilities": [
+    {
+      "name": "activate",
+      "type": "write",
+      "description": "Activate the siren",
+      "parameters": []
+    },
+    {
+      "name": "deactivate",
+      "type": "write",
+      "description": "Deactivate the siren",
+      "parameters": []
+    },
+    {
+      "name": "set-volume",
+      "type": "write",
+      "description": "Set siren volume",
+      "parameters": [
+        {
+          "name": "volume",
+          "type": "number",
+          "required": true,
+          "description": "Volume percentage (0-100)"
+        }
+      ]
+    },
+    {
+      "name": "set-pattern",
+      "type": "write",
+      "description": "Set alarm pattern",
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "string",
+          "required": true,
+          "description": "Pattern: continuous, intermittent, SOS"
+        }
+      ]
+    }
+  ],
+  "defaultState": {
+    "status": "inactive",
+    "active": false,
+    "volume": 100,
+    "pattern": "intermittent"
+  },
+  "physicalEffects": [
+    {
+      "parameter": "noise_level",
+      "effect": "noise",
+      "magnitude": 1.0,
+      "radius": 50,
+      "condition": "active == true"
+    }
+  ],
+  "semanticDescription": "A loud alarm siren for security and emergency alerts. Can be triggered by smoke detectors, motion sensors, or manual activation.",
+  "tags": ["security", "safety", "actuator", "alarm"]
+}

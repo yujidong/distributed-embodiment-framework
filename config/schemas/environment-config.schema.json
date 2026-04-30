@@ -1,0 +1,293 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://active-collaboration.io/schemas/environment-config.json",
+  "title": "Environment Configuration Schema",
+  "description": "Schema for validating environment configuration files with devices, agents, and scenarios",
+  "type": "object",
+  "required": ["version", "environment", "devices", "agents"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Configuration file version (e.g., '1.0')",
+      "examples": ["1.0", "2.0"]
+    },
+    "environment": {
+      "$ref": "#/definitions/environment"
+    },
+    "devices": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/device"
+      },
+      "minItems": 1,
+      "description": "List of devices to create in this environment"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/agent"
+      },
+      "minItems": 1,
+      "description": "List of agents to create in this environment"
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/scenario"
+      },
+      "description": "Optional list of predefined scenarios"
+    }
+  },
+  "definitions": {
+    "environment": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Unique environment identifier (lowercase, numbers, hyphens only)"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Human-readable environment name"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Optional environment description"
+        },
+        "owner": {
+          "type": "string",
+          "description": "User ID or name of the environment owner"
+        }
+      }
+    },
+    "device": {
+      "type": "object",
+      "required": ["id", "name", "type", "capabilities", "location", "behavior"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Unique device identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Human-readable device name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Device type (e.g., temperature-sensor, hvac, smart-light)"
+        },
+        "brand": {
+          "type": "string",
+          "description": "Optional device brand/manufacturer"
+        },
+        "model": {
+          "type": "string",
+          "description": "Optional device model number"
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "List of device capabilities"
+        },
+        "location": {
+          "$ref": "#/definitions/location"
+        },
+        "behavior": {
+          "$ref": "#/definitions/behavior"
+        },
+        "commands": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Optional command definitions"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Optional metadata (manufacturer, protocol, etc.)"
+        }
+      }
+    },
+    "location": {
+      "type": "object",
+      "required": ["coordinates"],
+      "properties": {
+        "building": {
+          "type": "string",
+          "description": "Building name or ID"
+        },
+        "floor": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Floor number"
+        },
+        "room": {
+          "type": "string",
+          "description": "Room name or ID"
+        },
+        "coordinates": {
+          "type": "object",
+          "required": ["x", "y"],
+          "properties": {
+            "x": {
+              "type": "number",
+              "description": "X coordinate"
+            },
+            "y": {
+              "type": "number",
+              "description": "Y coordinate"
+            },
+            "z": {
+              "type": "number",
+              "default": 0,
+              "description": "Z coordinate (optional, default 0)"
+            }
+          }
+        }
+      }
+    },
+    "behavior": {
+      "type": "object",
+      "required": ["type", "initialState"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["periodic", "event-driven", "random"],
+          "description": "Device behavior type"
+        },
+        "interval": {
+          "type": "integer",
+          "minimum": 1000,
+          "description": "Update interval in milliseconds (required for 'periodic' type)"
+        },
+        "initialState": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Initial device state"
+        }
+      }
+    },
+    "agent": {
+      "type": "object",
+      "required": ["id", "name", "type", "boundDevices", "capabilities"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Unique agent identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Human-readable agent name"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["cognitive", "reactive", "hybrid"],
+          "default": "cognitive",
+          "description": "Agent type"
+        },
+        "boundDevices": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "List of device IDs this agent controls"
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "List of agent capabilities"
+        },
+        "config": {
+          "type": "object",
+          "properties": {
+            "llmModel": {
+              "type": "string",
+              "default": "qwen3-14b-q4:latest",
+              "description": "LLM model to use for cognitive agents"
+            },
+            "decisionThreshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.7,
+              "description": "Decision confidence threshold"
+            },
+            "enableAutoCollaboration": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable automatic collaboration discovery"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": ["id", "name", "trigger", "expectedOutcome"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Unique scenario identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Human-readable scenario name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional scenario description"
+        },
+        "trigger": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["manual", "automatic", "scheduled"],
+              "description": "Trigger type"
+            },
+            "description": {
+              "type": "string",
+              "description": "Trigger description"
+            },
+            "conditions": {
+              "type": "object",
+              "additionalProperties": true,
+              "description": "Trigger conditions (for automatic or scheduled)"
+            }
+          }
+        },
+        "expectedOutcome": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Expected scenario outcome"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

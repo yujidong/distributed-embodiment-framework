@@ -1,0 +1,1306 @@
+{
+  "config": {
+    "id": "exp3-oracle-hospital",
+    "name": "Exp 3 RQ3: oracle hospital",
+    "rq": "RQ3",
+    "scenario": "hospital",
+    "condition": "oracle",
+    "iterations": 5,
+    "llmModel": "qwen3-14b-q4:latest",
+    "timeoutMs": 120000,
+    "multiAgentEval": true,
+    "realisticRouting": true
+  },
+  "iteration": 3,
+  "timestamp": "2026-04-26T23:59:09.442Z",
+  "events": [
+    {
+      "eventId": "evt-hosp-1",
+      "eventZoneId": "patient-room-1",
+      "decisionMade": "initiate_ac",
+      "agentId": "patient-care-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerDeviceIds": [
+        "dev-pr1-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Initiating cooling in patient-room-1 via ICU Ward 1 HVAC Service to address high temperature. Adjusting set-temperature and fan-speed to rapidly lower ambient temperature while maintaining safe patient conditions.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 4381.449900000356,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-2",
+      "eventZoneId": "icu-1",
+      "decisionMade": "initiate_ac",
+      "agentId": "icu-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-icu1-oxygen-1",
+        "dev-icu1-oxygen-2",
+        "dev-icu1-oxygen-3",
+        "dev-icu1-oxygen-4",
+        "dev-icu1-pressure-1",
+        "dev-icu1-pressure-2",
+        "dev-icu1-pressure-3",
+        "dev-icu1-pressure-4",
+        "dev-icu1-monitor-1",
+        "dev-icu1-monitor-2"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated due to critical environment parameter change in ICU-1 requiring immediate intervention.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 7566.586000000127,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-3",
+      "eventZoneId": "operating-room-1",
+      "decisionMade": "initiate_ac",
+      "agentId": "or-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "selectedPartnerAgentId": "patient-care-agent",
+      "requestedCapabilities": [
+        "dehumidifier-control",
+        "humidity-control"
+      ],
+      "llmReasoning": "Activated HVAC system in operating-room-1 to adjust humidity settings. Used available humidity-control parameters from Patient Room 1 HVAC Service to mitigate high humidity, as direct dehumidifier-control capability was missing but HVAC system can indirectly manage humidity through temperature and fan-speed adjustments.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 5610.765299999155,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-4",
+      "eventZoneId": "pharmacy",
+      "decisionMade": "ignore",
+      "agentId": "pharmacy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "patient-care-agent",
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "The pharmacy zone does not have explicitly listed cooling or temperature-control services available in the provided service catalog, making it impossible to fulfill the required task directly within the zone.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10408.226900000125,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-5",
+      "eventZoneId": "server-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerAgentId": "patient-care-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-ups-1",
+        "dev-sr-ups-2",
+        "dev-sr-ups-3",
+        "dev-sr-ups-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Critical parameter change detected in the server-room (severity=critical) requires immediate emergency response and monitoring. Adjacent zones may be affected via physical propagation, but server-room-specific monitoring services are not explicitly listed in SVCS, indicating a potential gap in coverage. Emergency protocols must be triggered to mitigate risks like fire/smoke from equipment failure, despite missing tasks.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 7385.825400000438,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-6",
+      "eventZoneId": "waiting-area",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "patient-care-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-wa-co2-1",
+        "dev-wa-co2-2",
+        "dev-wa-co2-3",
+        "dev-wa-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "High CO2 levels detected in the waiting area require immediate ventilation adjustments and continuous monitoring to ensure air quality safety. Activating HVAC systems in the zone to reduce CO2 concentrations and alerting emergency protocols for potential health risks.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 10288.472300000489,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-6",
+      "eventZoneId": "waiting-area",
+      "decisionMade": "ignore",
+      "agentId": "air-quality-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-wa-co2-1",
+        "dev-wa-co2-2",
+        "dev-wa-co2-3",
+        "dev-wa-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "The event zone 'waiting-area' is not within the air-quality-agent's actuator zones, preventing physical intervention. Emergency-response cannot be executed due to lack of coverage in this zone.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 10288.550900000148,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-7",
+      "eventZoneId": "emergency-dept",
+      "decisionMade": "handle_independently",
+      "agentId": "security-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "The parameter change in the emergency department has low severity, indicating a minor fluctuation. No immediate action is required as the system can self-regulate or monitor further without intervention.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 4427.768699999899,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-7",
+      "eventZoneId": "emergency-dept",
+      "decisionMade": "ignore",
+      "agentId": "facility-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "Event in zone emergency-dept is outside agent's actuator coverage (actuator zones: nurse-station, cafeteria). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 4427.805300000124,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-8",
+      "eventZoneId": "icu-2",
+      "decisionMade": "initiate_ac",
+      "agentId": "icu-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerDeviceIds": [
+        "dev-icu2-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "emergency-response"
+      ],
+      "llmReasoning": "Initiated emergency cooling and temperature control in ICU-2 to address the critical environment parameter change. Activated HVAC systems to lower temperature, adjusted fan speed, and alerted emergency response team for further intervention.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.25,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 8273.99420000054,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-9",
+      "eventZoneId": "cafeteria",
+      "decisionMade": "ignore",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerAgentId": "patient-care-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-cafe-co2-1",
+        "dev-cafe-co2-2",
+        "dev-cafe-co2-3",
+        "dev-cafe-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "The event zone 'cafeteria' is not within the safety-agent's actuator zones [server-room, utility-room], and the agent cannot physically reach or act on this zone. No emergency-response or monitoring capabilities are available for this location.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 8706.749499999918,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-9",
+      "eventZoneId": "cafeteria",
+      "decisionMade": "initiate_ac",
+      "agentId": "facility-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "smoke-detection",
+        "fire-detection"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-cafe-co2-1",
+        "dev-cafe-co2-2",
+        "dev-cafe-co2-3",
+        "dev-cafe-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated due to high severity parameter change in the cafeteria zone, which may indicate a critical environmental issue such as fire, CO2 buildup, or HVAC failure. Actuators in the cafeteria zone are being utilized to address the situation immediately.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 8706.913200000301,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-10",
+      "eventZoneId": "utility-room",
+      "decisionMade": "initiate_ac",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "power-monitoring",
+        "energy-monitoring"
+      ],
+      "selectedPartnerAgentId": "patient-care-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-ut-energy-1",
+        "dev-ut-energy-2",
+        "dev-ut-energy-3",
+        "dev-ut-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated: High-severity parameter change in utility-room detected. Activating smoke/fire detection systems in adjacent zones (cafeteria, server-room) via propagation. Monitoring utility-room energy-meter anomalies (high load) and cross-checking with HVAC/CO2 sensors in nearby areas. Alerting staff for potential water-leak or electrical hazards. Coordinating with emergency-alert services to ensure hospital-wide safety protocols are enforced.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 5686.841000000015,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-10",
+      "eventZoneId": "utility-room",
+      "decisionMade": "defer",
+      "agentId": "energy-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "Event in zone utility-room is outside agent's actuator coverage (actuator zones: parking). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 5686.9275000002235,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-11",
+      "eventZoneId": "parking",
+      "decisionMade": "initiate_ac",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-detection",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-parkin-energy-1",
+        "dev-parkin-energy-2",
+        "dev-parkin-energy-3",
+        "dev-parkin-energy-4",
+        "dev-parkin-ev-1",
+        "dev-parkin-ev-2",
+        "dev-parkin-ev-3",
+        "dev-parkin-ev-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "High-severity parameter change detected in the parking zone. Activating emergency lighting and occupancy monitoring to ensure safety and address potential issues promptly.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 10930.463800000027,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-11",
+      "eventZoneId": "parking",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-detection",
+        "emergency-alert"
+      ],
+      "selectedPartnerAgentId": "patient-care-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-parkin-energy-1",
+        "dev-parkin-energy-2",
+        "dev-parkin-energy-3",
+        "dev-parkin-energy-4",
+        "dev-parkin-ev-1",
+        "dev-parkin-ev-2",
+        "dev-parkin-ev-3",
+        "dev-parkin-ev-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated for high-severity parameter change in parking zone. Activating monitoring protocols and notifying security team to investigate potential safety hazards (e.g., fire, intrusion, or equipment failure) in the area.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 10930.647699999623,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-12",
+      "eventZoneId": "operating-room-2",
+      "decisionMade": "initiate_ac",
+      "agentId": "or-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Adjusted HVAC settings in operating-room-2 to stabilize environment parameters following the detected parameter change.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6661.303199999966,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-13",
+      "eventZoneId": "patient-room-2",
+      "decisionMade": "initiate_ac",
+      "agentId": "patient-care-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerAgentId": "icu-agent",
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Humidity control is required in patient-room-2 due to the environment parameter change. Adjust HVAC settings to stabilize humidity levels and ensure patient comfort and safety.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 4357.585199999623,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-14",
+      "eventZoneId": "radiology",
+      "decisionMade": "initiate_ac",
+      "agentId": "lab-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "energy-monitoring",
+        "load-balancing"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Initiated emergency response by activating HVAC control in the radiology zone to stabilize temperature and ensure safe environmental conditions. Checked temperature readings and adjusted cooling/heating settings to mitigate the high-severity parameter change detected in evt-hosp-14.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 4798.0270000007,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-15",
+      "eventZoneId": "icu-1",
+      "decisionMade": "ignore",
+      "agentId": "icu-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "selectedPartnerAgentId": "patient-care-agent",
+      "requestedCapabilities": [
+        "dehumidifier-control",
+        "humidity-control"
+      ],
+      "llmReasoning": "Required actuators dehumidifier-control and humidity-control are not available in the ICU zones.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7905.514499999583,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-16",
+      "eventZoneId": "laboratory",
+      "decisionMade": "initiate_ac",
+      "agentId": "lab-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerDeviceIds": [
+        "dev-lab-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Activated cooling and temperature control via ICU Ward 1 HVAC Service to address the high temperature in the laboratory zone. Adjusted set-temperature and enabled cooling mode to stabilize the environment.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 17757.188199999742,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-17",
+      "eventZoneId": "pharmacy",
+      "decisionMade": "initiate_ac",
+      "agentId": "pharmacy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-rx-lock-1",
+        "dev-rx-lock-2",
+        "dev-rx-lock-3",
+        "dev-rx-lock-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Critical environment parameter change detected in the pharmacy zone. Initiating emergency response protocols to address the issue, including monitoring and potential actuation of HVAC or access control systems to stabilize conditions and ensure safety.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 6028.287299999967,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-18",
+      "eventZoneId": "nurse-station",
+      "decisionMade": "initiate_ac",
+      "agentId": "facility-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Adjust HVAC settings in nurse-station to stabilize environment parameters based on the detected change.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 4465.052300000563,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-19",
+      "eventZoneId": "patient-room-4",
+      "decisionMade": "initiate_ac",
+      "agentId": "patient-care-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerDeviceIds": [
+        "dev-pr4-co2-1",
+        "dev-pr4-co2-2",
+        "dev-pr4-co2-3",
+        "dev-pr4-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Triggered emergency response by adjusting HVAC and ventilation in patient-room-4 to address high CO2 levels detected via CO2 Sensor Service, ensuring air quality and patient safety.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 9456.125999999233,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-19",
+      "eventZoneId": "patient-room-4",
+      "decisionMade": "initiate_ac",
+      "agentId": "air-quality-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-pr4-co2-1",
+        "dev-pr4-co2-2",
+        "dev-pr4-co2-3",
+        "dev-pr4-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Increased ventilation via HVAC to reduce CO2 levels in patient-room-4. Activated high fan speed and adjusted air filtration settings to mitigate high CO2 concentration. Notified emergency response team for further evaluation.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 9456.273099999875,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-20",
+      "eventZoneId": "emergency-dept",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert",
+        "fire-detection"
+      ],
+      "selectedPartnerAgentId": "patient-care-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-ed-co2-1",
+        "dev-ed-co2-2",
+        "dev-ed-co2-3",
+        "dev-ed-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Critical parameter change detected in emergency department; initiating emergency response and monitoring protocols to address potential safety hazards and ensure patient/environmental stability.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 6381.020899999887,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-20",
+      "eventZoneId": "emergency-dept",
+      "decisionMade": "defer",
+      "agentId": "facility-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "emergency-alert",
+        "fire-detection"
+      ],
+      "llmReasoning": "Event in zone emergency-dept is outside agent's actuator coverage (actuator zones: nurse-station, cafeteria). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6381.102099999785,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-21",
+      "eventZoneId": "waiting-area",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "ventilation-control",
+        "air-filtration"
+      ],
+      "selectedPartnerAgentId": "patient-care-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-wa-co2-1",
+        "dev-wa-co2-2",
+        "dev-wa-co2-3",
+        "dev-wa-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "The waiting-area zone has CO2 sensors capable of detecting air quality issues (e.g., elevated CO2 levels) and triggering ventilation control. Since the event environment.param_changed has high severity, the security-agent can initiate emergency response by actuating HVAC systems or alerting staff via monitoring protocols directly in the zone.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 10062.086099999957,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-21",
+      "eventZoneId": "waiting-area",
+      "decisionMade": "ignore",
+      "agentId": "air-quality-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerDeviceIds": [
+        "dev-wa-co2-1",
+        "dev-wa-co2-2",
+        "dev-wa-co2-3",
+        "dev-wa-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "The event zone 'waiting-area' is not within the agent's actuator zones, preventing physical intervention. Emergency-response cannot be executed due to lack of control over the zone, despite monitoring capabilities.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 10062.273799999617,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-22",
+      "eventZoneId": "patient-room-3",
+      "decisionMade": "initiate_ac",
+      "agentId": "patient-care-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Adjust HVAC settings in patient-room-3 to stabilize temperature/humidity levels, ensuring patient comfort and safety. Initiate diagnostic checks for environmental parameter anomalies.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6126.854399999604,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-23",
+      "eventZoneId": "icu-2",
+      "decisionMade": "initiate_ac",
+      "agentId": "icu-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerDeviceIds": [
+        "dev-icu2-oxygen-1",
+        "dev-icu2-oxygen-2",
+        "dev-icu2-oxygen-3",
+        "dev-icu2-oxygen-4",
+        "dev-icu2-pressure-1",
+        "dev-icu2-pressure-2",
+        "dev-icu2-pressure-3",
+        "dev-icu2-pressure-4",
+        "dev-icu2-monitor-1",
+        "dev-icu2-monitor-2"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response initiated: Activated ICU-2 HVAC system to stabilize temperature/humidity and alerted critical care staff due to critical environmental parameter change in ICU-2.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 8491.09779999964,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-24",
+      "eventZoneId": "corridor-1",
+      "decisionMade": "handle_independently",
+      "agentId": "patient-care-agent",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "The corridor-1 environment parameter change (medium signal, low severity) does not require immediate action by the patient-care-agent. Since corridor-1 is not an actuator zone and the severity is low, the agent will monitor the situation without initiating adjustments. Propagation effects on adjacent zones are not critical at this level of severity.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12182.246000000276,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-24",
+      "eventZoneId": "corridor-1",
+      "decisionMade": "handle_independently",
+      "agentId": "air-quality-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "The event occurs in corridor-1, which is not directly monitored by the air-quality-agent's zones (patient-room-4, waiting-area). The low severity and propagation from adjacent zones may not require immediate action.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12182.3451000005,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-25",
+      "eventZoneId": "reception",
+      "decisionMade": "handle_independently",
+      "agentId": "security-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "No immediate action required as the parameter change is low severity and does not trigger a security response.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 4341.561999999918,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-light-1",
+      "eventZoneId": "parking",
+      "decisionMade": "ignore",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-parkin-energy-1",
+        "dev-parkin-energy-2",
+        "dev-parkin-energy-3",
+        "dev-parkin-energy-4",
+        "dev-parkin-ev-1",
+        "dev-parkin-ev-2",
+        "dev-parkin-ev-3",
+        "dev-parkin-ev-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "Emergency response is required but not available in the parking zone. No actuator or service in the parking zone supports emergency response actions (e.g., alert triggering, evacuation protocols). The available actuators (parking zone) only handle lighting/occupancy, not critical emergency functions.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 12016.243700000457,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-light-1",
+      "eventZoneId": "parking",
+      "decisionMade": "ignore",
+      "agentId": "security-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "selectedPartnerAgentId": "patient-care-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-parkin-energy-1",
+        "dev-parkin-energy-2",
+        "dev-parkin-energy-3",
+        "dev-parkin-energy-4",
+        "dev-parkin-ev-1",
+        "dev-parkin-ev-2",
+        "dev-parkin-ev-3",
+        "dev-parkin-ev-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "The high signal in the parking zone is attributed to an environment parameter change from the experiment 'evt-hosp-light-1', which is likely a controlled test scenario. No immediate emergency or critical monitoring action is required at this time.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 12016.41839999985,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-air-1",
+      "eventZoneId": "waiting-area",
+      "decisionMade": "initiate_ac",
+      "agentId": "security-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "ventilation-control",
+        "air-filtration"
+      ],
+      "selectedPartnerAgentId": "patient-care-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-wa-co2-1",
+        "dev-wa-co2-2",
+        "dev-wa-co2-3",
+        "dev-wa-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "High CO2 levels detected in waiting area. Activating ventilation system to reduce concentrations and alerting emergency personnel for further assessment.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 9587.308400000446,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-air-1",
+      "eventZoneId": "waiting-area",
+      "decisionMade": "ignore",
+      "agentId": "air-quality-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerDeviceIds": [
+        "dev-wa-co2-1",
+        "dev-wa-co2-2",
+        "dev-wa-co2-3",
+        "dev-wa-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "The event zone is not in the agent's actuator zones, so the agent cannot physically reach it to act on it.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 9587.397599999793,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-emergency-1",
+      "eventZoneId": "server-room",
+      "decisionMade": "ignore",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerAgentId": "patient-care-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-ups-1",
+        "dev-sr-ups-2",
+        "dev-sr-ups-3",
+        "dev-sr-ups-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring"
+      ],
+      "llmReasoning": "The required emergency-response and monitoring tasks are missing, and the safety-agent cannot act alone. The server-room zone lacks direct services for fire/smoke detection or emergency alerts, relying instead on propagation from adjacent zones. However, no adjacent zone services are explicitly listed here to trigger a response, making autonomous action impossible.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 3,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 4455.210699999705,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-humidity-1",
+      "eventZoneId": "cafeteria",
+      "decisionMade": "ignore",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "selectedPartnerAgentId": "patient-care-agent",
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "The event zone 'cafeteria' is not within the safety-agent's actuator zones, and the required 'humidity-control' service is not available in the provided services list for this zone. The agent cannot physically act on the zone or execute the necessary control actions.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 18464.38069999963,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-hosp-humidity-1",
+      "eventZoneId": "cafeteria",
+      "decisionMade": "initiate_ac",
+      "agentId": "facility-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Adjusted HVAC settings in the cafeteria to stabilize humidity levels. Activated humidity control mechanisms via available actuators to address the medium severity parameter change.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 18464.515199999325,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    }
+  ],
+  "decisionQuality": {
+    "meanZoneTargetingAccuracy": 0.5853658536585366,
+    "meanCapabilityAppropriateness": 0.25,
+    "meanSideEffectAwareness": 0.2682926829268293,
+    "meanPhysicalPlausibility": 0.5853658536585366,
+    "meanCorrectDecisionRate": 0.4146341463414634
+  },
+  "collaboration": {
+    "initiationRate": 0.6341463414634146,
+    "formationSuccessRate": 0.34615384615384615,
+    "goalAchievementRate": 0.4634146341463415,
+    "optimalPerformanceRatio": 0.24390243902439024
+  },
+  "efficiency": {
+    "totalEvents": 41,
+    "layer1Filtered": 0,
+    "layer1FilterRate": 0,
+    "llmCallCount": 41,
+    "totalTokens": 236757,
+    "promptTokens": 212646,
+    "completionTokens": 24111,
+    "avgAssessmentTimeMs": 8668.180665853637,
+    "totalWallTimeMs": 237266.47339999955
+  },
+  "rawDualTriggerStats": {
+    "totalEventsProcessed": 5,
+    "filteredByLayer1": 0,
+    "passedToLayer2": 0,
+    "acDecisionMade": 4,
+    "acInitiated": 4,
+    "handledIndependently": 1,
+    "deferred": 0,
+    "layer2DecisionDistribution": {
+      "initiate_ac": 4,
+      "handle_independently": 1,
+      "defer": 0,
+      "ignore": 0
+    },
+    "totalAssessmentTimeMs": 27909,
+    "assessmentCount": 5,
+    "totalConfidence": 4,
+    "confidenceCount": 5,
+    "layer1Stats": {
+      "totalEventsProcessed": 0,
+      "clustersCreated": 0,
+      "passedToLayer2": 0,
+      "filteredByLayer1": 0,
+      "simpleAggregationUsed": 0,
+      "filteringRate": 0,
+      "layer2Rate": 0
+    },
+    "layer2Stats": {
+      "assessor": {
+        "totalAssessments": 5,
+        "acInitiated": 4,
+        "handledIndependently": 1,
+        "deferred": 0,
+        "ignored": 0,
+        "llmErrors": 0
+      },
+      "negotiator": {
+        "totalSelections": 4,
+        "partnersFound": 19,
+        "proposalsSent": 0,
+        "proposalsAccepted": 0,
+        "proposalsRejected": 0
+      },
+      "goalEngine": {
+        "totalFormulations": 4,
+        "goalsCreated": 8,
+        "simpleGoals": 0,
+        "moderateGoals": 0,
+        "complexGoals": 4
+      }
+    },
+    "layer1FilterRate": 0,
+    "avgAssessmentTimeMs": 5581.8,
+    "avgConfidence": 0.8
+  },
+  "classification": {
+    "perClass": [
+      {
+        "className": "initiate_ac",
+        "precision": 0.625,
+        "recall": 0.625,
+        "f1": 0.625,
+        "tp": 15,
+        "fp": 9,
+        "fn": 9,
+        "support": 24
+      },
+      {
+        "className": "handle_independently",
+        "precision": 0.5,
+        "recall": 0.16666666666666666,
+        "f1": 0.25,
+        "tp": 2,
+        "fp": 2,
+        "fn": 10,
+        "support": 12
+      },
+      {
+        "className": "defer",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 2,
+        "fn": 0,
+        "support": 0
+      },
+      {
+        "className": "ignore",
+        "precision": 0.09090909090909091,
+        "recall": 0.2,
+        "f1": 0.125,
+        "tp": 1,
+        "fp": 10,
+        "fn": 4,
+        "support": 5
+      }
+    ],
+    "macroPrecision": 0.3039772727272727,
+    "macroRecall": 0.24791666666666667,
+    "macroF1": 0.25,
+    "collaborationTriggerF1": {
+      "precision": 0.625,
+      "recall": 0.625,
+      "f1": 0.625,
+      "tp": 15,
+      "fp": 9,
+      "tn": 8,
+      "fn": 9,
+      "support": 24
+    },
+    "confusionMatrix": [
+      [
+        15,
+        0,
+        2,
+        7
+      ],
+      [
+        7,
+        2,
+        0,
+        3
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        0,
+        1
+      ]
+    ],
+    "partnerSelection": {
+      "partnerPrecision": 0,
+      "partnerRecall": 0,
+      "partnerF1": 0,
+      "support": 24
+    },
+    "capabilityMatch": {
+      "precision": 0.18333333333333332,
+      "recall": 0.18333333333333332,
+      "f1": 0.18333333333333332,
+      "support": 36
+    }
+  }
+}

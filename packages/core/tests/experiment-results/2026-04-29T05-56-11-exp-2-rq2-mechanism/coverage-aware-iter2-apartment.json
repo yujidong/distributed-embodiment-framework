@@ -1,0 +1,4102 @@
+{
+  "config": {
+    "id": "exp2-coverage-aware-apartment",
+    "name": "Exp 2 RQ2 Mechanism: coverage-aware",
+    "rq": "RQ2",
+    "scenario": "apartment",
+    "condition": "coverage-aware",
+    "iterations": 5,
+    "llmModel": "qwen3-14b-q4:latest",
+    "timeoutMs": 120000,
+    "multiAgentEval": true,
+    "realisticRouting": true
+  },
+  "iteration": 2,
+  "timestamp": "2026-04-29T05:11:00.227Z",
+  "events": [
+    {
+      "eventId": "evt-apt-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires cooling, temperature control, and HVAC control in the **living-room** zone, which is directly covered by the agent's actuators (as listed in ACTUATORS). Since the agent has full coverage (DIRECT) for this zone and no external partners are available, it can independently address the high-severity event using its own capabilities. Collaboration is unnecessary here.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6666666666666666,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 9290.846000000834,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in living-room and all required capabilities (hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 9290.934100000188,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control"
+      ],
+      "llmReasoning": "**Reasoning**:  \n- The **event needs** (cooling, temperature-control, hvac-control) are **not aligned with the agent's capabilities** (Caps: motion-detection, presence-detection, lighting-control, access-control, emergency-alert).  \n- The agent has **direct actuator coverage** in the **living-room** zone (where the event occurred), but its capabilities **do not include HVAC/temperature control**.  \n- **No available partners** exist to collaborate with, so the agent cannot delegate or request assistance for the event.  \n\n**Conclusion**: The agent lacks the required capabilities to address the event and has no collaborators to rely on. It should not initiate collaboration.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6666666666666666,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 9290.951400000602,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control"
+      ],
+      "llmReasoning": "DECISION: No, the safety-agent should not initiate collaboration because there are no available partners to handle the event needs (cooling, temperature-control, hvac-control). The agent's capabilities (gas-detection, water-leak-detection, fire-detection, emergency-alert, air-purification) do not align with the required actions. The agent should escalate the alert to a human operator or system for intervention, as no actuators are available to address the event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6666666666666666,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 9290.996200000867,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-2",
+      "eventZoneId": "server-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in server-room and all required capabilities (hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.18559999950230122,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-2",
+      "eventZoneId": "server-room",
+      "decisionMade": "defer",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "Event in zone server-room is outside agent's actuator coverage (actuator zones: living-room, bedroom, bathroom, entrance-hall, garage). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.21089999936521053,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-3",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires humidity control in the bedroom, which falls within the agent's capabilities (humidity-monitoring) and direct coverage (bedroom actuators). Since no other agents are available (AVAILABLE_PARTNERS=0), the agent can address the issue autonomously without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 5200.447600001469,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-3",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bedroom and all required capabilities (humidity-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 5200.482600001618,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-3",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires humidity-control, which is not among the agent's available capabilities (Caps: motion-detection, presence-detection, lighting-control, access-control, emergency-alert). Since no other agents are available (AVAILABLE_PARTNERS=0) and the agent lacks the required functionality to address humidity-control, collaboration is unnecessary. The agent can only monitor or act on its defined capabilities but cannot resolve the humidity issue independently.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 5200.495100000873,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-4",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires lighting-control, which is not among the agent's capabilities (Caps=[temperature-monitoring, humidity-monitoring, air-quality-monitoring, light-level-monitoring]). While the agent has coverage in the bathroom (DIRECT), it lacks the specific actuator capability for lighting-control. Since no partners are available (AVAILABLE_PARTNERS=0), collaboration is impossible. The agent must either ignore the event or escalate to a higher authority if applicable.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7458.059600001201,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-4",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires lighting-control, which is outside the agent's capabilities (Caps do not include lighting-control). Since there are no available partners (AVAILABLE_PARTNERS=0), collaboration is not feasible. The agent can only act on its own capabilities (temperature, HVAC, humidity, etc.) within the bathroom zone but cannot address the lighting-control need.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7458.126099999994,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-4",
+      "eventZoneId": "bathroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bathroom and all required capabilities (lighting-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 7458.144100001082,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-4",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires \"lighting-control,\" which is not among the safety-agent's capabilities (Caps). Since the agent is restricted to SENSOR-ONLY role and there are no AVAILABLE_PARTNERS to delegate the task, it cannot fulfill the request. The event should be logged or escalated for manual intervention.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7458.15690000169,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-5",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "env-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in living-room and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 3159.6107000000775,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-5",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in living-room and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 3159.637599999085,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-5",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in living-room and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 3159.6468000002205,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-5",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. Since the available partners are 0 (no other agents are available) and the agent operates in SENSOR-ONLY mode (no actuators), it cannot act on the event. Collaboration is impossible without available partners, and the agent has no capability to resolve the issue independently. The event should be logged or reported as unactionable due to resource constraints.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 3159.6558999996632,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-6",
+      "eventZoneId": "kitchen",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-hvac-1",
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration because there are no available partners. The agent has direct coverage in the kitchen (via actuators) and can address the critical event using its capabilities in temperature-monitoring, temperature-control, hvac-control, and cooling. Emergency-response is not explicitly within the agent's capabilities, but it can escalate the issue internally or trigger local actions (e.g., HVAC adjustments) to mitigate the problem.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 5022.089900000021,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-6",
+      "eventZoneId": "kitchen",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in kitchen and all required capabilities (temperature-control, hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 5022.150900000706,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-6",
+      "eventZoneId": "kitchen",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-hvac-1",
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "DECISION: No, this agent should not initiate collaboration. Since it is a SENSOR-ONLY agent with no actuators and no AVAILABLE_PARTNERS to delegate to, it can only detect and report the event. The critical parameter change in the kitchen (fire/gas/leak) requires immediate action, but without capable partners, the agent can only escalate the alert (e.g., trigger emergency alert via its own capabilities) and log the event for later review. Collaboration is impossible under these constraints.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 5022.168999999762,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-7",
+      "eventZoneId": "kitchen",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "hvac-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Direct Coverage:** The agent has actuators in the **kitchen** (the affected zone), enabling direct intervention.  \n2. **Self-Sufficiency:** The required actions (emergency response, monitoring, HVAC control) align with the agent's capabilities:  \n   - **Monitoring** is explicitly covered by its `temperature-monitoring`, `humidity-monitoring`, etc.  \n   - **Emergency response** can be managed via actuators in the kitchen (e.g., adjusting HVAC, alerting users).  \n   - **HVAC control** is implied through the monitoring capabilities (e.g., triggering adjustments based on parameter changes).  \n3. **No External Partners:** Since `AVAILABLE_PARTNERS = 0`, collaboration is unnecessary.  \n\nThe agent can independently address the critical event in the kitchen using its existing capabilities and direct actuation.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 1,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 9338.590600000694,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-7",
+      "eventZoneId": "kitchen",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in kitchen and all required capabilities (hvac-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 9338.694600000978,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-7",
+      "eventZoneId": "kitchen",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "hvac-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent cannot initiate collaboration because there are no available partners listed (AVAILABLE_PARTNERS: 0). However, as a SENSOR-ONLY agent with the **emergency-alert** capability, it should **trigger an emergency alert internally** (e.g., log the critical event, activate local alarms, or notify a predefined external system if configured). Collaboration is blocked due to no actuators being available, but the agent can still fulfill its role by escalating the critical event through its emergency alert function.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 9338.721700001508,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-8",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "water-shutoff"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "water-shutoff"
+      ],
+      "llmReasoning": "DECISION: No. The agent does not have the capability to handle water-related parameters (e.g., water leaks or shutoff) as its monitoring capabilities are limited to temperature, humidity, air quality, and light levels. While it has a physical actuator in the bathroom, the EVENT_NEEDS (water-shutoff, emergency-response) exceed its defined capabilities. Since no partner agents are available, it cannot initiate collaboration. The agent should escalate the event for external intervention or alert the user directly.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12362.43450000137,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-8",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "water-shutoff"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "water-shutoff"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The available partners are 0, meaning no other agents are available to assist. The agent's capabilities (temperature/humidity control, HVAC, air purification) do not include water-shutoff or emergency-response actions. While monitoring is possible via direct coverage of the bathroom zone, the critical needs (water-shutoff, emergency-response) cannot be fulfilled without external collaboration. The agent should escalate the issue to a human operator or system for intervention.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12362.487700000405,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-8",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "water-shutoff"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "water-shutoff"
+      ],
+      "llmReasoning": "DECISION: No. The agent cannot initiate collaboration because it lacks the capability to perform \"water-shutoff\" (not in its Caps list) and there are no available partners to assist. While it can handle \"emergency-response\" (via emergency-alert) and \"monitoring\" (via motion/presence detection), the critical \"water-shutoff\" requirement cannot be fulfilled. The agent should trigger an emergency alert and escalate the issue but cannot collaborate due to missing capabilities and no available partners.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 12362.514600001276,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-8",
+      "eventZoneId": "bathroom",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "water-shutoff"
+      ],
+      "llmReasoning": "DECISION: Yes, the agent should initiate collaboration. Despite having no available partners, its role as a SENSOR-ONLY agent requires it to detect events and alert capable agents. Since the event involves high-severity water-leak detection and requires emergency-response and water-shutoff actions (which it cannot perform alone), it must attempt collaboration. However, with no AVAILABLE_PARTNERS, the collaboration cannot proceed, and the agent should escalate the alert to external systems or human operators if possible.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12362.536600001156,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-9",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control"
+      ],
+      "llmReasoning": "DECISION: No. The agent does not have the necessary capabilities (cooling, temperature-control, hvac-control) to address the event in the garage. Since no other agents are available for collaboration, the agent cannot fulfill the request.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 9546.771199999377,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-9",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event requires **cooling, temperature-control, and hvac-control**, but the agent's capabilities are limited to **energy-monitoring, cost-optimization, and load-balancing**. These do not directly address HVAC or temperature regulation.  \n- While the agent has **direct coverage** (actuators in the garage zone), it lacks the specific **hvac-control** capability to address the event needs independently.  \n- **No available partners** exist to collaborate with, so initiating collaboration is impossible.  \n\nThe agent cannot resolve the event on its own due to mismatched capabilities and has no partners to delegate the task.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 9546.803199999034,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-9",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "maintenance-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The agent's capabilities (water-shutoff, equipment-monitoring, maintenance-scheduling) do not align with the event needs (cooling, temperature-control, hvac-control). While the agent has physical actuators in the garage zone, it lacks the specific functions required to address the event. With no available partners to collaborate with, the agent cannot fulfill the request independently.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 9546.827999999747,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-10",
+      "eventZoneId": "home-office",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-ho-co2-1",
+        "dev-ho-co2-2"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "air-purification"
+      ],
+      "llmReasoning": "**Reasoning**:  \n- The agent has **direct coverage** of the \"home-office\" zone (via actuators) and can address **monitoring** and **emergency-response** needs using its capabilities (temperature, humidity, air-quality, light monitoring).  \n- However, the **air-purification** need is outside its defined capabilities (Caps do not include air purification).  \n- Since **no partners are available** for collaboration, the agent cannot fulfill the air-purification requirement.  \n- The agent can independently handle the **monitoring** and **emergency-response** aspects but cannot resolve the air-purification need.  \n- Collaboration is not feasible due to **zero available partners**, so the agent must act within its own capabilities.  \n\n**Conclusion**: The agent should not initiate collaboration but focus on its own capabilities to address the event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 3909.35879999958,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-10",
+      "eventZoneId": "home-office",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in home-office and all required capabilities (air-purification). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 3909.4168999996036,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-11",
+      "eventZoneId": "utility-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "requestedCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "DECISION: No, this agent should not initiate collaboration. The event occurred in the \"utility-room,\" which is outside the agent's designated zones (living-room, bathroom, kitchen). Additionally, the required action \"maintenance-scheduling\" is not within the agent's capabilities (Caps). Since the agent has no actuators and no available partners to delegate to, it cannot address the event.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6222.8289000000805,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-11",
+      "eventZoneId": "utility-room",
+      "decisionMade": "ignore",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "Event in zone utility-room is outside agent's actuator coverage (actuator zones: garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6222.864700000733,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-11",
+      "eventZoneId": "utility-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "llm",
+      "agentId": "maintenance-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "requestedCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event occurs in the utility-room, which is not within the agent's actuator zones (garage). Since there are no available partners to collaborate with, the agent lacks the physical capability to address the event in the affected zone. The maintenance-scheduling capability is irrelevant here due to the zone mismatch.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 1,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6222.877600001171,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-12",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "env-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bedroom and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.1543000005185604,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-12",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bedroom and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.17830000072717667,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-12",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bedroom and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.1879000011831522,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-13",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "hvac-control",
+        "heating"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-balc-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control",
+        "heating"
+      ],
+      "llmReasoning": "**Reasoning**:  \n1. **Event Zone Mismatch**: The event occurred in the *balcony* zone, which is **not** among the agent's monitored zones (Caps: [living-room, bedroom, kitchen, home-office]).  \n2. **Actuator Limitation**: The agent’s actuators are limited to the zones listed in `ACTUATORS`, none of which include the *balcony*.  \n3. **Propagation Coverage**: While propagation from adjacent zones is possible, the *balcony* is not adjacent to any of the agent’s monitored zones (no adjacency implied in the provided data).  \n4. **No Available Partners**: The `AVAILABLE_PARTNERS` list is empty, so collaboration with other agents is not feasible.  \n\n**Conclusion**: The agent lacks the capability to directly address the event in the *balcony* zone and cannot propagate control to it. Collaboration is unnecessary due to no available partners.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14921.756899999455,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-13",
+      "eventZoneId": "balcony",
+      "decisionMade": "handle_independently",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 0.5,
+      "selectedPartnerDeviceIds": [
+        "dev-balc-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control",
+        "heating"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event occurs in the balcony, which is not directly controlled by the agent's actuators. However, the agent can potentially influence the balcony via **physical propagation from adjacent zones** (e.g., if the balcony is adjacent to a zone like the living-room or home-office). Since no other agents are available, the agent should attempt to address the issue indirectly through propagation (e.g., adjusting HVAC in adjacent zones to mitigate the balcony's environmental changes). Collaboration is unnecessary here due to the lack of available partners.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 14921.813699999824,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-13",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "hvac-control",
+        "heating"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-balc-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control",
+        "heating"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event involves temperature-related needs (cooling, heating, HVAC control), which are outside the agent's capabilities (motion detection, presence detection, lighting control, access control, emergency alerts). Since no other agents are available (AVAILABLE_PARTNERS=0), the agent cannot address the event directly or through collaboration. It should log the event and escalate to a human operator if emergency alerts are enabled.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14921.843100000173,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-13",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "heating"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-balc-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control",
+        "heating"
+      ],
+      "llmReasoning": "DECISION: No, this agent should not initiate collaboration. The event occurs in the \"balcony\" zone, which is outside the agent's coverage (living-room, bathroom, kitchen). Additionally, the event needs (cooling, temperature-control, etc.) do not align with the agent's capabilities (gas/water/fire detection, emergency alerts, air purification). Since no available partners exist to handle this event, the agent cannot meaningfully collaborate. It should instead log the event and alert human operators or systems outside its scope.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14921.879200000316,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-14",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The agent's **caps** (monitoring capabilities) explicitly exclude the **entrance-hall** zone. While it has **actuators** in the entrance-hall, it lacks the **monitoring coverage** (e.g., temperature, humidity, etc.) to assess the critical parameter change event.  \n- The **event severity is critical**, but the agent cannot directly monitor or interpret the issue in the entrance-hall.  \n- **No available partners** exist to collaborate with, so the agent cannot delegate or coordinate external assistance.  \n- The agent may need to trigger a **general emergency alert** (as per EVENT_NEEDS) or activate actuators in the entrance-hall (e.g., lights, fans) if applicable, but **collaboration is not required** due to the absence of external agents.  \n\n**Action:** The agent should prioritize local emergency alerts and use its actuators in the entrance-hall (if applicable) to mitigate the issue, but no collaboration is needed.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 4049.720800001174,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-14",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in entrance-hall and all required capabilities (emergency-alert). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 4049.764900000766,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-15",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "requestedCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires **maintenance-scheduling**, which is not among the agent's capabilities (Caps = monitoring-only: temperature, humidity, air quality, light). Additionally, there are no available partners to collaborate with. The agent can only monitor environmental parameters in the zones but cannot perform maintenance tasks. The low-severity event may be logged or reported internally, but no external collaboration is feasible.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10999.903299998492,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-15",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "requestedCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires \"maintenance-scheduling,\" which is not within the agent's defined capabilities (temperature-control, HVAC-control, etc.). Since there are no available partners to collaborate with, the agent cannot fulfill this request. The low severity of the event may allow it to be logged or deferred until further action is possible.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10999.9459999986,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-15",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "requestedCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires \"maintenance-scheduling,\" but this capability is not listed in the agent's Caps. Since there are no available partners to collaborate with, the agent cannot fulfill this request. The agent should log the event and escalate it to a human operator or external system for resolution.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10999.965699998662,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-15",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "requestedCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "DECISION: No. The safety-agent is SENSOR-ONLY and has no actuators or available partners to perform maintenance-scheduling. It can only detect and alert, but cannot initiate collaboration since no capable agents are available. The event should be logged for future reference when partners become available.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10999.987599998713,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration because there are no available partners (AVAILABLE_PARTNERS=0). The agent's capabilities (monitoring temperature, humidity, air quality, light) align with the \"monitoring\" and \"emergency-alert\" needs but not with \"fire-suppression\" or \"emergency-response\" (which require physical intervention or external systems). Since the agent cannot act on fire-suppression or coordinate with others, it must handle the situation independently by escalating the emergency alert and continuing monitoring.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14834.35929999873,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The available partners are 0, and the agent's capabilities (temperature/humidity control, HVAC) do not directly address the critical event's needs (fire-suppression, emergency-alert). The agent can manage environmental parameters but cannot handle fire or emergency alerts independently. It should focus on its core functions (e.g., adjusting HVAC to stabilize temperature/humidity) while escalating alerts if necessary.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14834.637699998915,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The agent has the **emergency-alert** capability, which matches one of the EVENT_NEEDS.  \n- However, the other EVENT_NEEDS (**emergency-response**, **monitoring**, **fire-suppression**) are not fully covered by the agent's capabilities (fire-suppression is not listed, and monitoring is implied but not explicitly a capability).  \n- Since **AVAILABLE_PARTNERS = 0**, collaboration is not possible.  \n- The agent can only act on its own capabilities (e.g., trigger an emergency alert) but cannot fulfill all EVENT_NEEDS.  \n\n**Conclusion:** The agent should handle its own capabilities (e.g., send emergency alerts) but cannot collaborate due to no available partners.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14834.907899999991,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerDeviceIds": [
+        "dev-living-co2-1",
+        "dev-living-co2-2",
+        "dev-living-plug-1",
+        "dev-living-plug-2",
+        "dev-living-plug-3",
+        "dev-living-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration because there are no available partners (AVAILABLE_PARTNERS: 0). However, the agent can autonomously trigger its **emergency-alert** capability (from its Caps) to address the critical event in the living room, as collaboration is not possible. The agent should prioritize alerting and monitoring while awaiting potential future partnerships.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14835.037200000137,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "defer",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "Event in zone living-room is outside agent's actuator coverage (actuator zones: garage). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 14835.943799998611,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-1",
+      "eventZoneId": "living-room",
+      "decisionMade": "defer",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "Event in zone living-room is outside agent's actuator coverage (actuator zones: garage). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 14835.985099999234,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "security-monitoring"
+      ],
+      "llmReasoning": "The agent should **not** initiate collaboration because **no partners are available**. However, the agent **can act directly** in the entrance-hall zone (via actuators) but lacks monitoring capabilities for that zone (its monitoring zones are limited to living-room, bedroom, kitchen, home-office). Since the event requires **monitoring** and **security-monitoring** (which the agent cannot fulfill for entrance-hall), it cannot fully address the high-severity event alone. Without available partners, the agent is **unprepared to resolve the event** and must rely on external systems or manual intervention.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 21969.79389999993,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "security-monitoring"
+      ],
+      "llmReasoning": "The climate-controller agent does not need to initiate collaboration.  \n\n**Reasoning:**  \n1. **Event Scope Mismatch**: The event occurs in the *entrance-hall*, which is not part of the agent's **ACTUATORS** list or **Zones** under its direct control.  \n2. **Capability Misalignment**: The required **EVENT_NEEDS** (emergency-response, monitoring, security-monitoring) do not align with the agent's **Caps** (temperature/HVAC control, etc.). The agent cannot directly address security or emergency-related tasks.  \n3. **Propagation Limitations**: While the agent can influence zones via **COVERAGE: PROPAGATION**, the entrance-hall is not adjacent to any zones under its control (per the given data).  \n4. **No Available Partners**: With **AVAILABLE_PARTNERS = 0**, there is no opportunity for collaboration.  \n\n**Action Plan**:  \n- Log the event for monitoring (if permitted by system rules).  \n- Notify higher-level systems or human operators (if applicable) about the high-severity event in an uncontrolled zone.  \n- No physical actuation is required.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 21969.923100000247,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "security-monitoring"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires emergency response, monitoring, and security monitoring, which align with the agent's capabilities (emergency-alert, security-monitoring). However, since there are **no available partners** (AVAILABLE_PARTNERS=0), collaboration is not feasible. The agent can independently handle the event using its own capabilities (e.g., triggering emergency alerts, adjusting lighting/access control in the entrance-hall zone).",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 21969.98640000075,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "security-monitoring"
+      ],
+      "llmReasoning": "DECISION: No. The safety-agent cannot initiate collaboration because the event occurred in the \"entrance-hall,\" which is outside its designated zones (living-room, bathroom, kitchen). Additionally, no available partners exist to handle the event, and the agent's capabilities (gas/water/fire detection, etc.) are not applicable to this zone. The agent must remain in SENSOR-ONLY mode and cannot act on this event.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 21970.044400000945,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "security-monitoring"
+      ],
+      "llmReasoning": "**Reasoning**:  \n- The event requires **emergency-response**, **monitoring**, and **security-monitoring**, but the energy-agent's capabilities are limited to **energy-monitoring**, **cost-optimization**, and **load-balancing**.  \n- While \"monitoring\" partially overlaps with the agent's capabilities, the critical needs (**emergency-response**, **security-monitoring**) are outside its scope.  \n- The agent has no available partners to collaborate with, and its physical actuators (e.g., garage) are unrelated to the entrance-hall event.  \n- Propagation from adjacent zones may not address the high-severity parameter change or the security/emergency requirements.  \n\nThus, the energy-agent cannot fulfill the event's needs independently or through collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 21970.09460000135,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-2",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "maintenance-agent",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "security-monitoring"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event occurs in the **entrance-hall**, which is not adjacent to the zones where the agent can act (utility-room, garage). Additionally, the agent’s capabilities (water-shutoff, equipment-monitoring, maintenance-scheduling) do not align with the required event types (**emergency-response, security-monitoring**). Since no other agents are available for collaboration, the agent cannot address the high-severity event directly.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 1,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 21970.13540000096,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "DECISION: No. The agent does not need to initiate collaboration because it has direct coverage in the living-room zone (via the `COVERAGE: DIRECT` statement) and the required actuator (hvac-control) is available in the same zone. Since no external partners are available (`AVAILABLE_PARTNERS: 0`), the agent can autonomously address the event using its direct capabilities.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8674.633500000462,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in living-room and all required capabilities (hvac-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 8674.680099999532,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "1. Acknowledge the event and log it as unactionable, or  \n2. Escalate the issue to a human operator if emergency-alert capabilities are configured for such scenarios.  \n\nNo collaboration is feasible under the current constraints.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8674.696800000966,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires HVAC control, which is outside the safety-agent's capabilities (Caps do not include HVAC-control). Since AVAILABLE_PARTNERS is 0 (no other agents are available to handle the task), collaboration is impossible. The agent must alert the user or system via its emergency-alert capability but cannot delegate the HVAC action to any partner.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8674.715299999341,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "Event in zone living-room is outside agent's actuator coverage (actuator zones: garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8674.734200000763,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-broadcast-3",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "llmReasoning": "Event in zone living-room is outside agent's actuator coverage (actuator zones: garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8674.746200000867,
+      "goalAchieved": true,
+      "eventCategory": "agent-directed"
+    },
+    {
+      "eventId": "evt-apt-16",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "requestedCapabilities": [
+        "air-purification"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires air purification, which falls under the agent's air-quality-monitoring capability. Since the agent has direct coverage of the affected zone (living-room) and no other agents are available (AVAILABLE_PARTNERS=0), it can autonomously address the issue using its actuators in that zone. Collaboration is unnecessary here.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 1,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7306.326300000772,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-16",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in living-room and all required capabilities (air-purification). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 7306.36989999935,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-16",
+      "eventZoneId": "living-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "requestedCapabilities": [
+        "air-purification"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires air-purification, which is not among the agent's capabilities (Caps). Since there are no available partners (AVAILABLE_PARTNERS=0), the agent cannot delegate or collaborate on this task. The agent must handle the situation within its own capabilities or escalate manually if possible.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7306.386199999601,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-16",
+      "eventZoneId": "living-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "requestedCapabilities": [
+        "air-purification"
+      ],
+      "llmReasoning": "DECISION: No, this agent should not initiate collaboration. While the event requires air-purification (which is in the agent's capabilities), the agent is restricted to SENSOR-ONLY role with NO COVERAGE and no available partners to delegate to. It cannot actuate solutions or collaborate effectively in this scenario.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7306.404999999329,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-17",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires humidity control in the bedroom, which is within the agent's capabilities (humidity-monitoring) and coverage (direct actuation in the bedroom). Since no partners are available, the agent can handle the task autonomously.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 4469.032600000501,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-17",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bedroom and all required capabilities (humidity-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 4469.066899999976,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-17",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires humidity-control, but the agent's capabilities (Caps) do not include humidity-control. Additionally, there are no available partners to collaborate with (AVAILABLE_PARTNERS=0). The agent cannot act on this event directly or through collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 4469.080600000918,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-18",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "lighting-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The agent has **direct coverage** of the **entrance-hall** zone (via actuators) and can address the **lighting-control** need independently.  \n- The **monitoring** need aligns with the agent's capabilities (temperature, humidity, air quality, light-level monitoring).  \n- **Emergency-response** is not explicitly covered by the agent's stated capabilities (e.g., no fire suppression, security systems, or external alert mechanisms listed).  \n- Since **no partners are available**, collaboration is not feasible. The agent should handle its own capabilities (monitoring/lighting) and escalate or log the unmet \"emergency-response\" need if required.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 3171.142799999565,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-18",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in entrance-hall and all required capabilities (lighting-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 3171.1816000007093,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-19",
+      "eventZoneId": "kitchen",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration because there are no available partners (AVAILABLE_PARTNERS: 0). The agent can directly address the critical event in the kitchen using its own actuators and monitoring capabilities (e.g., triggering emergency alerts, escalating monitoring efforts). Collaboration is unnecessary in this scenario.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 10043.712700000033,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-19",
+      "eventZoneId": "kitchen",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires emergency-response, monitoring, and emergency-alert, but the agent has no available partners to collaborate with. However, the agent can directly address the critical parameter change in the kitchen using its existing capabilities (e.g., HVAC control, temperature/humidity adjustment). Since the agent has direct coverage of the kitchen zone and the necessary actuators, it can handle the emergency response independently. Emergency alerts may fall outside its explicit capabilities, but it can mitigate the issue through environmental control. Collaboration is not feasible due to the absence of available partners.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 10043.782899999991,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-19",
+      "eventZoneId": "kitchen",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerDeviceIds": [
+        "dev-kitchen-plug-1",
+        "dev-kitchen-plug-2",
+        "dev-kitchen-plug-3",
+        "dev-kitchen-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. Since the agent is in SENSOR-ONLY mode and there are no AVAILABLE_PARTNERS (0), it cannot delegate tasks or collaborate with other agents. It must log the critical event in the kitchen and wait for external intervention, as its role is strictly detection and alerting without actuation capabilities.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 10043.820700000972,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-20",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "DECISION: No. The agent can directly address the humidity-control need in the bathroom zone using its available actuators, even though the bathroom was not initially listed in its monitoring zones. Since the agent has physical actuation capabilities in the bathroom and no external partners are available, collaboration is unnecessary. The agent should autonomously manage the humidity adjustment in the bathroom.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 9626.08920000121,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-20",
+      "eventZoneId": "bathroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bathroom and all required capabilities (humidity-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 9626.1408000011,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-20",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Requirement:** The event requires **humidity-control**, which is **not among the agent's capabilities** (Caps include motion-detection, presence-detection, lighting-control, access-control, emergency-alert).  \n2. **No Available Partners:** The `AVAILABLE_PARTNERS` list is empty, meaning no other agents can be engaged for collaboration.  \n3. **Direct Coverage:** While the agent has actuators in the bathroom zone, it lacks the specific capability to address humidity changes.  \n\n**Conclusion:** The agent cannot resolve the event independently or through collaboration, as neither its capabilities nor external partners align with the required action (humidity-control). The event may need to be escalated or handled by a system outside the agent's scope.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 9626.170099999756,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-20",
+      "eventZoneId": "bathroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "DECISION: No, this agent should not initiate collaboration. The event requires humidity-control, which is not within the safety-agent's listed capabilities (Caps). Since there are no available partners to delegate to, the agent cannot address the event directly or through collaboration. It should log the event and await further instructions or system updates.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 9626.204300001264,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-21",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "security-monitoring",
+        "access-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-balc-airq-1",
+        "dev-balc-noise-1"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "security-monitoring",
+        "access-control"
+      ],
+      "llmReasoning": "**Reasoning**:  \n1. **Coverage Mismatch**: The event occurred in the *balcony*, which is not among the zones monitored by the agent (Caps: [living-room, bedroom, kitchen, home-office]).  \n2. **Capability Limitation**: The agent’s capabilities are limited to environmental monitoring (temperature, humidity, air quality, light level). The event requires **emergency-response, security-monitoring, and access-control**, which are outside its scope.  \n3. **Propagation Uncertainty**: While the agent can act via propagation from adjacent zones, the balcony’s adjacency to monitored zones (e.g., entrance-hall, home-office) is unspecified. Without explicit adjacency data, propagation is speculative.  \n4. **No Available Partners**: Collaboration is impossible due to 0 available partners.  \n\n**Conclusion**: The agent lacks the necessary capabilities, coverage, and collaboration options to address the high-severity event in the balcony.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14303.16589999944,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-21",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "security-monitoring",
+        "access-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-balc-airq-1",
+        "dev-balc-noise-1"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "security-monitoring",
+        "access-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event involves the **balcony** zone, which is **not covered** by the agent's actuators (ACTUATORS list excludes balcony). While the agent can influence zones via **propagation** from adjacent zones, the required **EVENT_NEEDS** (emergency-response, security-monitoring, access-control) are **outside the agent's capabilities** (Caps include climate/hvac control, not security/emergency functions). Additionally, there are **no available partners** to collaborate with. The agent is unable to address the event directly or through collaboration.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14303.229900000617,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-21",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "security-monitoring"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-balc-airq-1",
+        "dev-balc-noise-1"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "security-monitoring",
+        "access-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event occurs in the \"balcony\" zone, which is not listed in the ACTUATORS or Zones where the agent can directly act. The agent’s capabilities (Caps) include emergency-alert, which could trigger an alert for the high-severity event. However, since there are no available partners (AVAILABLE_PARTNERS = 0), collaboration is not possible. The agent can autonomously use its emergency-alert capability but cannot coordinate with external entities.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14303.268799999729,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-21",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "security-monitoring",
+        "access-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-balc-airq-1",
+        "dev-balc-noise-1"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "security-monitoring",
+        "access-control"
+      ],
+      "llmReasoning": "DECISION: No. The safety-agent's coverage is limited to the zones [living-room, bathroom, kitchen], and the event occurred in the **balcony** (outside its coverage). Additionally, the agent has no available partners to delegate the task to (AVAILABLE_PARTNERS: 0). Since it cannot act directly or collaborate, it should **not** initiate collaboration.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 14303.308700000867,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-22",
+      "eventZoneId": "home-office",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "gas-detection",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-ho-co2-1",
+        "dev-ho-co2-2"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "gas-detection",
+        "emergency-alert"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The agent has **no available partners** (AVAILABLE_PARTNERS=0), so collaboration is impossible.  \n- The event in the **home-office** zone falls under the agent's **monitoring coverage** (DIRECT coverage).  \n- While the event requires **gas-detection** (not explicitly listed in the agent's capabilities), the agent can still handle **emergency-response**, **monitoring**, and **emergency-alert** using its existing capabilities (e.g., air-quality-monitoring may indirectly support gas detection, and high-severity alerts can be triggered).  \n- Since no external agents are available, the agent must act independently.  \n\n**Action:** The agent should escalate the high-severity event internally (e.g., trigger an emergency alert, check air quality, and notify occupants) without collaboration.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 6860.785000000149,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-22",
+      "eventZoneId": "home-office",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "gas-detection",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-ho-co2-1",
+        "dev-ho-co2-2"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "gas-detection",
+        "emergency-alert"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The EVENT_NEEDS include \"gas-detection,\" which is not among the agent's capabilities (Caps). Since there are no available partners (AVAILABLE_PARTNERS=0), collaboration is impossible. The agent can address its own capabilities (e.g., emergency-alert, monitoring via HVAC/temperature control) but cannot fulfill gas-detection requirements. Thus, the agent must act independently within its limits and cannot collaborate.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 6860.910299999639,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-23",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "security-monitoring",
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "security-monitoring",
+        "hvac-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event occurred in the \"entrance-hall,\" which is not among the zones the agent is directly monitoring (its coverage is limited to living-room, bedroom, kitchen, and home-office). Additionally, the event requires \"security-monitoring\" and \"hvac-control,\" which are outside the agent's capabilities (its Caps only include environmental monitoring parameters). Since there are no available partners to collaborate with, the agent cannot address the event.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6250.126399999484,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-23",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "security-monitoring",
+        "hvac-control"
+      ],
+      "requestedCapabilities": [
+        "security-monitoring",
+        "hvac-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires \"security-monitoring\" (covered by the agent's capabilities) and \"hvac-control\" (not among its listed capabilities). Since the agent has **no available partners** to collaborate with and cannot fulfill the hvac-control requirement, it cannot address the event fully. However, it can independently handle the security-monitoring aspect (e.g., check motion/presence in the entrance-hall). Collaboration is not feasible here.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6250.173900000751,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-24",
+      "eventZoneId": "utility-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "requestedCapabilities": [
+        "water-shutoff"
+      ],
+      "llmReasoning": "DECISION: No, this agent should not initiate collaboration. The event occurred in the **utility-room**, which is outside the agent's **Zones** (living-room, bathroom, kitchen). Additionally, the required action **[water-shutoff]** is not within the agent's **Caps** (gas-detection, water-leak-detection, fire-detection, emergency-alert, air-purification). Since no **AVAILABLE_PARTNERS** exist to handle the event, the agent has no actionable authority here.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 4656.53589999862,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-24",
+      "eventZoneId": "utility-room",
+      "decisionMade": "ignore",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "water-shutoff"
+      ],
+      "llmReasoning": "Event in zone utility-room is outside agent's actuator coverage (actuator zones: garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 4656.570199999958,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-24",
+      "eventZoneId": "utility-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "llm",
+      "agentId": "maintenance-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "requestedCapabilities": [
+        "water-shutoff"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event zone (utility-room) is outside the agent's actuator zones [garage], and no other agents are available to collaborate. The agent lacks the physical capability to address the event directly and cannot coordinate with partners due to their unavailability.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 4656.58189999871,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-25",
+      "eventZoneId": "server-room",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-sr-ups-1",
+        "dev-sr-ups-2",
+        "dev-sr-ups-3",
+        "dev-sr-ups-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "1. **Emergency-Alert**: The agent can trigger an emergency alert (e.g., via built-in systems or integrated alerts) to notify occupants or authorities.  \n2. **Monitoring**: The agent can monitor the server-room environment (temperature, humidity, etc.) continuously.  \n3. **Fire-Suppression**: **Not directly possible** (not in the agent's capabilities). However, it could **indirectly support** by activating HVAC to reduce temperature (if fire is heat-related) or shutting down systems to prevent escalation.  \n4. **Emergency-Response**: The agent can **initiate local actions** (e.g., shutting off HVAC, isolating the server-room) but cannot coordinate external emergency services without partners.  \n\n**Final Decision**: The agent should **initiate emergency alerts and monitoring** immediately. Since fire-suppression is outside its capabilities and no partners are available, it **cannot fully address the critical event** but must act within its constraints. Collaboration is **not possible** due to the lack of available partners.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 4261.153300000355,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-25",
+      "eventZoneId": "server-room",
+      "decisionMade": "defer",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "fire-suppression"
+      ],
+      "llmReasoning": "Event in zone server-room is outside agent's actuator coverage (actuator zones: living-room, bedroom, bathroom, entrance-hall, garage). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 4261.213400000706,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-26",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-bed-plug-1",
+        "dev-bed-plug-2",
+        "dev-bed-plug-3",
+        "dev-bed-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "air-purification"
+      ],
+      "llmReasoning": "1. **Monitor** the environment (covered by its temperature, humidity, air quality, and light-level monitoring capabilities).  \n2. **Initiate air purification** via actuators in the bedroom (assuming the actuator supports air-purification actions).  \n3. **Handle emergency response** internally (e.g., trigger alerts or escalate locally if possible).  \n\nSince the agent has direct coverage of the bedroom and the required capabilities, collaboration is unnecessary in this scenario.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 6868.566499998793,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-26",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bedroom and all required capabilities (air-purification). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6868.642499998212,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-26",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-bed-plug-1",
+        "dev-bed-plug-2",
+        "dev-bed-plug-3",
+        "dev-bed-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "air-purification"
+      ],
+      "llmReasoning": "DECISION: No. The agent can handle **emergency-response** (via emergency-alert capability) and **monitoring** (via presence/motion detection). However, **air-purification** is not within its capabilities (not listed in Caps). Since no partners are available to collaborate, the agent cannot fulfill all EVENT_NEEDS. It should escalate the air-purification need as a critical gap but proceed with emergency-response and monitoring actions independently.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 6868.657499998808,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-27",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "requestedCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The EVENT_NEEDS (HVAC control, cooling) are not covered by the agent's capabilities (motion-detection, presence-detection, lighting-control, access-control, emergency-alert). Since no other agents are available (AVAILABLE_PARTNERS=0), the agent cannot fulfill the request through collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8528.305599998683,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-27",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "requestedCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "DECISION: No, the energy-agent should not initiate collaboration. The event requires **hvac-control** and **cooling**, but the agent's capabilities are limited to **energy-monitoring**, **cost-optimization**, and **load-balancing**. None of these directly address HVAC or cooling needs. Since there are no available partners to collaborate with, the agent cannot fulfill the event requirements.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8528.341699998826,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-27",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "maintenance-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "requestedCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires \"hvac-control\" and \"cooling,\" but the agent's capabilities are limited to \"water-shutoff,\" \"equipment-monitoring,\" and \"maintenance-scheduling.\" While the agent can monitor equipment in the garage (covered by \"equipment-monitoring\"), it lacks direct control over HVAC systems or cooling mechanisms. Since no partners are available and the required capabilities are not aligned, the agent cannot fulfill the event needs autonomously.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 8528.3591999989,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-28",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "gas-detection"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-garage-energy-1",
+        "dev-garage-energy-2",
+        "dev-garage-energy-3",
+        "dev-garage-energy-4",
+        "dev-garage-plug-1",
+        "dev-garage-plug-2",
+        "dev-garage-plug-3",
+        "dev-garage-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "gas-detection",
+        "emergency-alert"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires emergency response and gas detection, but the agent's capabilities include emergency alerts (directly matching) and monitoring (via presence/motion detection). However, gas detection is not among the agent's capabilities. Since no partners are available, the agent must act within its own capabilities: trigger emergency alerts, monitor the garage zone, and use access/lighting control if applicable. Collaboration is unnecessary due to lack of available partners.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 8579.427799999714,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-28",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "gas-detection",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-garage-energy-1",
+        "dev-garage-energy-2",
+        "dev-garage-energy-3",
+        "dev-garage-energy-4",
+        "dev-garage-plug-1",
+        "dev-garage-plug-2",
+        "dev-garage-plug-3",
+        "dev-garage-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "gas-detection",
+        "emergency-alert"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The **event needs** (emergency-response, gas-detection, emergency-alert) are not aligned with the **agent's capabilities** (energy-monitoring, cost-optimization, load-balancing).  \n- The agent has **direct coverage** in the garage zone but lacks the specific tools or expertise to address emergency-related tasks.  \n- **No available partners** exist to collaborate with, so the agent cannot delegate or augment its capabilities.  \n\nThe energy-agent is not equipped to handle the high-severity event requiring emergency actions.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 8579.486600000411,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-28",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "maintenance-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "gas-detection",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-garage-energy-1",
+        "dev-garage-energy-2",
+        "dev-garage-energy-3",
+        "dev-garage-energy-4",
+        "dev-garage-plug-1",
+        "dev-garage-plug-2",
+        "dev-garage-plug-3",
+        "dev-garage-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "gas-detection",
+        "emergency-alert"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The agent's **caps** (water-shutoff, equipment-monitoring, maintenance-scheduling) do not include **gas-detection** or **emergency-alert** capabilities required by the event.  \n- While the agent can handle **equipment-monitoring** (aligned with the `param_changed` event), the **high-severity** event requires **emergency-response** and **gas-detection**, which are outside its scope.  \n- **No available partners** exist to collaborate with, so the agent cannot delegate or augment its capabilities.  \n\n**Action:** The agent should escalate the issue to a higher authority or system (e.g., trigger a generic alert) but cannot resolve the event independently.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 8579.520999999717,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-29",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "energy-monitoring",
+        "cost-optimization"
+      ],
+      "requestedCapabilities": [
+        "energy-monitoring",
+        "cost-optimization"
+      ],
+      "llmReasoning": "**Reasoning**:  \n1. **Event Zone Mismatch**: The event occurred in the **balcony**, which is **not** among the agent's monitored zones ([living-room, bedroom, kitchen, home-office]). The agent cannot directly monitor or act on the balcony.  \n2. **Capability Gap**: The event requires **energy-monitoring** and **cost-optimization**, which are **not** part of the agent's capabilities ([temperature, humidity, air-quality, light-level monitoring]).  \n3. **Propagation Limitations**: While the agent can affect zones via physical propagation from adjacent zones (e.g., if balcony is adjacent to \"entrance-hall\"), it lacks the necessary tools or data to address the event's specific needs (energy/cost).  \n4. **No Available Partners**: No other agents are available to collaborate, so the agent cannot delegate or share responsibilities.  \n\n**Conclusion**: The agent is neither capable nor authorized to address the event, and collaboration is not feasible.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 16196.982699999586,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-29",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "energy-monitoring",
+        "cost-optimization"
+      ],
+      "requestedCapabilities": [
+        "energy-monitoring",
+        "cost-optimization"
+      ],
+      "llmReasoning": "**Reasoning**:  \n1. **Zone Coverage**: The event involves the *balcony*, which is not listed in the agent's ACTUATORS or Zones. The agent can only directly act on zones like living-room, bedroom, etc. While propagation is possible from adjacent zones, the balcony is not explicitly connected to any of the agent's controlled zones in the provided data.  \n2. **Event Needs vs. Capabilities**: The EVENT_NEEDS (energy-monitoring, cost-optimization) align with the agent's capabilities (temperature/hvac control, etc.), but the balcony is outside the agent's direct influence. Without explicit adjacency or propagation rules linking the balcony to the agent's zones, the agent cannot effectively address the event.  \n3. **Partnership Constraints**: No partners are available (AVAILABLE_PARTNERS: 0), so collaboration is impossible.  \n\n**Conclusion**: The agent lacks direct control over the balcony and cannot propagate influence to it based on the given data. Collaboration is unnecessary and unfeasible.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 16197.02170000039,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-29",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "energy-monitoring",
+        "cost-optimization"
+      ],
+      "requestedCapabilities": [
+        "energy-monitoring",
+        "cost-optimization"
+      ],
+      "llmReasoning": "DECISION: No. The event occurred in the \"balcony\" zone, which is not within the agent's coverage zones (Caps and ACTUATORS do not include balcony). Additionally, the EVENT_NEEDS (energy-monitoring, cost-optimization) do not align with the agent's capabilities (motion-detection, presence-detection, etc.). Since no partners are available and the event falls outside the agent's scope, collaboration is not required.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 16197.043500000611,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-29",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "energy-monitoring",
+        "cost-optimization"
+      ],
+      "requestedCapabilities": [
+        "energy-monitoring",
+        "cost-optimization"
+      ],
+      "llmReasoning": "**Reasoning**:  \n1. **Coverage Mismatch**: The event occurred in the *balcony* zone, which is **not** part of the safety-agent's designated zones (living-room, bathroom, kitchen).  \n2. **Capability Mismatch**: The event requires **energy-monitoring** and **cost-optimization**, which are **not** among the safety-agent's capabilities ([gas-detection, water-leak-detection, fire-detection, emergency-alert, air-purification]).  \n3. **No Available Partners**: The agent is instructed to delegate to actuators via AVAILABLE_PARTNERS, but **no partners are available** to handle the event.  \n\nThe safety-agent cannot address the event due to coverage, capability, and partnership constraints.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 16197.068700000644,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-30",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-detection"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-garage-energy-1",
+        "dev-garage-energy-2",
+        "dev-garage-energy-3",
+        "dev-garage-energy-4",
+        "dev-garage-plug-1",
+        "dev-garage-plug-2",
+        "dev-garage-plug-3",
+        "dev-garage-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-detection",
+        "emergency-alert"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration because there are no available partners (AVAILABLE_PARTNERS=0). The agent's capabilities include **emergency-alert** (matching one of the EVENT_NEEDS) and **monitoring** (via motion/presence detection). However, **fire-detection** and **emergency-response** are not directly supported by the agent's capabilities. Since collaboration is impossible and the agent can only partially address the event (via emergency alerts and monitoring), it must act independently within its constraints.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 13196.677899999544,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-30",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-detection",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-garage-energy-1",
+        "dev-garage-energy-2",
+        "dev-garage-energy-3",
+        "dev-garage-energy-4",
+        "dev-garage-plug-1",
+        "dev-garage-plug-2",
+        "dev-garage-plug-3",
+        "dev-garage-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-detection",
+        "emergency-alert"
+      ],
+      "llmReasoning": "**Reasoning**:  \n- The agent's capabilities (energy-monitoring, cost-optimization, load-balancing) do not align with the critical event needs (emergency-response, fire-detection, emergency-alert).  \n- While the agent can monitor energy-related parameters, it lacks direct capabilities for emergency response or fire detection.  \n- No available partners exist to collaborate with, and the agent cannot fulfill the required actions (e.g., triggering alarms, deploying fire suppression) independently.  \n\n**Action**: The agent should escalate the event to a higher-level system or human operator for intervention, as its current scope does not address the critical safety requirements.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 13196.762199999765,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-30",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "maintenance-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-detection",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-garage-energy-1",
+        "dev-garage-energy-2",
+        "dev-garage-energy-3",
+        "dev-garage-energy-4",
+        "dev-garage-plug-1",
+        "dev-garage-plug-2",
+        "dev-garage-plug-3",
+        "dev-garage-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-detection",
+        "emergency-alert"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The available partners are 0, meaning no other agents are available to assist. While the maintenance-agent has capabilities like equipment-monitoring and water-shutoff, the critical event requires emergency-response and fire-detection, which are outside its defined capabilities. Since collaboration is impossible and the agent cannot fulfill all EVENT_NEEDS independently, it must act within its own capabilities (e.g., monitor equipment, schedule maintenance) but cannot initiate collaboration.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 13196.81799999997,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-31",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "equipment-monitoring"
+      ],
+      "requestedCapabilities": [
+        "equipment-monitoring"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Capability Mismatch:** The agent's capabilities (temperature, humidity, air quality, light monitoring) do not include \"equipment-monitoring,\" which is required to address the event.  \n2. **Zone Coverage:** The event occurred in the **balcony**, which is not part of the agent's monitored zones (living-room, bedroom, kitchen, home-office) or actuators (bathroom, entrance-hall). The agent cannot physically propagate to the balcony via adjacent zones (no adjacency defined in the problem).  \n3. **No Available Partners:** Collaboration is not feasible since there are no other agents available.  \n\nThe agent lacks the tools and access to address the event, so it should not initiate collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 13767.86920000054,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-31",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-controller",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "equipment-monitoring"
+      ],
+      "requestedCapabilities": [
+        "equipment-monitoring"
+      ],
+      "llmReasoning": "**Reasoning**:  \n1. **No Available Partners**: The `AVAILABLE_PARTNERS` field is set to 0, meaning there are no other agents to collaborate with.  \n2. **Zone Outside Actuator Coverage**: The event occurs in the **balcony** zone, which is not listed in the `ACTUATORS` (the agent can only act on: living-room, bedroom, kitchen, bathroom, server-room, home-office). While propagation from adjacent zones is possible, the balcony is not explicitly adjacent to any of the actuator zones (unconfirmed adjacency).  \n3. **Event Needs Not Covered by Caps**: The event requires `equipment-monitoring`, which is not part of the agent’s capabilities (`Caps`). The agent’s capabilities focus on climate control (temperature, HVAC, humidity, etc.), not equipment monitoring.  \n\n**Conclusion**: The agent lacks the tools, partners, and direct control over the balcony zone to address the event. Collaboration is unnecessary and unfeasible under these constraints.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 13767.903900001198,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-31",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "equipment-monitoring"
+      ],
+      "requestedCapabilities": [
+        "equipment-monitoring"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Zone Mismatch:** The event occurred in the **balcony** zone, which is **not** listed in the agent's **ACTUATORS** (only: living-room, bedroom, bathroom, entrance-hall, garage). The agent cannot directly interact with the balcony.  \n2. **Propagation Limitation:** While the agent can affect zones via **physical propagation from adjacent zones**, the balcony is not explicitly connected to any of the agent's controllable zones (e.g., entrance-hall). Without explicit adjacency confirmation, propagation is speculative.  \n3. **No Available Partners:** The **AVAILABLE_PARTNERS** field is **0**, meaning no other agents can assist.  \n4. **Event Need vs. Capabilities:** The event requires **equipment-monitoring**, which the agent supports (via its **Caps**). However, the agent lacks the **physical actuation capability** in the balcony zone to address the issue.  \n\n**Conclusion:** The agent cannot act on the balcony zone directly or indirectly (due to adjacency uncertainty) and has no collaborators. Collaboration is unnecessary.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 13767.93209999986,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-31",
+      "eventZoneId": "balcony",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "equipment-monitoring"
+      ],
+      "requestedCapabilities": [
+        "equipment-monitoring"
+      ],
+      "llmReasoning": "DECISION: No. The event occurs in the \"balcony\" zone, which is outside the agent's assigned zones (living-room, bathroom, kitchen). While the agent has the \"equipment-monitoring\" capability, it is restricted to the specified zones. Since the event is outside its coverage and no partners are available to act, collaboration cannot be initiated. The agent should not take action here.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 13767.949599999934,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-32",
+      "eventZoneId": "server-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in server-room and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.11050000041723251,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-32",
+      "eventZoneId": "server-room",
+      "decisionMade": "ignore",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "Event in zone server-room is outside agent's actuator coverage (actuator zones: living-room, bedroom, bathroom, entrance-hall, garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 0.12899999879300594,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-33",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.0977999996393919,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-33",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.11309999972581863,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-33",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.12179999984800816,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-34",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "env-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bedroom and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.07650000043213367,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-34",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bedroom and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.08790000155568123,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-34",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bedroom and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.09590000100433826,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-35",
+      "eventZoneId": "server-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in server-room and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.06000000052154064,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-35",
+      "eventZoneId": "server-room",
+      "decisionMade": "ignore",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "Event in zone server-room is outside agent's actuator coverage (actuator zones: living-room, bedroom, bathroom, entrance-hall, garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 0.07709999941289425,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-36",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.0965999998152256,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-36",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.11260000057518482,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-36",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.12130000069737434,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-37",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "env-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in entrance-hall and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.05960000120103359,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-37",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in entrance-hall and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.07160000130534172,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-38",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.06890000030398369,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-38",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.08170000091195107,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-38",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.08950000070035458,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-39",
+      "eventZoneId": "server-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in server-room and all required capabilities (hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.06859999895095825,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-39",
+      "eventZoneId": "server-room",
+      "decisionMade": "defer",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "Event in zone server-room is outside agent's actuator coverage (actuator zones: living-room, bedroom, bathroom, entrance-hall, garage). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.08770000003278255,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-40",
+      "eventZoneId": "home-office",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires humidity control in the **home-office** zone, which is within the agent's **DIRECT coverage** (actuators are available in this zone). Since the agent can act directly on the zone without needing external partners, collaboration is unnecessary. The agent should handle the humidity adjustment internally.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 2204.328099999577,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-40",
+      "eventZoneId": "home-office",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in home-office and all required capabilities (humidity-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 2204.3662000000477,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-41",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "DECISION: No, this agent should not initiate collaboration. The event requires \"lighting-control,\" but the agent's capabilities (Caps) do not include lighting control. Additionally, while the entrance-hall is covered by actuators, the agent lacks the necessary functionality to address the event. Since no partners are available, collaboration is not feasible.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 2218.4378999993205,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-41",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in entrance-hall and all required capabilities (lighting-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 2218.4875999987125,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-42",
+      "eventZoneId": "home-office",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "heating"
+      ],
+      "requestedCapabilities": [
+        "hvac-control",
+        "heating"
+      ],
+      "llmReasoning": "DECISION: No, the agent does not need to initiate collaboration. The event requires HVAC control and heating, which fall within the agent's capabilities (via the `hvac-control` and `heating` actuators in the `home-office` zone). Since the agent has direct coverage of the zone and no external partners are available, it can autonomously address the event without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 2063.595300000161,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-42",
+      "eventZoneId": "home-office",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in home-office and all required capabilities (hvac-control, heating). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 2063.627100000158,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-43",
+      "eventZoneId": "server-room",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in server-room and all required capabilities (air-purification). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.07770000025629997,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-43",
+      "eventZoneId": "server-room",
+      "decisionMade": "ignore",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "llmReasoning": "Event in zone server-room is outside agent's actuator coverage (actuator zones: living-room, bedroom, bathroom, entrance-hall, garage). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 0.09860000014305115,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-44",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "access-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-entrance-lock-1",
+        "dev-entrance-lock-2",
+        "dev-entrance-lock-3",
+        "dev-entrance-lock-4"
+      ],
+      "requestedCapabilities": [
+        "access-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires access-control, which is not among the agent's capabilities (Caps). Since there are no available partners (AVAILABLE_PARTNERS=0), the agent cannot fulfill the request through collaboration. The agent can only monitor environmental parameters and lacks the capacity to handle access-control actions.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 2420.441899999976,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-44",
+      "eventZoneId": "entrance-hall",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in entrance-hall and all required capabilities (access-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 2420.5200000014156,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-45",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "env-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "requestedCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires HVAC control and cooling, but the agent's capabilities are limited to monitoring (temperature, humidity, air quality, light) and it does not explicitly have control capabilities for HVAC. While the agent has actuators in the bedroom zone, the absence of HVAC-control capability in its defined functions means it cannot fulfill the event needs independently. Since no partners are available, collaboration is impossible, and the agent must either escalate the issue or remain unable to act.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7352.547100000083,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-45",
+      "eventZoneId": "bedroom",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bedroom and all required capabilities (hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 7352.583300000057,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-45",
+      "eventZoneId": "bedroom",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "requestedCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "DECISION: No. The agent does not have the capability to perform HVAC control or cooling, which are required by the event. While the agent can act directly in the bedroom (coverage: DIRECT), its available functions (lighting-control, access-control, etc.) do not align with the needed actions. No collaboration is possible due to no available partners.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 7352.599100001156,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-46",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (lighting-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6066.872899999842,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-46",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "DECISION: No, the energy-agent should not initiate collaboration. While the agent has coverage in the garage zone, its capabilities (energy-monitoring, cost-optimization, load-balancing) do not directly include **lighting-control**, which is required to address the event. Since there are no available partners to collaborate with, the agent cannot fulfill the lighting-control need on its own. The event may require a separate agent with explicit lighting-control capabilities.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6066.9032000005245,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-46",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "maintenance-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event requires \"lighting-control,\" which is not among the agent's capabilities (Caps: water-shutoff, equipment-monitoring, maintenance-scheduling). Since the agent lacks the necessary functionality to address the event and no partners are available, collaboration is not feasible. The agent must either escalate the issue or wait for external intervention.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6066.9210999999195,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-47",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "equipment-monitoring"
+      ],
+      "requestedCapabilities": [
+        "equipment-monitoring"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. The event (environment.param_changed in the garage) falls under the agent's capabilities (equipment-monitoring is implied via its Caps like motion-detection and access-control). Since the agent has direct coverage of the garage zone and no external partners are available, it can handle the event autonomously. Collaboration is unnecessary here.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6997.664100000635,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-47",
+      "eventZoneId": "garage",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "equipment-monitoring"
+      ],
+      "requestedCapabilities": [
+        "equipment-monitoring"
+      ],
+      "llmReasoning": "**Rationale**:  \n- The agent lacks a direct capability for equipment monitoring.  \n- The event is low severity, so immediate action may not be critical.  \n- No partners are available to handle the event.  \n- The agent can monitor energy-related parameters (indirectly related to equipment) but cannot fulfill the specific equipment-monitoring need.  \n\n**Action**: Log the event and monitor energy metrics in the garage zone for further analysis.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6997.704199999571,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-47",
+      "eventZoneId": "garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garage and all required capabilities (equipment-monitoring). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6997.722300000489,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-48",
+      "eventZoneId": "home-office",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "env-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in home-office and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.09669999964535236,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-apt-48",
+      "eventZoneId": "home-office",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-controller",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in home-office and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.11519999988377094,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    }
+  ],
+  "decisionQuality": {
+    "meanZoneTargetingAccuracy": 0.22435897435897437,
+    "meanCapabilityAppropriateness": 0.6113247863247864,
+    "meanSideEffectAwareness": 0.16666666666666666,
+    "meanPhysicalPlausibility": 0.22435897435897437,
+    "meanCorrectDecisionRate": 0.358974358974359
+  },
+  "collaboration": {
+    "initiationRate": 0.04487179487179487,
+    "formationSuccessRate": 0,
+    "goalAchievementRate": 0.5128205128205128,
+    "optimalPerformanceRatio": 0.1282051282051282
+  },
+  "efficiency": {
+    "totalEvents": 156,
+    "layer1Filtered": 0,
+    "layer1FilterRate": 0,
+    "llmCallCount": 156,
+    "totalTokens": 54915,
+    "promptTokens": 15713,
+    "completionTokens": 39202,
+    "avgAssessmentTimeMs": 7445.818555128343,
+    "totalWallTimeMs": 314424.1901000012
+  },
+  "rawDualTriggerStats": {
+    "totalEventsProcessed": 34,
+    "filteredByLayer1": 0,
+    "passedToLayer2": 0,
+    "acDecisionMade": 0,
+    "acInitiated": 0,
+    "handledIndependently": 5,
+    "deferred": 29,
+    "layer2DecisionDistribution": {
+      "initiate_ac": 0,
+      "handle_independently": 5,
+      "defer": 0,
+      "ignore": 29
+    },
+    "totalAssessmentTimeMs": 99672,
+    "assessmentCount": 34,
+    "totalConfidence": 28.200000000000014,
+    "confidenceCount": 34,
+    "layer1Stats": {
+      "totalEventsProcessed": 0,
+      "clustersCreated": 0,
+      "passedToLayer2": 0,
+      "filteredByLayer1": 0,
+      "simpleAggregationUsed": 0,
+      "filteringRate": 0,
+      "layer2Rate": 0
+    },
+    "layer2Stats": {
+      "assessor": {
+        "totalAssessments": 34,
+        "acInitiated": 0,
+        "handledIndependently": 5,
+        "deferred": 0,
+        "ignored": 29,
+        "llmErrors": 0
+      },
+      "negotiator": {
+        "totalSelections": 0,
+        "partnersFound": 0,
+        "proposalsSent": 0,
+        "proposalsAccepted": 0,
+        "proposalsRejected": 0
+      },
+      "goalEngine": {
+        "totalFormulations": 0,
+        "goalsCreated": 0,
+        "simpleGoals": 0,
+        "moderateGoals": 0,
+        "complexGoals": 0
+      }
+    },
+    "layer1FilterRate": 0,
+    "avgAssessmentTimeMs": 2931.529411764706,
+    "avgConfidence": 0.8294117647058827
+  },
+  "classification": {
+    "perClass": [
+      {
+        "className": "initiate_ac",
+        "precision": 1,
+        "recall": 0.02247191011235955,
+        "f1": 0.04395604395604396,
+        "tp": 2,
+        "fp": 0,
+        "fn": 87,
+        "support": 89
+      },
+      {
+        "className": "handle_independently",
+        "precision": 0.5961538461538461,
+        "recall": 0.5166666666666667,
+        "f1": 0.5535714285714286,
+        "tp": 31,
+        "fp": 21,
+        "fn": 29,
+        "support": 60
+      },
+      {
+        "className": "defer",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 5,
+        "fn": 0,
+        "support": 0
+      },
+      {
+        "className": "ignore",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 97,
+        "fn": 7,
+        "support": 7
+      }
+    ],
+    "macroPrecision": 0.39903846153846156,
+    "macroRecall": 0.13478464419475655,
+    "macroF1": 0.14938186813186813,
+    "collaborationTriggerF1": {
+      "precision": 1,
+      "recall": 0.02247191011235955,
+      "f1": 0.04395604395604396,
+      "tp": 2,
+      "fp": 0,
+      "tn": 67,
+      "fn": 87,
+      "support": 89
+    },
+    "confusionMatrix": [
+      [
+        2,
+        14,
+        4,
+        69
+      ],
+      [
+        0,
+        31,
+        1,
+        28
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        7,
+        0,
+        0
+      ]
+    ],
+    "partnerSelection": {
+      "partnerPrecision": 0,
+      "partnerRecall": 0,
+      "partnerF1": 0,
+      "support": 89
+    },
+    "capabilityMatch": {
+      "precision": 0.5887445887445888,
+      "recall": 0.7513812154696132,
+      "f1": 0.6601941747572816,
+      "support": 129
+    }
+  }
+}

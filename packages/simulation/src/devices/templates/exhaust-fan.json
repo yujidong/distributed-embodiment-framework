@@ -1,0 +1,50 @@
+{
+  "id": "exhaust-fan-v1",
+  "name": "Exhaust Fan",
+  "description": "Wall or ceiling-mounted exhaust fan for ventilation",
+  "category": "actuator",
+  "type": "exhaust-fan",
+  "capabilities": [
+    {
+      "name": "set-speed",
+      "type": "write",
+      "description": "Set fan speed",
+      "parameters": [
+        {
+          "name": "speed",
+          "type": "number",
+          "required": true,
+          "description": "Speed percentage (0-100%)"
+        }
+      ]
+    },
+    {
+      "name": "turn-on",
+      "type": "write",
+      "description": "Turn on the exhaust fan",
+      "parameters": []
+    },
+    {
+      "name": "turn-off",
+      "type": "write",
+      "description": "Turn off the exhaust fan",
+      "parameters": []
+    }
+  ],
+  "defaultState": {
+    "status": "off",
+    "power": false,
+    "speed": 50
+  },
+  "physicalEffects": [
+    {
+      "parameter": "humidity",
+      "effect": "humidity",
+      "magnitude": -0.2,
+      "radius": 4,
+      "condition": "power == true"
+    }
+  ],
+  "semanticDescription": "An exhaust fan that removes stale air, humidity, and odors from enclosed spaces. Common in bathrooms, kitchens, and industrial areas.",
+  "tags": ["ventilation", "climate", "actuator", "fan"]
+}

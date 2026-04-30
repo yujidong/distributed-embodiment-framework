@@ -1,0 +1,151 @@
+{
+  "version": "1.0",
+  "environment": {
+    "id": "cross-brand-smart-home",
+    "name": "跨品牌智能家居演示",
+    "description": "展示AC打破品牌壁垒的能力",
+    "owner": "demo-user"
+  },
+  "devices": [
+    {
+      "id": "xiaomi-temp-sensor",
+      "name": "小米温度传感器",
+      "type": "temperature-sensor",
+      "brand": "Xiaomi",
+      "capabilities": ["temperature-monitoring"],
+      "location": {
+        "building": "Home",
+        "floor": 1,
+        "room": "客厅",
+        "coordinates": { "x": 100, "y": 100, "z": 0 }
+      },
+      "behavior": {
+        "type": "periodic",
+        "interval": 60000,
+        "initialState": { "temperature": 25 }
+      }
+    },
+    {
+      "id": "gree-hvac",
+      "name": "格力空调",
+      "type": "hvac",
+      "brand": "Gree",
+      "capabilities": ["temperature-control", "cooling"],
+      "location": {
+        "building": "Home",
+        "floor": 1,
+        "room": "客厅",
+        "coordinates": { "x": 110, "y": 100, "z": 0 }
+      },
+      "behavior": {
+        "type": "event-driven",
+        "initialState": {
+          "power": false,
+          "mode": "off",
+          "targetTemperature": 24
+        }
+      }
+    },
+    {
+      "id": "philips-light",
+      "name": "飞利浦智能灯",
+      "type": "smart-light",
+      "brand": "Philips",
+      "capabilities": ["lighting-control"],
+      "location": {
+        "building": "Home",
+        "floor": 1,
+        "room": "客厅",
+        "coordinates": { "x": 105, "y": 95, "z": 0 }
+      },
+      "behavior": {
+        "type": "event-driven",
+        "initialState": {
+          "power": true,
+          "brightness": 80
+        }
+      }
+    },
+    {
+      "id": "haier-curtain",
+      "name": "海尔智能窗帘",
+      "type": "smart-curtain",
+      "brand": "Haier",
+      "capabilities": ["curtain-control"],
+      "location": {
+        "building": "Home",
+        "floor": 1,
+        "room": "客厅",
+        "coordinates": { "x": 120, "y": 100, "z": 0 }
+      },
+      "behavior": {
+        "type": "event-driven",
+        "initialState": {
+          "openPercentage": 50
+        }
+      }
+    }
+  ],
+  "agents": [
+    {
+      "id": "temp-monitor-agent",
+      "name": "温度监测Agent",
+      "type": "cognitive",
+      "boundDevices": ["xiaomi-temp-sensor"],
+      "capabilities": ["temperature-monitoring"],
+      "config": {
+        "llmModel": "qwen3-14b-q4:latest",
+        "enableAutoCollaboration": true
+      }
+    },
+    {
+      "id": "hvac-control-agent",
+      "name": "空调控制Agent",
+      "type": "cognitive",
+      "boundDevices": ["gree-hvac"],
+      "capabilities": ["temperature-control"],
+      "config": {
+        "llmModel": "qwen3-14b-q4:latest",
+        "enableAutoCollaboration": true
+      }
+    },
+    {
+      "id": "light-control-agent",
+      "name": "照明控制Agent",
+      "type": "cognitive",
+      "boundDevices": ["philips-light"],
+      "capabilities": ["lighting-control"],
+      "config": {
+        "llmModel": "qwen3-14b-q4:latest",
+        "enableAutoCollaboration": true
+      }
+    },
+    {
+      "id": "curtain-control-agent",
+      "name": "窗帘控制Agent",
+      "type": "cognitive",
+      "boundDevices": ["haier-curtain"],
+      "capabilities": ["curtain-control"],
+      "config": {
+        "llmModel": "qwen3-14b-q4:latest",
+        "enableAutoCollaboration": true
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "high-temp-cooling",
+      "name": "高温自动降温",
+      "trigger": {
+        "type": "manual",
+        "description": "用户手动触发高温事件"
+      },
+      "expectedOutcome": {
+        "acBuilt": true,
+        "participants": 4,
+        "temperatureDrop": ">= 8°C",
+        "executionTime": "< 10s"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1355 @@
+{
+  "config": {
+    "id": "exp3-full-ac-campus",
+    "name": "Exp 3 RQ3: full-ac campus",
+    "rq": "RQ3",
+    "scenario": "campus",
+    "condition": "full-ac",
+    "iterations": 5,
+    "llmModel": "qwen3-14b-q4:latest",
+    "timeoutMs": 120000,
+    "multiAgentEval": true,
+    "realisticRouting": true
+  },
+  "iteration": 3,
+  "timestamp": "2026-04-29T08:52:31.379Z",
+  "events": [
+    {
+      "eventId": "evt-campus-1",
+      "eventZoneId": "office-building-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "office-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in office-building-1 and all required capabilities (hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.11539999954402447,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-2",
+      "eventZoneId": "server-facility",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "server-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in server-facility and all required capabilities (hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.11180000007152557,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-3",
+      "eventZoneId": "warehouse",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "facility-monitor",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Context:** The warehouse zone has a high-severity parameter change (temperature/humidity likely) requiring **cooling**, **temperature-control**, and **HVAC-control**.  \n2. **Agent Limitations:** The agent can only **monitor** (not actuate) in the warehouse and can **physically act** only in the **cafeteria**.  \n3. **Propagation Potential:** The agent can influence the warehouse via **adjacent zone propagation** from the cafeteria.  \n4. **Available Partners:** The **Cafeteria HVAC Service** (with capabilities like `set-temperature`, `set-mode`, `cooling`, etc.) is available and can act in the cafeteria. By adjusting HVAC settings there, it may propagate cooling/temperature control to the adjacent warehouse.  \n5. **Action Plan:** Collaborate with the **Cafeteria HVAC Service** to adjust temperature/humidity settings in the cafeteria, leveraging propagation to stabilize the warehouse environment.  \n\n**Next Step:** Request the Cafeteria HVAC Service to perform `set-temperature` or `cooling` actions in the cafeteria to mitigate the warehouse's high-severity event.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.6666666666666666,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 8729.852800000459,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-4",
+      "eventZoneId": "lab-building-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "lab-monitor",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in lab-building-1 and all required capabilities (hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.13760000094771385,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-5",
+      "eventZoneId": "cafeteria",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "facility-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-cafe-hvac-1",
+        "dev-cafe-co2-1",
+        "dev-cafe-co2-2",
+        "dev-cafe-co2-3",
+        "dev-cafe-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event in the **cafeteria** zone involves a **critical parameter change** (environment.param_changed) requiring **temperature-control, HVAC-control, cooling, and emergency-response**.  \n- The agent’s **capabilities** (Caps) include **temperature-monitoring, humidity-monitoring, motion-detection, presence-detection**, but **no actuation capabilities** for temperature/HVAC control.  \n- **Available partners** include **Cafeteria HVAC Service** (set-temperature, set-mode, cooling, actuation) and **Cafeteria Temperature Service** (temperature-reading, temperature-control), which align with the event’s needs.  \n- Since the agent has **direct actuator access** to the cafeteria zone (COVERAGE: DIRECT), it can **coordinate with partners** to trigger emergency responses (e.g., adjusting HVAC settings, cooling systems) and monitor outcomes.  \n- **Collaboration is necessary** to address the critical event, as the agent alone cannot perform temperature control or emergency actuation.  \n\n**Action:** Initiate collaboration with **Cafeteria HVAC Service** and **Cafeteria Temperature Service** to resolve the temperature anomaly and ensure emergency protocols are followed.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 5893.256300000474,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-5",
+      "eventZoneId": "cafeteria",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-coordinator",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in cafeteria and all required capabilities (temperature-control, hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 5893.4760999996215,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-6",
+      "eventZoneId": "office-building-2",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "office-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in office-building-2 and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.08200000040233135,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-7",
+      "eventZoneId": "lobby",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "security-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in lobby and all required capabilities (lighting-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.13719999976456165,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-7",
+      "eventZoneId": "lobby",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-coordinator",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in lobby and all required capabilities (lighting-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.16080000065267086,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-8",
+      "eventZoneId": "lab-building-2",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "lab-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "**Reasoning**:  \n- The EVENT in **lab-building-2** requires **humidity-control**, but the agent's **Caps** only include **humidity-monitoring**, not **humidity-control**.  \n- The **Cafeteria HVAC Service** (among other partners) has **humidity-control** in its capabilities, making it a viable collaborator.  \n- While the Cafeteria HVAC Service may operate in a different zone, the lab-monitor agent can still request collaboration to address the humidity issue in **lab-building-2**.  \n- Direct action by the lab-monitor is insufficient due to lack of humidity-control capability, necessitating partnership with an agent that can execute the required control actions.  \n\n**Action**: Collaborate with the **Cafeteria HVAC Service** (or another agent with humidity-control) to adjust humidity levels in **lab-building-2**.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 8381.738500000909,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-9",
+      "eventZoneId": "office-building-3",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "office-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in office-building-3 and all required capabilities (hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 4849.435699999332,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-9",
+      "eventZoneId": "office-building-3",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "security-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-ob3-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event in **office-building-3** requires **cooling, temperature-control, and hvac-control**, but the **security-agent**'s capabilities are limited to **motion-detection, presence-detection, and lighting-control**.  \n- The **security-agent** does not have direct control over HVAC or temperature systems.  \n- However, **Office Building 3 HVAC Service** (with capabilities like `set-temperature`, `set-mode`, `hvac-control`, etc.) is available as a partner.  \n- Since the event is in **office-building-3** (a zone where the agent has coverage), collaboration with the **Office Building 3 HVAC Service** is necessary to address the high-severity parameter change.  \n\n**Action:** Initiate collaboration with **Office Building 3 HVAC Service** to resolve the temperature/hvac-related event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6666666666666666,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 4849.476999999955,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-10",
+      "eventZoneId": "warehouse",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "facility-monitor",
+      "interactionType": "A",
+      "coverage": 0.5,
+      "selectedPartnerAgentId": "office-manager",
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \nThe event involves a **humidity parameter change** in the **warehouse** zone (low severity), and the EVENT_NEEDS specify **humidity-control**. While the facility-monitor agent has **humidity-monitoring** capabilities, it lacks **humidity-control** actuation. However, the **Cafeteria HVAC Service** (under AVAILABLE_PARTNERS) explicitly supports **humidity-control** and is located in the **cafeteria** zone, which is adjacent to the warehouse. \n\nSince the agent can affect the warehouse via **physical propagation from adjacent zones** (as per COVERAGE), it can collaborate with the Cafeteria HVAC Service to adjust humidity in the warehouse. This aligns with the EVENT_NEEDS and leverages available actuation capabilities in a connected zone. \n\n**Action:** Initiate collaboration with **Cafeteria HVAC Service** to execute **humidity-control** adjustments in the warehouse.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6757.603600000963,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-11",
+      "eventZoneId": "server-facility",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "server-manager",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "requestedCapabilities": [
+        "dehumidifier-control",
+        "humidity-control"
+      ],
+      "llmReasoning": "**Action**: Request the Lab Building 1 HVAC Service to adjust humidity settings in the server-facility zone.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6830.449899999425,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-12",
+      "eventZoneId": "lobby",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "security-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-lob-co2-1",
+        "dev-lob-co2-2",
+        "dev-lob-co2-3",
+        "dev-lob-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Context:** The critical event in the *lobby* zone involves a parameter change from an experiment, requiring **emergency response, monitoring, temperature control, HVAC control, and cooling**.  \n2. **Agent Capabilities:** The security-agent has **motion-detection, presence-detection, and lighting-control** capabilities, but **no direct control over temperature, HVAC, or cooling**.  \n3. **Coverage:** The agent has **direct coverage** in the *lobby* zone, enabling it to act locally.  \n4. **Collaboration Needs:**  \n   - **Emergency Response:** The agent can use **lighting-control** (e.g., turning on emergency lights) and **presence-detection** (e.g., alerting occupants) to support safety.  \n   - **Monitoring:** The agent can collaborate with **Lobby Temperature Service** and **Lobby CO2 Sensor Service** (available partners) to gather data on temperature/CO2 levels, which may be linked to the critical event.  \n   - **HVAC/Cooling:** Since the agent lacks HVAC control, it should collaborate with **Office Building 1/2/3 HVAC Services** or **Lobby Temperature Service** to address temperature-related issues.  \n\n**Action Steps:**  \n- Use **presence-detection** to confirm if occupants are in the lobby.  \n- Trigger **lighting-control** (e.g., emergency lighting) for visibility.  \n- Request data from **Lobby Temperature Service** and **CO2 Sensor Service** to assess the situation.  \n- Collaborate with **HVAC Services** (e.g., Office Building 3 HVAC Service) to adjust temperature/cooling if needed.  \n\n**Conclusion:** Collaboration is necessary to address the critical event, leveraging available partners for temperature/HVAC control and ensuring safety via lighting and monitoring.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 10328.655000001192,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-12",
+      "eventZoneId": "lobby",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-coordinator",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in lobby and all required capabilities (temperature-control, hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 10328.752700001001,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-13",
+      "eventZoneId": "cafeteria",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "facility-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-cafe-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event requires **cooling, temperature-control, and hvac-control**, which align directly with the **Cafeteria HVAC Service**'s capabilities (e.g., `set-temperature`, `set-mode`, `cooling`, `hvac-control`, `actuation`).  \n- The **Cafeteria HVAC Service** is explicitly listed under the **cafeteria** zone, matching the event's location and the agent's coverage.  \n- The agent’s own capabilities (monitoring/detection) do not include actuation, so collaboration with the HVAC Service is necessary to resolve the issue.  \n- Other partners (e.g., temperature sensors or CO2 sensors) are not actuation-capable for HVAC adjustments.  \n\n**Action:** Initiate collaboration with **Cafeteria HVAC Service** to adjust temperature, cooling, or HVAC settings in the cafeteria.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6666666666666666,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 6140.172700000927,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-13",
+      "eventZoneId": "cafeteria",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-coordinator",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in cafeteria and all required capabilities (hvac-control, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6140.2578999996185,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-14",
+      "eventZoneId": "parking-lot",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-pl-energy-1",
+        "dev-pl-energy-2",
+        "dev-pl-energy-3",
+        "dev-pl-energy-4",
+        "dev-pl-ev-1",
+        "dev-pl-ev-2",
+        "dev-pl-ev-3",
+        "dev-pl-ev-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "hvac-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Context:** The high-severity parameter change in the *parking-lot* zone requires immediate attention. The event needs include **emergency-response**, **monitoring**, and **hvac-control**, which align with the Energy Agent's **monitoring** capability (via energy-monitoring) but not directly with **hvac-control** or **emergency-response**.  \n\n2. **Collaboration Necessity:**  \n   - **Emergency-Response:** The *Parking Lot Occupancy Service* (available partner) provides **emergency-alert**, **fire-detection**, and **access-control** capabilities, which are critical for addressing high-severity events.  \n   - **HVAC Control:** While the Energy Agent lacks direct HVAC control, the *Office Building HVAC Services* (e.g., Office Building 1/2/3) and *Cafeteria HVAC Service* (available partners) can manage temperature/humidity adjustments. Collaboration is needed to ensure HVAC systems in adjacent zones (e.g., dormitory) are optimized during emergencies.  \n\n3. **Actuation in Parking-Lot:** The Energy Agent has **direct coverage** in the parking-lot zone, allowing it to coordinate with local actuators (e.g., EV charging stations, energy meters) to optimize load-balancing or cost-optimization during emergencies.  \n\n**Action Plan:**  \n- Partner with *Parking Lot Occupancy Service* to trigger emergency protocols (e.g., lockdown, alert dissemination).  \n- Coordinate with *Office Building HVAC Services* to adjust temperature/humidity in adjacent zones (e.g., dormitory) if the parking-lot event impacts building systems.  \n- Use energy-monitoring data to prioritize EV charging or load-shifting during emergencies.  \n\n**Conclusion:** Collaboration is essential to address the high-severity event, leveraging partners for emergency response and HVAC control while using the Energy Agent's monitoring and optimization capabilities.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 1,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 18856.39650000073,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-14",
+      "eventZoneId": "parking-lot",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-pl-energy-1",
+        "dev-pl-energy-2",
+        "dev-pl-energy-3",
+        "dev-pl-energy-4",
+        "dev-pl-ev-1",
+        "dev-pl-ev-2",
+        "dev-pl-ev-3",
+        "dev-pl-ev-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "hvac-control"
+      ],
+      "llmReasoning": "**Key Reasoning**:\n- **Event Needs**: Emergency-response, monitoring, HVAC-control.\n- **Agent Caps**: Emergency-alert (can trigger alerts).\n- **Available Partners**: Parking Lot EV Charger Service (actuation/control) and Energy Meter Service (monitoring).\n- **Action**: Use **emergency-alert** to notify stakeholders and delegate monitoring to the **Parking Lot Energy Meter Service**. If HVAC-control is required, escalate to building-specific HVAC services (e.g., Server Facility HVAC Service) for intervention.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 18856.605699999258,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-15",
+      "eventZoneId": "lecture-hall",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "occupancy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-lh-hvac-1",
+        "dev-lh-co2-1",
+        "dev-lh-co2-2",
+        "dev-lh-co2-3",
+        "dev-lh-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "**Action:** Alert **Office Building 1 HVAC Service** or **Office Building 2 HVAC Service** (depending on the lecture hall’s location) to adjust cooling and ventilation settings, and coordinate with CO2/air-quality sensors in the same zone for monitoring.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 6162.325999999419,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-16",
+      "eventZoneId": "dormitory",
+      "decisionMade": "defer",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "Event in zone dormitory is outside agent's actuator coverage (actuator zones: parking-lot). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 13232.599899999797,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-16",
+      "eventZoneId": "dormitory",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-dorm-hvac-1",
+        "dev-dorm-co2-1",
+        "dev-dorm-co2-2",
+        "dev-dorm-co2-3",
+        "dev-dorm-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "temperature-control",
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "**Reasoning:**  \nThe event in the dormitory zone (critical severity) involves **environment.param_changed**, which may relate to temperature or other environmental factors. The EVENT_NEEDS include **temperature-control, hvac-control, cooling**, which are **not within the Safety Agent's capabilities** (Caps: smoke-detection, fire-detection, emergency-alert, access-control, lock-control). The Safety Agent is a **SENSOR-ONLY** agent and cannot actuate systems like HVAC or cooling.  \n\n**Available Partners:**  \nWhile the dormitory-specific services (e.g., Dormitory CO2 Sensor Service) focus on CO2 monitoring, **no dormitory-specific HVAC/temperature control services** are listed. However, **other agents** (e.g., Office Building HVAC Services, Cafeteria HVAC Service, Server Facility HVAC Service) have **temperature-control, hvac-control, cooling** capabilities.  \n\n**Action Required:**  \nThe Safety Agent must **collaborate with available partners** (e.g., HVAC services in nearby buildings or zones) to address the critical event. Even if the partners are not explicitly tied to the dormitory zone, the **emergency-response** and **monitoring** needs justify escalation to ensure the dormitory's safety. The Safety Agent’s role is to **detect and alert**, not resolve the issue directly.  \n\n**Conclusion:**  \nCollaboration is necessary to fulfill the EVENT_NEEDS (temperature-control, emergency-response) through available partners.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6,
+      "sideEffectAwareness": 1,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 13232.626399999484,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-17",
+      "eventZoneId": "parking-lot",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control",
+        "presence-detection"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-pl-energy-1",
+        "dev-pl-energy-2",
+        "dev-pl-energy-3",
+        "dev-pl-energy-4",
+        "dev-pl-ev-1",
+        "dev-pl-ev-2",
+        "dev-pl-ev-3",
+        "dev-pl-ev-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "lighting-control",
+        "presence-detection"
+      ],
+      "llmReasoning": "### Reasoning:\n1. **Event Needs Alignment**:\n   - **Emergency-response**: The Parking Lot Occupancy Service provides **emergency-alert**, **fire-detection**, and **smoke-detection** capabilities, which are critical for addressing the severity=critical event.\n   - **Monitoring**: The agent’s **energy-monitoring** and **presence-detection** capabilities (via collaboration) can leverage the Occupancy Service’s **occupancy-counting**, **slot-detection**, and **access-control** functions to ensure real-time monitoring of the parking lot.\n   - **Lighting-control**: While not explicitly in the agent’s Caps, the Occupancy Service’s **presence-detection** can indirectly support lighting adjustments (e.g., turning lights on/off based on occupancy).\n\n2. **Direct Coverage**:\n   - The agent has **DIRECT** coverage in the parking-lot zone, making it feasible to coordinate with local actuators (e.g., Parking Lot Occupancy Service) for immediate action.\n\n3. **Partner Availability**:\n   - The **Parking Lot Occupancy Service** is explicitly listed as an available partner, offering the required **emergency-alert**, **presence-detection**, and **monitoring** functionalities.\n\n### Action Steps:\n- Request the Parking Lot Occupancy Service to trigger **emergency alerts** and **fire/smoke detection** protocols.\n- Use **presence-detection** data to optimize **lighting-control** and **load-balancing** in the parking lot.\n- Monitor energy usage and coordinate with the Occupancy Service to ensure **cost-optimization** during emergencies. \n\nThis collaboration ensures a rapid, targeted response to the critical event while aligning with the agent’s core capabilities.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 18481.499799998477,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-17",
+      "eventZoneId": "parking-lot",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "lighting-control",
+        "presence-detection"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-pl-energy-1",
+        "dev-pl-energy-2",
+        "dev-pl-energy-3",
+        "dev-pl-energy-4",
+        "dev-pl-ev-1",
+        "dev-pl-ev-2",
+        "dev-pl-ev-3",
+        "dev-pl-ev-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "lighting-control",
+        "presence-detection"
+      ],
+      "llmReasoning": "**Reasoning:**  \nThe event in the **parking-lot** zone involves a **critical severity** parameter change, and the EVENT_NEEDS include **emergency-response**, **monitoring**, **lighting-control**, and **presence-detection**. While the Safety Agent's **Caps** (smoke-detection, fire-detection, emergency-alert) directly align with **emergency-response** (via emergency alerts), the other needs (**monitoring**, **lighting-control**, **presence-detection**) are not covered by its sensor-only capabilities. However, the agent is explicitly instructed to **collaborate** when events require action beyond its own capabilities. \n\nAlthough the **AVAILABLE_PARTNERS** list does not explicitly include agents in the **parking-lot** zone with the required actuators (e.g., lighting-control, presence-detection), the Safety Agent's role is to **detect and alert**. It must **delegate** to any available partners (even if they are not in the same zone) that can address the EVENT_NEEDS. For example, **Cafeteria Smoke Detector Service** or **Lobby Occupancy Service** might be relevant for presence-detection or emergency-response, even if they are not in the parking-lot. \n\nSince the agent cannot fulfill all EVENT_NEEDS alone, it must **initiate collaboration** to ensure the critical event is addressed. The absence of direct parking-lot partners with the required services does not negate the need to alert others. Thus, **collaboration is necessary**. \n\n**Final Answer:**  \nDECISION: Yes.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 18481.602599998936,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-18",
+      "eventZoneId": "garden",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garden and all required capabilities (irrigation-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.12550000101327896,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-19",
+      "eventZoneId": "sports-field",
+      "decisionMade": "ignore",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "Event in zone sports-field is outside agent's actuator coverage (actuator zones: garden). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 0.09560000151395798,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-20",
+      "eventZoneId": "lecture-hall",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "occupancy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "access-control",
+        "lock-control"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-lh-co2-1",
+        "dev-lh-co2-2",
+        "dev-lh-co2-3",
+        "dev-lh-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "access-control",
+        "lock-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event in the **lecture-hall** requires **emergency-response, monitoring, access-control, and lock-control**, but the Occupancy Agent (sensor-only) lacks actuation capabilities for these actions.  \n- The agent’s **Caps** include **occupancy-detection, presence-detection, co2-monitoring, air-quality-monitoring, ventilation-control** (monitoring capabilities), which align with the **monitoring** need but not the others.  \n- **Available Partners** include services like:  \n  - **Cafeteria Smoke Detector Service** (emergency-response via smoke-detection).  \n  - **Parking Lot Occupancy Service** (access-control, lock-control).  \n  - **Office Building 3 HVAC/Light Services** (ventilation-control, lighting adjustments).  \n- Since the agent cannot act on **emergency-response, access-control, or lock-control**, it must **collaborate** with partners capable of handling these needs.  \n\n**Action:** Alert all relevant partners (e.g., Cafeteria Smoke Detectors, Parking Lot Occupancy Services, HVAC/Light Services) to address the high-severity event in the lecture-hall.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 10311.343299999833,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-21",
+      "eventZoneId": "gym",
+      "decisionMade": "defer",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "llmReasoning": "Event in zone gym is outside agent's actuator coverage (actuator zones: parking-lot). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 7158.51040000096,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-21",
+      "eventZoneId": "gym",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "occupancy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "hvac-control",
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-gym-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "hvac-control"
+      ],
+      "llmReasoning": "**Reasoning**:  \nThe event in the **gym** zone requires **cooling, temperature-control, and hvac-control** (EVENT_NEEDS). While the Occupancy Agent (SENSOR-ONLY) cannot act directly, it must collaborate with agents that have **actuation capabilities** for these tasks.  \n\n**Available Partners** include multiple **HVAC Services** (e.g., *Office Building 1 HVAC Service*, *Office Building 2 HVAC Service*, etc.) and **Temperature Services** across buildings. These partners explicitly support **cooling, temperature-control, hvac-control, and actuation**, aligning with the EVENT_NEEDS.  \n\nSince the gym is a monitored zone (Zones=[gym, ...]), and the event severity is **high**, the Occupancy Agent should **initiate collaboration** with the most relevant HVAC/Temperature Service (e.g., *Office Building 1 HVAC Service*) to address the parameter change.  \n\n**Action**: Alert the HVAC/Temperature Service(s) to adjust cooling/temperature settings in the gym zone.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6666666666666666,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 7158.552100000903,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-22",
+      "eventZoneId": "library",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "occupancy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "requestedCapabilities": [
+        "dehumidifier-control",
+        "humidity-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event involves **humidity-control** and **dehumidifier-control**, which are **not within the Occupancy Agent's capabilities** (its Caps include CO2/air-quality monitoring, not humidity control).  \n- As a **SENSOR-ONLY** agent with **COVERAGE=NONE**, it cannot actuate systems directly and must delegate to **available partners** with the required capabilities.  \n- Among the available partners, **Server Facility Humidity Service** and **Cafeteria HVAC Service** (among others) include **humidity-monitoring** and **humidity-control** capabilities. While the event occurs in the **library**, the absence of a library-specific humidity-control service in the partner list necessitates delegation to the **most relevant available partner** (e.g., Cafeteria HVAC Service, which includes humidity-control).  \n\n**Action:** Alert the **Cafeteria HVAC Service** (or equivalent) to address the humidity-related event in the library zone.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12188.03029999882,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-22",
+      "eventZoneId": "library",
+      "decisionMade": "defer",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "Event in zone library is outside agent's actuator coverage (actuator zones: garden). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12188.083899999037,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-23",
+      "eventZoneId": "dormitory",
+      "decisionMade": "defer",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "fire-detection",
+        "emergency-alert"
+      ],
+      "llmReasoning": "Event in zone dormitory is outside agent's actuator coverage (actuator zones: parking-lot). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 16401.726600000635,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-23",
+      "eventZoneId": "dormitory",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-dorm-co2-1",
+        "dev-dorm-co2-2",
+        "dev-dorm-co2-3",
+        "dev-dorm-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-detection",
+        "emergency-alert"
+      ],
+      "llmReasoning": "**Action**: Alert all available partners in the dormitory zone (e.g., Dormitory CO2 Sensor Service) and escalate the emergency alert to external systems (if possible).",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 16401.752000000328,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-24",
+      "eventZoneId": "garden",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in garden and all required capabilities (maintenance-scheduling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.14180000126361847,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-25",
+      "eventZoneId": "dormitory",
+      "decisionMade": "ignore",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "Event in zone dormitory is outside agent's actuator coverage (actuator zones: parking-lot). Not relevant to this agent.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6489.101900000125,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-25",
+      "eventZoneId": "dormitory",
+      "decisionMade": "handle_independently",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "**Reasoning:**  \n- The event is a **low-severity parameter change** in the **dormitory zone** (not directly related to fire/smoke/emergency alerts).  \n- The Safety Agent's role is to **detect and alert**, but it has **no actuators** (COVERAGE=NONE).  \n- **Available partners** for the dormitory include CO2 sensors and energy meters, but **no fire/smoke detection services** or emergency actuation capabilities are listed.  \n- Since the event is **low severity** and unrelated to the Safety Agent's critical caps (fire/smoke/emergency), **no immediate action or collaboration is required**.  \n\nThe Safety Agent should continue monitoring but delegate only if a high-severity event (e.g., smoke/fire) occurs.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 6489.130900001153,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-light-1",
+      "eventZoneId": "parking-lot",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The **EVENT_NEEDS** require **lighting-control**, but the Energy Agent's **Caps** do not include this capability.  \n- While **available partners** (e.g., Office Building X Light Services) offer lighting-control, they operate in **different zones** (e.g., office buildings, labs) and are **not specific to the parking-lot zone** where the event occurred.  \n- The **parking-lot zone** has **no direct lighting-control actuators** or partners listed in the available services.  \n- The Energy Agent’s **coverage is limited to parking-lot and dormitory**, but no lighting-control services are available in these zones.  \n\n**Conclusion:** The Energy Agent lacks the capability or direct partnership to address the lighting-control need in the parking-lot zone. Collaboration with external agents is not feasible here.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 14750.128499999642,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-light-1",
+      "eventZoneId": "parking-lot",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "DECISION: No, this agent should not initiate collaboration. The event requires \"lighting-control,\" but none of the available partners listed have explicit \"lighting-control\" capabilities specific to the **parking-lot** zone. While some partners (e.g., Office Building 1/2/3 Light Services) have \"lighting-control,\" they are associated with office buildings, not the parking lot. Since the agent's role is SENSOR-ONLY and coverage is NONE, it must delegate to partners with actuators, but no suitable partner exists for this event. The agent should log the event and alert higher-level systems or administrators for manual intervention.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 14750.195399999619,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-air-1",
+      "eventZoneId": "cafeteria",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "facility-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "requestedCapabilities": [
+        "air-purification"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Context:** The cafeteria zone experienced an environmental parameter change (`param_changed`) requiring **air-purification**.  \n2. **Agent Capabilities:** While the agent itself does not directly handle air-purification, it has **direct coverage** of the cafeteria zone and can actuate changes there.  \n3. **Available Partners:** The **Cafeteria HVAC Service** (with capabilities like `set-temperature`, `set-mode`, `hvac-control`, and `air-quality-monitoring`) is available. This service can adjust HVAC settings to improve air quality (e.g., increasing ventilation, filtering, or cooling).  \n4. **Action Plan:** The agent should collaborate with the Cafeteria HVAC Service to address the air-purification need by triggering actions like adjusting HVAC modes or fan speeds.  \n\n**Next Step:** Initiate a request to the Cafeteria HVAC Service to optimize air quality in the cafeteria.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 10474.8638000004,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-air-1",
+      "eventZoneId": "cafeteria",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "climate-coordinator",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "requestedCapabilities": [
+        "air-purification"
+      ],
+      "llmReasoning": "DECISION: No, the agent should not initiate collaboration. While the event requires air-purification, none of the available partners explicitly provide air-purification capabilities. The available services focus on temperature/humidity monitoring, HVAC control, CO2 sensing, lighting, or occupancy detection, but no partner is listed with air-purification functionality. The climate-coordinator lacks this capability in its own caps and cannot act on the event without a suitable collaborator.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10474.911800000817,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-emergency-1",
+      "eventZoneId": "dormitory",
+      "decisionMade": "defer",
+      "decisionSource": "precheck",
+      "agentId": "energy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "emergency-alert"
+      ],
+      "llmReasoning": "Event in zone dormitory is outside agent's actuator coverage (actuator zones: parking-lot). Deferring to agents with relevant coverage.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 6407.705199999735,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-emergency-1",
+      "eventZoneId": "dormitory",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerAgentId": "office-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-dorm-co2-1",
+        "dev-dorm-co2-2",
+        "dev-dorm-co2-3",
+        "dev-dorm-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event requires **emergency-response** and **emergency-alert**, which align with the agent's **emergency-alert** capability. However, the agent is **SENSOR-ONLY** and cannot actuate responses (e.g., trigger alarms, lockdowns, or dispatch teams).  \n- The **event severity is critical**, and the **zone is dormitory**, where no actuator-capable partners (e.g., emergency response systems, security services) are explicitly listed in the available partners.  \n- While **Dormitory CO2 Sensor Services** exist, they focus on air quality/energy monitoring, not emergency response.  \n- The agent must delegate to **AVAILABLE_PARTNERS** with actuators, but none are explicitly listed for dormitory emergency response.  \n\n**Action:**  \nCollaborate with relevant partners (e.g., campus security, emergency services) to fulfill **emergency-response** and **monitoring** needs, even if they are not explicitly named in the provided list. The agent should trigger an **emergency-alert** and request assistance from external systems.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 6407.742000000551,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-campus-humidity-1",
+      "eventZoneId": "lecture-hall",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "occupancy-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "selectedPartnerAgentId": "office-manager",
+      "requestedCapabilities": [
+        "humidity-control"
+      ],
+      "llmReasoning": "**Available Partners with Humidity-Related Capabilities**:\n- **Server Facility Humidity Service**: Provides `humidity-reading`, `humidity-monitoring`, and `humidity-sensor` capabilities. While it lacks explicit `humidity-control`, it is the closest match among available partners for monitoring humidity changes. \n- **Lab Building HVAC Services**: Include `humidity-monitoring` but not `humidity-control`.\n- **Cafeteria HVAC Service**: Has `humidity-control`, but the event is in the **lecture-hall**, not the cafeteria. \n\n**Action**:\nDelegate to **Server Facility Humidity Service** to monitor and report on humidity levels in the lecture-hall (even though it may not be geographically co-located). If the Server Facility service cannot act, escalate to **Lab Building 1 HVAC Service** (which has `humidity-monitoring` and `temperature-control` as fallbacks). \n\n**Collaboration Request**:\n> \"Please monitor and report humidity levels in the lecture-hall zone. If humidity exceeds safe thresholds, alert me so I can escalate to an HVAC service for intervention.\" \n\nThis ensures the event is acknowledged and addressed by the most relevant available partner.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12404.570399999619,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    }
+  ],
+  "decisionQuality": {
+    "meanZoneTargetingAccuracy": 0.3181818181818182,
+    "meanCapabilityAppropriateness": 0.45378787878787874,
+    "meanSideEffectAwareness": 0.13636363636363635,
+    "meanPhysicalPlausibility": 0.3181818181818182,
+    "meanCorrectDecisionRate": 0.8409090909090909
+  },
+  "collaboration": {
+    "initiationRate": 0.5909090909090909,
+    "formationSuccessRate": 0.7692307692307693,
+    "goalAchievementRate": 0.5227272727272727,
+    "optimalPerformanceRatio": 0.4318181818181818
+  },
+  "efficiency": {
+    "totalEvents": 44,
+    "layer1Filtered": 0,
+    "layer1FilterRate": 0,
+    "llmCallCount": 44,
+    "totalTokens": 137383,
+    "promptTokens": 114719,
+    "completionTokens": 22664,
+    "avgAssessmentTimeMs": 8247.369120454712,
+    "totalWallTimeMs": 211304.09610000066
+  },
+  "rawDualTriggerStats": {
+    "totalEventsProcessed": 3,
+    "filteredByLayer1": 0,
+    "passedToLayer2": 0,
+    "acDecisionMade": 0,
+    "acInitiated": 0,
+    "handledIndependently": 3,
+    "deferred": 0,
+    "layer2DecisionDistribution": {
+      "initiate_ac": 0,
+      "handle_independently": 3,
+      "defer": 0,
+      "ignore": 0
+    },
+    "totalAssessmentTimeMs": 0,
+    "assessmentCount": 3,
+    "totalConfidence": 3,
+    "confidenceCount": 3,
+    "layer1Stats": {
+      "totalEventsProcessed": 0,
+      "clustersCreated": 0,
+      "passedToLayer2": 0,
+      "filteredByLayer1": 0,
+      "simpleAggregationUsed": 0,
+      "filteringRate": 0,
+      "layer2Rate": 0
+    },
+    "layer2Stats": {
+      "assessor": {
+        "totalAssessments": 3,
+        "acInitiated": 0,
+        "handledIndependently": 3,
+        "deferred": 0,
+        "ignored": 0,
+        "llmErrors": 0
+      },
+      "negotiator": {
+        "totalSelections": 0,
+        "partnersFound": 0,
+        "proposalsSent": 0,
+        "proposalsAccepted": 0,
+        "proposalsRejected": 0
+      },
+      "goalEngine": {
+        "totalFormulations": 0,
+        "goalsCreated": 0,
+        "simpleGoals": 0,
+        "moderateGoals": 0,
+        "complexGoals": 0
+      }
+    },
+    "layer1FilterRate": 0,
+    "avgAssessmentTimeMs": 0,
+    "avgConfidence": 1
+  },
+  "classification": {
+    "perClass": [
+      {
+        "className": "initiate_ac",
+        "precision": 0.9047619047619048,
+        "recall": 0.6333333333333333,
+        "f1": 0.7450980392156863,
+        "tp": 19,
+        "fp": 2,
+        "fn": 11,
+        "support": 30
+      },
+      {
+        "className": "handle_independently",
+        "precision": 0.6153846153846154,
+        "recall": 0.8888888888888888,
+        "f1": 0.7272727272727273,
+        "tp": 8,
+        "fp": 5,
+        "fn": 1,
+        "support": 9
+      },
+      {
+        "className": "defer",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 5,
+        "fn": 0,
+        "support": 0
+      },
+      {
+        "className": "ignore",
+        "precision": 0.4,
+        "recall": 0.4,
+        "f1": 0.4,
+        "tp": 2,
+        "fp": 3,
+        "fn": 3,
+        "support": 5
+      }
+    ],
+    "macroPrecision": 0.48003663003663,
+    "macroRecall": 0.4805555555555555,
+    "macroF1": 0.46809269162210343,
+    "collaborationTriggerF1": {
+      "precision": 0.9047619047619048,
+      "recall": 0.6333333333333333,
+      "f1": 0.7450980392156863,
+      "tp": 19,
+      "fp": 2,
+      "tn": 12,
+      "fn": 11,
+      "support": 30
+    },
+    "confusionMatrix": [
+      [
+        19,
+        3,
+        5,
+        3
+      ],
+      [
+        1,
+        8,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        2,
+        0,
+        2
+      ]
+    ],
+    "partnerSelection": {
+      "partnerPrecision": 0.2,
+      "partnerRecall": 0.13333333333333333,
+      "partnerF1": 0.16,
+      "support": 30
+    },
+    "capabilityMatch": {
+      "precision": 0.5757575757575758,
+      "recall": 0.5671641791044776,
+      "f1": 0.5714285714285714,
+      "support": 39
+    }
+  }
+}

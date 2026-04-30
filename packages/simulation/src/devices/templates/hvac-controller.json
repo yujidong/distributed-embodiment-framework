@@ -1,0 +1,86 @@
+{
+  "id": "hvac-controller-v1",
+  "name": "HVAC Controller",
+  "description": "Controls heating, ventilation, and air conditioning",
+  "category": "actuator",
+  "type": "hvac-controller",
+  "capabilities": [
+    {
+      "name": "set-temperature",
+      "type": "write",
+      "description": "Set target temperature",
+      "parameters": [
+        {
+          "name": "target",
+          "type": "number",
+          "required": true,
+          "description": "Target temperature in Celsius"
+        }
+      ]
+    },
+    {
+      "name": "set-mode",
+      "type": "write",
+      "description": "Set operating mode",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "string",
+          "required": true,
+          "description": "Operating mode: heating, cooling, or auto"
+        }
+      ]
+    },
+    {
+      "name": "set-fan-speed",
+      "type": "write",
+      "description": "Set fan speed",
+      "parameters": [
+        {
+          "name": "speed",
+          "type": "number",
+          "required": true,
+          "description": "Fan speed percentage (0-100)"
+        }
+      ]
+    },
+    {
+      "name": "turn-on",
+      "type": "write",
+      "description": "Turn on the HVAC system",
+      "parameters": []
+    },
+    {
+      "name": "turn-off",
+      "type": "write",
+      "description": "Turn off the HVAC system",
+      "parameters": []
+    }
+  ],
+  "defaultState": {
+    "status": "idle",
+    "power": false,
+    "targetTemperature": 22,
+    "currentTemperature": 22,
+    "mode": "auto",
+    "fanSpeed": 50
+  },
+  "physicalEffects": [
+    {
+      "parameter": "temperature",
+      "effect": "cooling",
+      "magnitude": -1.0,
+      "radius": 10,
+      "condition": "mode == 'cooling' && power == true"
+    },
+    {
+      "parameter": "temperature",
+      "effect": "heating",
+      "magnitude": 1.0,
+      "radius": 10,
+      "condition": "mode == 'heating' && power == true"
+    }
+  ],
+  "semanticDescription": "A full HVAC (Heating, Ventilation, Air Conditioning) controller that can heat or cool spaces. Essential for climate control in buildings.",
+  "tags": ["climate", "hvac", "actuator", "temperature"]
+}

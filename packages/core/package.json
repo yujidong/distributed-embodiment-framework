@@ -1,0 +1,52 @@
+{
+  "name": "@active-collaboration/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Core agent and environment center implementation",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "clean": "rm -rf dist *.tsbuildinfo nul stderr coverage",
+    "rebuild": "npm run clean && npm run build",
+    "test": "node --max-old-space-size=16384 ../../node_modules/vitest/vitest.mjs",
+    "test:run": "node --max-old-space-size=16384 ../../node_modules/vitest/vitest.mjs --run",
+    "test:coverage": "vitest --coverage",
+    "test:manual": "tsx src/test.ts",
+    "test:workflow": "tsx src/workflow/test.ts",
+    "test:integration": "tsx tests/run-tests.ts --type=integration",
+    "test:all": "tsx tests/run-tests.ts",
+    "test:e2e": "tsx tests/run-tests.ts --type=e2e",
+    "example:smart-home": "tsx src/examples/smart-home-automation.ts",
+    "example:multi-agent": "tsx src/examples/multi-agent-scenario.ts",
+    "example:factory": "tsx src/examples/factory-monitoring.ts",
+    "example:iot-app": "tsx src/examples/iot-app-development.ts",
+    "test:smart-home": "tsx src/scenarios/smart-home-test.ts",
+    "test:ac-execution": "tsx src/test/test-ac-execution.ts"
+  },
+  "dependencies": {
+    "@active-collaboration/llm-integration": "*",
+    "@active-collaboration/shared": "*",
+    "ajv": "^8.18.0",
+    "mqtt": "^5.3.0",
+    "uuid": "^9.0.1",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.10.0",
+    "@types/uuid": "^9.0.7",
+    "@types/ws": "^8.5.10",
+    "@vitest/coverage-v8": "^1.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^1.0.0"
+  }
+}
