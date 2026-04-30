@@ -12,8 +12,6 @@ The framework consists of three layers:
 - **Agent Layer** — Cognitive agents with autonomous decision-making (dual-layer decision engine, three-phase resource matching, feedback learning)
 - **Environment Management Layer** — Event-driven coordination (EventManager, CollaborationManager, ServiceBroker)
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed documentation.
-
 ## Project Structure
 
 ```
