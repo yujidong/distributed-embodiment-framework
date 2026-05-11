@@ -1,0 +1,1055 @@
+{
+  "config": {
+    "id": "exp3-full-ac-smart-city",
+    "name": "Exp 3 RQ3: full-ac smart-city",
+    "rq": "RQ3",
+    "scenario": "smart-city",
+    "condition": "full-ac",
+    "iterations": 5,
+    "llmModel": "qwen3-14b-q4:latest",
+    "timeoutMs": 120000,
+    "multiAgentEval": true,
+    "realisticRouting": true
+  },
+  "iteration": 3,
+  "timestamp": "2026-05-08T23:20:00.863Z",
+  "events": [
+    {
+      "eventId": "evt-sc-1",
+      "eventZoneId": "residential-a",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "residential-manager",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "load-balancing"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-ra-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "emergency-response",
+        "load-balancing"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event in **Zone=residential-a** is a **critical parameter change** (likely a temperature or environmental anomaly). The required actions include **emergency-response**, **temperature-control**, **cooling**, and **load-balancing**.  \n- While the agent has **cooling/heating** capabilities and **temperature-reading** in residential-a (via its **Caps**), the **critical severity** and need for **emergency-response** suggest a potential risk (e.g., overheating, safety hazard, or system failure).  \n- The agent **cannot act alone** on **emergency-response** (e.g., alerting external services, coordinating with fire/emergency teams) and **load-balancing** (e.g., redistributing energy/cooling resources across zones).  \n- **Available Partners** like **Emergency Center Alert System Service**, **Fire Station Alert System Service**, or **Office Tower HVAC Service** (for load-balancing) are necessary to address the criticality.  \n\n**Action Plan:**  \n1. **Trigger emergency-response** by notifying the **Emergency Center Alert System Service**.  \n2. **Collaborate with Office Tower HVAC Service** (if applicable) for **load-balancing** or **backup cooling/heating**.  \n3. Use **residential-a's actuators** to activate **cooling/heating** directly while awaiting external support.  \n\nThis ensures the critical event is managed proactively, leveraging both the agent's direct capabilities and external partners.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 8777.796900004148,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-2",
+      "eventZoneId": "factory-zone",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "industrial-safety",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert",
+        "dispatch"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-fz-vibration-1",
+        "dev-fz-vibration-2",
+        "dev-fz-energy-1",
+        "dev-fz-energy-2",
+        "dev-fz-energy-3",
+        "dev-fz-energy-4",
+        "dev-fz-noise-1",
+        "dev-fz-noise-2",
+        "dev-fz-noise-3",
+        "dev-fz-noise-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert",
+        "dispatch",
+        "ventilation-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event in **factory-zone** (critical severity) requires **ventilation-control** (covered by the agent's capabilities) and **emergency-response/emergency-alert/dispatch** (not directly covered by the agent's capabilities).  \n- While the agent can handle **ventilation-control** internally, the other needs (**emergency-response**, **emergency-alert**, **dispatch**) require external collaboration.  \n- Available partners include **Emergency Center Alert System Service**, **Fire Station Alert System Service**, and others, which align with the **emergency-response** and **emergency-alert** needs.  \n- The agent should coordinate with these partners to ensure timely dispatch and alert systems are activated, even though they are not in the same zone.  \n\n**Action Steps:**  \n1. Trigger **emergency-alert** via **Emergency Center Alert System Service**.  \n2. Coordinate **dispatch** with **Fire Station Alert System Service**.  \n3. Use **ventilation-control** capabilities locally to mitigate the critical parameter change.  \n4. Monitor the situation and escalate if conditions worsen.  \n\nThis ensures a comprehensive response to the critical event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 71602.21860000491,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-3",
+      "eventZoneId": "power-plant",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "energy-grid",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in power-plant and all required capabilities (load-shedding, cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 2.524999998509884,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-4",
+      "eventZoneId": "water-treatment",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "water-management",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "traffic-monitoring"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-wt-energy-1",
+        "dev-wt-energy-2",
+        "dev-wt-energy-3",
+        "dev-wt-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "traffic-monitoring",
+        "pump-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Critical Event in Zone of Responsibility**: The event occurs in the `water-treatment` zone, where the agent has **direct coverage** (actuators available).  \n2. **Matching Capabilities**:  \n   - **Pump-control** (agent's capability) aligns with the `pump-control` need in the event.  \n   - **Monitoring** (agent's `water-quality-monitoring` and `flow-monitoring` capabilities) overlaps with the `monitoring` need.  \n3. **Emergency Response**: While the agent does not explicitly have an \"emergency-response\" capability, it can **initiate collaboration** with external partners (e.g., `Emergency Center Alert System Service`) to address the critical severity.  \n4. **Irrelevant Needs**: The `traffic-monitoring` need does not align with the agent's capabilities, but this does not negate the need for collaboration on the overlapping needs.  \n\n**Action Plan**:  \n- Use **pump-control** to mitigate the issue (e.g., adjust pumps if the parameter change relates to flow or pressure).  \n- Leverage **water-quality-monitoring** and **flow-monitoring** to gather data for the event.  \n- Collaborate with external partners (e.g., `Emergency Center Alert System Service`) for emergency response.  \n\n**Conclusion**: The agent must act immediately due to the critical severity and its direct responsibility for the zone. Collaboration is necessary to address the overlapping needs and ensure system stability.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 6506.654300004244,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-5",
+      "eventZoneId": "hospital-district",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "environmental-monitor",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert",
+        "dispatch"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-hd-co2-1",
+        "dev-hd-co2-2",
+        "dev-hd-co2-3",
+        "dev-hd-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert",
+        "dispatch"
+      ],
+      "llmReasoning": "**Reasoning:**  \nThe environmental-monitor agent has critical monitoring capabilities (air-quality, PM2.5, temperature, noise, oxygen) in the hospital-district zone. The event (`environment.param_changed` with critical severity) requires **emergency-response**, **monitoring**, **emergency-alert**, and **dispatch**. While the agent can fulfill the **monitoring** need directly, it lacks inherent capabilities for **emergency-response**, **emergency-alert**, and **dispatch**. However, it can collaborate with **available partners** like the **Emergency Center Alert System Service** (which handles emergency alerts) and **Fire Station Alert System Service** to address the critical event. Since the agent has **direct coverage** of the hospital-district zone and the event is critical, initiating collaboration with these partners is necessary to ensure timely emergency actions (e.g., alerting authorities, dispatching resources). This aligns with the EVENT_NEEDS and leverages external services to fulfill gaps in the agent’s own capabilities.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 6690.16970000416,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-6",
+      "eventZoneId": "park",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "residential-manager",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "ventilation-control",
+        "air-filtration"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-park-airq-1"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "ventilation-control",
+        "air-filtration"
+      ],
+      "llmReasoning": "DECISION: Yes, the residential-manager should initiate collaboration. While the agent can handle monitoring (via temperature-reading and motion-detection) and emergency-response (through direct actuation in the park zone), the event requires **ventilation-control** and **air-filtration** capabilities, which are **not explicitly in the agent's Caps**. To address these gaps, the residential-manager must collaborate with external partners (e.g., HVAC services, air-quality monitoring systems, or emergency alert systems) to ensure a comprehensive response. The park zone's critical environment parameter change necessitates integrated action beyond the agent's standalone capabilities.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 6880.407600000501,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-7",
+      "eventZoneId": "data-center",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "energy-grid",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in data-center and all required capabilities (cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.2621999979019165,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-8",
+      "eventZoneId": "parking-garage",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "transport-coordinator",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-alert",
+        "dispatch"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-pg-energy-1",
+        "dev-pg-energy-2",
+        "dev-pg-energy-3",
+        "dev-pg-energy-4",
+        "dev-pg-ev-1",
+        "dev-pg-ev-2",
+        "dev-pg-ev-3",
+        "dev-pg-ev-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-alert",
+        "dispatch"
+      ],
+      "llmReasoning": "**Action Plan**:  \n1. Trigger a **fire-alert** via the **Emergency Center Alert System Service**.  \n2. Use **video-surveillance** and **occupancy-counting** to monitor the zone for escalating risks.  \n3. Coordinate **dispatch** of emergency resources via **fleet-management** and **GPS-tracking**.  \n4. Collaborate with **Fire Station Alert System Service** for on-ground response.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 69840.72450000048,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-9",
+      "eventZoneId": "highway-junction",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "transport-coordinator",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert",
+        "dispatch"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-hj-airq-1",
+        "dev-hj-noise-1",
+        "dev-hj-energy-1",
+        "dev-hj-energy-2",
+        "dev-hj-energy-3",
+        "dev-hj-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert",
+        "dispatch"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- **Event Context:** The high-severity parameter change in the *highway-junction* zone (covered by the agent's actuators) requires **emergency response, monitoring, emergency alert, and dispatch**.  \n- **Agent Capabilities:** The agent can monitor traffic, detect speed anomalies, and track GPS/fleet data (via **traffic-monitoring, speed-detection, GPS-tracking**). However, it lacks direct emergency alert/dispatch capabilities (e.g., no \"emergency-alert\" or \"dispatch\" in its Caps).  \n- **Collaboration Need:** To fulfill the **emergency alert** and **dispatch** requirements, the agent must collaborate with **Emergency Center Alert System Service** (which handles alerts) and potentially **Fire Station Alert System Service** (for emergency response).  \n- **Action Plan:**  \n  1. Use **traffic-monitoring** and **speed-detection** to assess the incident (e.g., accident, congestion).  \n  2. Trigger an **emergency alert** via the **Emergency Center Alert System Service** to notify authorities.  \n  3. Coordinate **dispatch** with relevant partners (e.g., fire stations, police) using the agent's **fleet-management** or **GPS-tracking** capabilities to guide resources.  \n\n**Conclusion:** Collaboration is necessary to address the high-severity event effectively.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 73676.81079999357,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-10",
+      "eventZoneId": "office-tower-a",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "commercial-hvac",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "power-monitoring",
+        "load-balancing"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-ota-co2-1",
+        "dev-ota-co2-2",
+        "dev-ota-co2-3",
+        "dev-ota-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "power-monitoring",
+        "load-balancing"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The agent's capabilities (Caps) include **temperature-reading, cooling, occupancy-counting, energy-monitoring, security-monitoring, and access-control**, which align with the **monitoring** and **emergency-response** needs of the event.  \n- The **power-monitoring** and **load-balancing** needs may be partially addressed by the agent's **energy-monitoring** capability, though load-balancing is not explicitly listed in its Caps. However, the agent has **direct actuation rights** in **office-tower-a**, allowing it to respond autonomously to the high-severity parameter change (e.g., adjusting cooling systems, checking occupancy, or isolating energy usage).  \n- **Available partners** are primarily in residential blocks or unrelated zones (e.g., central park, factory zones), which are not relevant to the **office-tower-a** event. There is no clear partner with explicit **load-balancing** or **power-monitoring** capabilities in the same zone.  \n- Since the agent can act directly in the affected zone and its Caps cover critical aspects of the event, collaboration is unnecessary at this stage.  \n\n**Conclusion:** The agent should handle the event independently using its existing capabilities and actuation rights.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 1,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 8877.2268999964,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-11",
+      "eventZoneId": "warehouse-district",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "industrial-safety",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "gps-tracking",
+        "fleet-management"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-wd-energy-1",
+        "dev-wd-energy-2",
+        "dev-wd-energy-3",
+        "dev-wd-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "gps-tracking",
+        "fleet-management"
+      ],
+      "llmReasoning": "**Rationale:**  \n1. **Event Context:** The high-severity `param_changed` event in the **warehouse-district** (a zone where the agent can act) requires **emergency-response** and **monitoring**. The agent’s capabilities (Caps) include **air-quality-monitoring**, **temperature-reading**, **humidity-reading**, and **gas-detection**, which align with the **monitoring** need.  \n\n2. **Emergency Response:** While the agent lacks direct **GPS-tracking** or **fleet-management** capabilities, it can:  \n   - Use its **gas-detection** and **air-quality-monitoring** to assess risks (e.g., toxic gas leaks).  \n   - Coordinate with **Emergency Center Alert System Service** (available partner) to trigger alerts.  \n   - Propagate warnings to adjacent zones via **COVERAGE** (e.g., notify nearby **factory-zone** or **warehouse-district** partners).  \n\n3. **Collaboration Opportunities:**  \n   - Partner with **Emergency Center Smoke Detector Service** or **Fire Station Smoke Detector Service** for immediate threat mitigation.  \n   - Leverage **ventilation-control** and **air-filtration** (agent’s Caps) to reduce risks in the warehouse-district.  \n   - Use **inventory-tracking** (if relevant) to manage resources during the emergency.  \n\n4. **Limitations:** The agent cannot fulfill **GPS-tracking** or **fleet-management** needs directly, but collaboration with **Emergency Center Alert System Service** can escalate the event to external responders (e.g., fire departments).  \n\n**Action Plan:**  \n- Initiate **monitoring** using air-quality, temperature, and humidity sensors in the warehouse-district.  \n- Alert **Emergency Center Alert System Service** for emergency response.  \n- Propagate warnings to adjacent zones (e.g., factory-zone) via **COVERAGE**.  \n- Coordinate with **ventilation-control** and **air-filtration** systems to mitigate hazards.  \n\n**Conclusion:** Collaboration is necessary to address the high-severity event, leveraging the agent’s monitoring capabilities and external emergency services.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 73523.20889999717,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-12",
+      "eventZoneId": "airport-terminal",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "transport-coordinator",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "access-control",
+        "alarm"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-at-cctv-1",
+        "dev-at-cctv-2",
+        "dev-at-cctv-3",
+        "dev-at-cctv-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "access-control",
+        "alarm",
+        "video-surveillance"
+      ],
+      "llmReasoning": "**Reasoning:**  \nThe event in the **airport-terminal** zone involves a **critical parameter change** (severity=critical) requiring **emergency-response, monitoring, access-control, alarm, and video-surveillance**. While the agent has **video-surveillance** and **monitoring** capabilities (via its **video-surveillance, occupancy-counting, traffic-monitoring**, etc.), **emergency-response, access-control, and alarm** fall outside its direct capabilities.  \n\n**Key Collaboration Needs:**  \n1. **Emergency-response**: Requires coordination with external emergency services (e.g., **Emergency Center Alert System Service**, **Fire Station Alert System Service**).  \n2. **Access-control**: May involve integrating with security systems not directly managed by the transport-coordinator.  \n3. **Alarm**: Needs to trigger alerts via external alarm systems or notify human operators.  \n\n**Available Partners:**  \n- **Emergency Center Alert System Service** (handles emergency alerts).  \n- **Fire Station Alert System Service** (supports emergency response).  \n\n**Action:**  \nThe transport-coordinator should **initiate collaboration** with these services to ensure a timely and coordinated response to the critical event in the airport-terminal. This aligns with the event's severity and the agent's role as a coordinator in transport and security contexts.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 5758.825999997556,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-13",
+      "eventZoneId": "shopping-mall",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "commercial-hvac",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "traffic-monitoring"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-mall-co2-1",
+        "dev-mall-co2-2",
+        "dev-mall-co2-3",
+        "dev-mall-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "traffic-monitoring",
+        "cooling"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Needs Alignment:** The event requires **cooling**, which is explicitly in the agent's **Caps** (cooling).  \n2. **Zone Coverage:** The event occurs in the **shopping-mall**, which is one of the agent's assigned zones. While the agent's **ACTUATORS** are limited to **office-tower-a** and **office-tower-b**, the **COVERAGE** specifies **PROPAGATION** from adjacent zones. This implies the agent can influence the **shopping-mall** indirectly through neighboring zones (e.g., office towers).  \n3. **High Severity:** The event has **severity=high**, necessitating immediate action. The agent can address the cooling requirement directly using its capabilities.  \n4. **Collaboration Opportunities:** While the agent does not explicitly handle **emergency-response** or **traffic-monitoring**, it can collaborate with external services (e.g., **Emergency Center Alert System Service** for emergency coordination) or leverage adjacent zones via propagation.  \n\n**Action Steps:**  \n- Deploy cooling systems in **office-tower-a** and **office-tower-b** to stabilize adjacent zones.  \n- Monitor temperature readings in the **shopping-mall** via propagation from nearby zones.  \n- Coordinate with external partners (e.g., **Emergency Center**) for emergency-response if needed.  \n\nThis ensures the agent addresses the critical cooling requirement while adhering to its capabilities and coverage.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 70252.77930000424,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-14",
+      "eventZoneId": "bank",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "commercial-hvac",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "alarm",
+        "video-surveillance"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-bank-co2-1",
+        "dev-bank-co2-2",
+        "dev-bank-co2-3",
+        "dev-bank-co2-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "access-control",
+        "alarm",
+        "video-surveillance"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Needs vs. Agent Capabilities:**  \n   - The event requires **emergency-response, monitoring, access-control, alarm, and video-surveillance**.  \n   - The agent’s **Caps** include **access-control** and **security-monitoring** (which may partially overlap with video-surveillance). However, **alarm** and **video-surveillance** are **not directly covered** by the agent’s capabilities.  \n\n2. **Propagation Coverage:**  \n   - The agent can affect the **bank** zone via **physical propagation** from adjacent zones (e.g., if `office-tower-a` or `office-tower-b` are adjacent to the bank). However, this is **uncertain** without explicit adjacency information. If propagation is possible, the agent could act locally (e.g., trigger access-control measures). If not, collaboration is required.  \n\n3. **Available Partners:**  \n   - Partners like **Main Station CCTV Service** (video-surveillance) and **Emergency Center Alert System Service** (alarm) are available. These directly address the event’s needs.  \n   - The agent must **collaborate** with these partners to fulfill the **alarm** and **video-surveillance** requirements, as they are **outside the agent’s own capabilities**.  \n\n4. **Critical Severity:**  \n   - The event is **critical**, necessitating immediate action. Collaboration ensures timely fulfillment of all required services (e.g., triggering alarms, enabling video surveillance).  \n\n**Action Steps:**  \n- **Trigger access-control** measures locally (if propagation is possible).  \n- **Collaborate with Main Station CCTV Service** for video-surveillance.  \n- **Collaborate with Emergency Center Alert System Service** for alarm activation.  \n- Coordinate with **security-monitoring** partners (if available) to enhance situational awareness.  \n\nThis decision ensures the event’s critical needs are met through a combination of the agent’s capabilities and external partnerships.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 6793.766499996185,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-15",
+      "eventZoneId": "city-hall",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "municipal-services",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "residential-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-ch-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling"
+      ],
+      "llmReasoning": "**Reasoning:**  \nThe municipal-services agent has **temperature-reading** and **lighting-control** capabilities but **no cooling** capability. The event in the **city-hall** zone requires **cooling** (EVENT_NEEDS: [cooling]). Since the agent cannot fulfill this need autonomously, it must collaborate with an external partner. The **Residential Block A HVAC Service** and **Residential Block B HVAC Service** (among others) provide **cooling** as a capability. While these partners operate in different zones, the agent can initiate cross-zone collaboration to address the cooling requirement. Direct actuators in the city-hall zone are insufficient for this task, necessitating external support.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 1,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 69452.14280000329,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-16",
+      "eventZoneId": "bus-depot",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "transport-coordinator",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in bus-depot and all required capabilities (fleet-management). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.12519999593496323,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-17",
+      "eventZoneId": "park",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "residential-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in park and all required capabilities (irrigation-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.08749999850988388,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-18",
+      "eventZoneId": "residential-b",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "residential-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in residential-b and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.07010000199079514,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-19",
+      "eventZoneId": "highway-junction",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "transport-coordinator",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in highway-junction and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.047300003468990326,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-20",
+      "eventZoneId": "warehouse-district",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "industrial-safety",
+      "interactionType": "A",
+      "coverage": 0.5,
+      "selectedPartnerDeviceIds": [
+        "dev-wd-humidity-1"
+      ],
+      "requestedCapabilities": [
+        "humidity-control",
+        "humidity-reading"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Needs:** The event requires **humidity-control** and **humidity-reading**.  \n   - The agent has **humidity-reading** capability (from its Caps list), so it can fulfill this part.  \n   - However, **humidity-control** is not in its Caps, so it cannot act directly on this need.  \n\n2. **Collaboration Opportunity:**  \n   - While the agent cannot control humidity directly, it can **propagate effects** from adjacent zones (e.g., **factory-zone**, which is an ACTUATOR zone).  \n   - The **factory-zone** might have HVAC systems (not explicitly listed in Caps but implied via ACTUATORS) that could indirectly influence humidity in the **warehouse-district**.  \n   - Alternatively, the agent could collaborate with **available partners** (e.g., **Residential Block A/B HVAC Services** or **Office Tower HVAC Services**) to address humidity control, even if they are not in the warehouse-district.  \n\n3. **Necessity of Collaboration:**  \n   - Since the event severity is **low** and the agent can provide **humidity-reading**, collaboration may not be urgent. However, if **humidity-control** is critical (e.g., to prevent mold or equipment damage), collaboration with an HVAC partner is necessary.  \n   - The agent should **initiate collaboration** with a partner capable of humidity control (e.g., HVAC services) to address the full event needs, leveraging propagation from adjacent zones or external services.  \n\n**Conclusion:** The agent should initiate collaboration to address the **humidity-control** need, even if it requires working with external HVAC services or using propagation from adjacent zones.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 3,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 75021.26990000159,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-21",
+      "eventZoneId": "factory-zone",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "industrial-safety",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in factory-zone and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.09520000219345093,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-22",
+      "eventZoneId": "data-center",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "energy-grid",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in data-center and all required capabilities (ups-monitoring). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.07070000469684601,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-23",
+      "eventZoneId": "emergency-center",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "emergency-services",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in emergency-center and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.057099997997283936,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-24",
+      "eventZoneId": "airport-terminal",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "transport-coordinator",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in airport-terminal and all required capabilities (occupancy-counting). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.05430000275373459,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-25",
+      "eventZoneId": "power-plant",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "energy-grid",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in power-plant and all required capabilities (generator-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.11900000274181366,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-26",
+      "eventZoneId": "residential-b",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "residential-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in residential-b and all required capabilities (motion-detection). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.11429999768733978,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-27",
+      "eventZoneId": "water-treatment",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "water-management",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in water-treatment and all required capabilities (water-quality-monitoring). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.07519999891519547,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-28",
+      "eventZoneId": "police-station",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "security-network",
+      "interactionType": "E",
+      "coverage": 0,
+      "requestedCapabilities": [
+        "video-surveillance"
+      ],
+      "llmReasoning": "Agent security-network is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 1.3234999999403954,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-light-1",
+      "eventZoneId": "parking-garage",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "transport-coordinator",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in parking-garage and all required capabilities (lighting-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.05870000272989273,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-air-1",
+      "eventZoneId": "factory-zone",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "industrial-safety",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-fz-vibration-1",
+        "dev-fz-vibration-2",
+        "dev-fz-energy-1",
+        "dev-fz-energy-2",
+        "dev-fz-energy-3",
+        "dev-fz-energy-4",
+        "dev-fz-noise-1",
+        "dev-fz-noise-2",
+        "dev-fz-noise-3",
+        "dev-fz-noise-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert",
+        "air-filtration"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Needs Alignment:** The critical event in the factory-zone requires **emergency-response**, **monitoring**, **emergency-alert**, and **air-filtration**. The agent’s capabilities include **air-quality-monitoring** (to monitor the issue) and **air-filtration** (to address it directly).  \n2. **Emergency Response Coordination:** While the agent lacks direct emergency-response capabilities, it can collaborate with the **Emergency Center Alert System Service** (available in the partners list) to trigger an **emergency-alert**. This ensures rapid escalation of the critical situation.  \n3. **Actuator Coverage:** The agent has **DIRECT coverage** in the factory-zone, enabling it to activate **air-filtration** systems locally to mitigate the issue.  \n4. **Critical Severity:** The event’s **critical** severity necessitates immediate action, making collaboration with external emergency services essential to ensure safety and compliance.  \n\n**Action Steps:**  \n- Activate **air-filtration** systems in the factory-zone.  \n- Trigger an **emergency-alert** via the **Emergency Center Alert System Service**.  \n- Coordinate with **monitoring** partners (e.g., air-quality-monitoring services) to track the situation in real time.  \n\nThis ensures a proactive response to the critical environmental parameter change.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 6428.428999997675,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-emergency-1",
+      "eventZoneId": "warehouse-district",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "industrial-safety",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "emergency-alert",
+        "dispatch"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-wd-energy-1",
+        "dev-wd-energy-2",
+        "dev-wd-energy-3",
+        "dev-wd-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert",
+        "dispatch"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Context**: The critical `param_changed` event in the **warehouse-district** (a zone within the agent's coverage) requires immediate action. The EVENT_NEEDS include **emergency-response, monitoring, emergency-alert, and dispatch**, which align with the agent's capabilities in **gas-detection, air-quality-monitoring, noise-monitoring, temperature-reading, humidity-reading**, and **ventilation-control**.  \n\n2. **Collaboration Opportunities**:  \n   - **Emergency Alert**: The agent can trigger alerts via the **Emergency Center Alert System Service** (available in the partners list) to notify relevant authorities.  \n   - **Monitoring Coordination**: Partner services like **Residential Block A/B/C Air Quality Service** or **Shopping Mall CO2 Sensor Service** (which overlap with the agent's air-quality-monitoring capability) could provide additional data if the warehouse-district event is linked to air quality or gas leaks.  \n   - **Dispatch Support**: While the agent cannot directly dispatch resources, it can collaborate with **Fire Station Alert System Service** or **Emergency Center Smoke Detector Service** (available partners) to escalate the situation.  \n\n3. **Propagation Coverage**: The agent can act in the **warehouse-district** directly and propagate effects to adjacent zones if needed (e.g., if the emergency spreads).  \n\n**Action Steps**:  \n- Activate **gas-detection** and **air-quality-monitoring** in the warehouse-district to assess the threat.  \n- Send an **emergency-alert** to the **Emergency Center Alert System Service** and **Fire Station Alert System Service**.  \n- Coordinate with **ventilation-control** systems (if applicable) to mitigate risks.  \n- Monitor **temperature-reading** and **humidity-reading** for secondary hazards.  \n\nThis ensures the agent fulfills its role in monitoring, alerting, and enabling emergency response through collaboration.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 71061.73839999735,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sc-humidity-1",
+      "eventZoneId": "residential-a",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "residential-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in residential-a and all required capabilities (motion-detection, occupancy-counting). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.10450000315904617,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    }
+  ],
+  "decisionQuality": {
+    "meanZoneTargetingAccuracy": 0.5,
+    "meanCapabilityAppropriateness": 0.43124999999999997,
+    "meanSideEffectAwareness": 0.40625,
+    "meanPhysicalPlausibility": 0.5,
+    "meanCorrectDecisionRate": 0.9375
+  },
+  "collaboration": {
+    "initiationRate": 0.5,
+    "formationSuccessRate": 0.0625,
+    "goalAchievementRate": 0.5,
+    "optimalPerformanceRatio": 0.46875
+  },
+  "efficiency": {
+    "totalEvents": 32,
+    "layer1Filtered": 0,
+    "layer1FilterRate": 0,
+    "llmCallCount": 32,
+    "totalTokens": 41694,
+    "promptTokens": 28297,
+    "completionTokens": 13397,
+    "avgAssessmentTimeMs": 19723.417496875394,
+    "totalWallTimeMs": 631179.6281000003
+  },
+  "rawDualTriggerStats": {
+    "totalEventsProcessed": 6,
+    "filteredByLayer1": 0,
+    "passedToLayer2": 0,
+    "acDecisionMade": 2,
+    "acInitiated": 2,
+    "handledIndependently": 4,
+    "deferred": 0,
+    "layer2DecisionDistribution": {
+      "initiate_ac": 2,
+      "handle_independently": 4,
+      "defer": 0,
+      "ignore": 0
+    },
+    "totalAssessmentTimeMs": 13420,
+    "assessmentCount": 6,
+    "totalConfidence": 5.6,
+    "confidenceCount": 6,
+    "layer1Stats": {
+      "totalEventsProcessed": 0,
+      "clustersCreated": 0,
+      "passedToLayer2": 0,
+      "filteredByLayer1": 0,
+      "simpleAggregationUsed": 0,
+      "filteringRate": 0,
+      "layer2Rate": 0
+    },
+    "layer2Stats": {
+      "assessor": {
+        "totalAssessments": 6,
+        "acInitiated": 2,
+        "handledIndependently": 4,
+        "deferred": 0,
+        "ignored": 0,
+        "llmErrors": 0
+      },
+      "negotiator": {
+        "totalSelections": 2,
+        "partnersFound": 10,
+        "proposalsSent": 0,
+        "proposalsAccepted": 0,
+        "proposalsRejected": 0
+      },
+      "goalEngine": {
+        "totalFormulations": 2,
+        "goalsCreated": 7,
+        "simpleGoals": 0,
+        "moderateGoals": 0,
+        "complexGoals": 2
+      }
+    },
+    "layer1FilterRate": 0,
+    "avgAssessmentTimeMs": 2236.6666666666665,
+    "avgConfidence": 0.9333333333333332
+  },
+  "classification": {
+    "perClass": [
+      {
+        "className": "initiate_ac",
+        "precision": 0.875,
+        "recall": 0.8235294117647058,
+        "f1": 0.8484848484848485,
+        "tp": 14,
+        "fp": 2,
+        "fn": 3,
+        "support": 17
+      },
+      {
+        "className": "handle_independently",
+        "precision": 0.6,
+        "recall": 0.8181818181818182,
+        "f1": 0.6923076923076923,
+        "tp": 9,
+        "fp": 6,
+        "fn": 2,
+        "support": 11
+      },
+      {
+        "className": "defer",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0
+      },
+      {
+        "className": "ignore",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 1,
+        "fn": 4,
+        "support": 4
+      }
+    ],
+    "macroPrecision": 0.36875,
+    "macroRecall": 0.410427807486631,
+    "macroF1": 0.38519813519813517,
+    "collaborationTriggerF1": {
+      "precision": 0.875,
+      "recall": 0.8235294117647058,
+      "f1": 0.8484848484848485,
+      "tp": 14,
+      "fp": 2,
+      "tn": 13,
+      "fn": 3,
+      "support": 17
+    },
+    "confusionMatrix": [
+      [
+        14,
+        2,
+        0,
+        1
+      ],
+      [
+        2,
+        9,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        4,
+        0,
+        0
+      ]
+    ],
+    "partnerSelection": {
+      "partnerPrecision": 0,
+      "partnerRecall": 0,
+      "partnerF1": 0,
+      "support": 17
+    },
+    "capabilityMatch": {
+      "precision": 0.5396825396825397,
+      "recall": 0.723404255319149,
+      "f1": 0.6181818181818182,
+      "support": 28
+    }
+  }
+}

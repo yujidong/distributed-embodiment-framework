@@ -1,0 +1,1214 @@
+{
+  "config": {
+    "id": "exp3-full-ac-factory",
+    "name": "Exp 3 RQ3: full-ac factory",
+    "rq": "RQ3",
+    "scenario": "factory",
+    "condition": "full-ac",
+    "iterations": 5,
+    "llmModel": "qwen3-14b-q4:latest",
+    "timeoutMs": 120000,
+    "multiAgentEval": true,
+    "realisticRouting": true
+  },
+  "iteration": 2,
+  "timestamp": "2026-05-08T21:30:53.468Z",
+  "events": [
+    {
+      "eventId": "evt-factory-1",
+      "eventZoneId": "production-line-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "production-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in production-line-1 and all required capabilities (cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.0738999992609024,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-2",
+      "eventZoneId": "chemical-storage",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "ventilation-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-cs-energy-1",
+        "dev-cs-energy-2",
+        "dev-cs-energy-3",
+        "dev-cs-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "ventilation-control"
+      ],
+      "llmReasoning": "Agent safety-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 64411.578599996865,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-3",
+      "eventZoneId": "server-room",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "emergency-response"
+      ],
+      "llmReasoning": "Agent maintenance-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 64398.86930000037,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-4",
+      "eventZoneId": "painting-booth",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "ventilation-control",
+        "air-purification"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-pb2-vibration-1",
+        "dev-pb2-vibration-2",
+        "dev-pb2-energy-1",
+        "dev-pb2-energy-2",
+        "dev-pb2-energy-3",
+        "dev-pb2-energy-4",
+        "dev-pb2-noise-1",
+        "dev-pb2-noise-2",
+        "dev-pb2-noise-3",
+        "dev-pb2-noise-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "ventilation-control",
+        "air-purification"
+      ],
+      "llmReasoning": "Agent safety-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 9308.822999998927,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-4",
+      "eventZoneId": "painting-booth",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "climate-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "selectedPartnerAgentId": "production-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-pb2-vibration-1",
+        "dev-pb2-vibration-2",
+        "dev-pb2-energy-1",
+        "dev-pb2-energy-2",
+        "dev-pb2-energy-3",
+        "dev-pb2-energy-4",
+        "dev-pb2-noise-1",
+        "dev-pb2-noise-2",
+        "dev-pb2-noise-3",
+        "dev-pb2-noise-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "ventilation-control",
+        "air-purification"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Ventilation-Control**: The agent has this capability in the painting-booth zone (DIRECT coverage). Since the event requires ventilation-control, the agent can act autonomously here.  \n2. **Air-Purification**: Not in the agent’s capabilities, but the **Painting Booth Energy Meter Service** and **Painting Booth Noise Sensor Service** (available partners) might indirectly support air-quality monitoring. However, no explicit air-purification service is listed.  \n3. **Emergency-Response & Monitoring**: While the agent can monitor via its actuators, emergency-response may require collaboration with other agents (e.g., **Quality Control Lab HVAC Service** for broader environmental control).  \n\n**Action Plan**:  \n- **Initiate Ventilation-Control** directly in the painting-booth zone.  \n- **Request Collaboration** with **Production Line HVAC Services** (e.g., cooling/heating) to address air-purification needs if available.  \n- **Monitor** using existing sensors (e.g., **Painting Booth Vibration Sensor Service**, **Noise Sensor Service**) and escalate if parameters worsen.  \n\nThis ensures immediate action on manageable tasks while addressing gaps through available partners.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 9308.89090000093,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-5",
+      "eventZoneId": "warehouse-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "logistics-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "dehumidifier-control",
+        "humidity-control"
+      ],
+      "llmReasoning": "Agent logistics-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 518.4479999989271,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-6",
+      "eventZoneId": "assembly-area",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "production-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in assembly-area and all required capabilities (robot-control, equipment-monitoring). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 70731.54939999431,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-6",
+      "eventZoneId": "assembly-area",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "climate-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "robot-control",
+        "equipment-monitoring"
+      ],
+      "selectedPartnerAgentId": "production-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-aa-vibration-1",
+        "dev-aa-vibration-2",
+        "dev-aa-energy-1",
+        "dev-aa-energy-2",
+        "dev-aa-energy-3",
+        "dev-aa-energy-4",
+        "dev-aa-noise-1",
+        "dev-aa-noise-2",
+        "dev-aa-noise-3",
+        "dev-aa-noise-4",
+        "dev-aa-robot-1"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "robot-control",
+        "equipment-monitoring"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Context:** The `assembly-area` zone has a high-severity parameter change (`environment.param_changed`), which likely impacts environmental conditions (temperature, humidity, ventilation).  \n2. **Alignment with Capabilities:**  \n   - The climate-agent’s **cooling, heating, humidity-control, and ventilation-control** capabilities directly address environmental parameter adjustments.  \n   - The **monitoring** need is supported by the agent’s coverage of the `assembly-area` (direct actuators).  \n3. **Collaboration Needs:**  \n   - **Emergency-response:** Partner with **Production Line X HVAC Service** (cooling/heating) to stabilize the environment.  \n   - **Equipment-monitoring:** Collaborate with **Assembly Area Temperature/Humidity/Vibration Sensors** to diagnose the root cause.  \n   - **Robot-control:** Coordinate with **Assembly Area Robot Controller Service** to pause/adjust machinery if environmental instability risks equipment or safety.  \n4. **High Severity:** Immediate action is required to prevent escalation (e.g., overheating, humidity damage). The agent’s direct actuators in `assembly-area` enable rapid intervention.  \n\n**Action Plan:**  \n- Adjust HVAC settings in `assembly-area` to stabilize temperature/humidity.  \n- Request sensor data from `Assembly Area Temperature/Humidity/Vibration Services` to identify the parameter change source.  \n- Alert **robot-control** partners to halt operations if environmental thresholds are breached.  \n- Escalate to **emergency-response** partners if conditions worsen (e.g., fire, equipment failure).  \n\nThis ensures the climate-agent addresses the event within its capabilities while leveraging available partners for comprehensive resolution.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 70731.59779999405,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-7",
+      "eventZoneId": "production-line-2",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "production-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in production-line-2 and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.5865999981760979,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-8",
+      "eventZoneId": "ev-charging",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "equipment-monitoring"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-ev-energy-1",
+        "dev-ev-energy-2",
+        "dev-ev-energy-3",
+        "dev-ev-energy-4",
+        "dev-ev-ev-1",
+        "dev-ev-ev-2",
+        "dev-ev-ev-3",
+        "dev-ev-ev-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "equipment-monitoring"
+      ],
+      "llmReasoning": "DECISION: No, the agent does not need to initiate collaboration. The event occurs in the **ev-charging** zone, where the agent has **direct coverage** and **actuators**. The agent’s capabilities (energy-monitoring, load-balancing, cost-optimization, ev-charging) align with the event’s needs (monitoring, equipment-monitoring). While the event severity is high, the agent can address it autonomously using its own tools (e.g., adjusting EV charging load, optimizing energy use). No explicit emergency-response partners are available in the provided list, and the agent’s direct control over the zone eliminates the need for external collaboration.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 6533.699699997902,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-9",
+      "eventZoneId": "welding-bay",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "ventilation-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-wb-vibration-1",
+        "dev-wb-vibration-2",
+        "dev-wb-energy-1",
+        "dev-wb-energy-2",
+        "dev-wb-energy-3",
+        "dev-wb-energy-4",
+        "dev-wb-noise-1",
+        "dev-wb-noise-2",
+        "dev-wb-noise-3",
+        "dev-wb-noise-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "ventilation-control"
+      ],
+      "llmReasoning": "Agent safety-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 552.1984999999404,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-9",
+      "eventZoneId": "welding-bay",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in welding-bay and all required capabilities (ventilation-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 552.2485000044107,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-10",
+      "eventZoneId": "quality-lab",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "quality-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "production-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-ql-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event in **quality-lab** requires **cooling** and **temperature-control**, but the agent's own capabilities (Caps) only include **temperature-monitoring** (not control).  \n- The **HVAC services** (e.g., *Production Line X HVAC Service*, *Assembly Area HVAC Service*) listed in **AVAILABLE_PARTNERS** provide **cooling/heating** capabilities, which align with the event's needs.  \n- Since the agent cannot directly address temperature-control (only monitoring) and the event has **high severity**, collaboration with an HVAC service is necessary to resolve the issue.  \n\n**Action:** Initiate collaboration with a relevant HVAC service (e.g., *Assembly Area HVAC Service* or *Production Line X HVAC Service*) to address the temperature-control requirement in the quality-lab zone.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 5751.6103999987245,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-11",
+      "eventZoneId": "server-room",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "emergency-alert",
+        "fire-detection"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-ups-1",
+        "dev-sr-ups-2",
+        "dev-sr-ups-3",
+        "dev-sr-ups-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert",
+        "fire-detection"
+      ],
+      "llmReasoning": "Agent maintenance-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 64362.49589999765,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-12",
+      "eventZoneId": "loading-dock",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "logistics-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "access-control",
+        "lighting-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-ld-energy-1",
+        "dev-ld-energy-2",
+        "dev-ld-energy-3",
+        "dev-ld-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "access-control",
+        "lighting-control"
+      ],
+      "llmReasoning": "Agent logistics-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 141962.33669999987,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-12",
+      "eventZoneId": "loading-dock",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "security-agent",
+      "interactionType": "A",
+      "coverage": 0.5,
+      "selectedPartnerAgentId": "production-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-ld-energy-1",
+        "dev-ld-energy-2",
+        "dev-ld-energy-3",
+        "dev-ld-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "access-control",
+        "lighting-control"
+      ],
+      "llmReasoning": "1. **Event Needs Alignment**: The event requires **emergency-response, monitoring, access-control, and lighting-control**. The agent's capabilities include **access-control** and **lighting-control**, which directly address two of the needs. However, the **loading-dock** zone (where the event occurred) is not among the agent's **ACTUATORS** (break-room, control-room), so direct action is not possible. Propagation from adjacent zones (e.g., break-room or control-room) could enable indirect influence on loading-dock if adjacency is confirmed.\n\n2. **Critical Severity**: The event is classified as **critical**, necessitating immediate action. While the agent can manage **access-control** (e.g., locking doors) and **lighting-control** via propagation, **emergency-response** may require coordination with other agents (e.g., HVAC, temperature, or security systems in adjacent zones) to ensure safety protocols are enforced.\n\n3. **Collaboration Opportunities**: The **AVAILABLE_PARTNERS** include services like **Loading Dock Temperature Service** and **Energy Meter Services**, which could provide additional monitoring data. However, the agent’s **access-control** and **lighting-control** capabilities may need to be activated via propagation from break-room or control-room to address the event.\n\n4. **Propagation Feasibility**: If the **loading-dock** is adjacent to **break-room** or **control-room**, the agent can use **PROPAGATION** to influence the loading-dock zone. For example, adjusting lighting or access controls in adjacent zones to mitigate risks in loading-dock.\n\n**Conclusion**: The agent should collaborate to address **access-control** and **lighting-control** needs via propagation and coordinate with other agents for **monitoring** and **emergency-response**. This ensures a comprehensive response to the critical event in loading-dock.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 2,
+      "physicalPlausibility": 1,
+      "correctDecision": false,
+      "assessmentTimeMs": 141962.5320999995,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-13",
+      "eventZoneId": "warehouse-2",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "logistics-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "Agent logistics-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 4.541900001466274,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-14",
+      "eventZoneId": "production-line-3",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "production-manager",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in production-line-3 and all required capabilities (equipment-monitoring, vibration-monitoring). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.06469999998807907,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-15",
+      "eventZoneId": "production-line-2",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "production-manager",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "energy-monitoring",
+        "load-balancing"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-pl2-vibration-1",
+        "dev-pl2-vibration-2",
+        "dev-pl2-energy-1",
+        "dev-pl2-energy-2",
+        "dev-pl2-energy-3",
+        "dev-pl2-energy-4",
+        "dev-pl2-noise-1",
+        "dev-pl2-noise-2",
+        "dev-pl2-noise-3",
+        "dev-pl2-noise-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "energy-monitoring",
+        "load-balancing"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event occurs in **Zone=production-line-2**, which is within the agent's **DIRECT coverage** (actuators available in this zone).  \n- The **EVENT_NEEDS** include **emergency-response**, **monitoring**, **energy-monitoring**, and **load-balancing**. While the agent has capabilities in **temperature-monitoring**, **vibration-monitoring**, and **equipment-monitoring**, **energy-monitoring** and **load-balancing** are not directly covered by its own caps.  \n- **Available partners** include services like **Painting Booth Energy Meter Service**, **Welding Bay Energy Meter Service**, and **HVAC services** (e.g., **Painting Booth HVAC Service**, **Welding Bay HVAC Service**), which align with the **energy-monitoring** and **cooling/heating** needs.  \n- The **high severity** of the event necessitates collaboration to address energy and load-balancing issues promptly, ensuring production stability and safety.  \n\n**Action:** Initiate collaboration with energy-meter and HVAC services in zones like **Painting Booth** and **Welding Bay** to resolve the event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 5589.446799993515,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-16",
+      "eventZoneId": "chemical-storage",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "requestedCapabilities": [
+        "humidity-control",
+        "chemical-monitoring"
+      ],
+      "llmReasoning": "Agent safety-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 64204.46769999713,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-17",
+      "eventZoneId": "control-room",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "cooling"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-cr-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling"
+      ],
+      "llmReasoning": "Agent maintenance-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 133392.1752000004,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-17",
+      "eventZoneId": "control-room",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "security-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "production-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-cr-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event in **control-room** requires **cooling**, which is a capability available via the **Control Room HVAC Service (cooling, heating)** listed in the **AVAILABLE_PARTNERS**.  \n- The agent has **direct coverage** (actuators in **control-room**) and is responsible for **occupancy-detection** and **presence-detection**, which may relate to managing environmental conditions in the zone.  \n- While the agent itself does not directly provide cooling, it can **coordinate with the HVAC service** to address the cooling need, ensuring the environment remains safe and functional.  \n- Collaboration is necessary to resolve the **medium-severity parameter change** and maintain operational integrity in the control room.  \n\n**Action:** Initiate a request to the **Control Room HVAC Service** to provide cooling in response to the event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 133392.38059999794,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-18",
+      "eventZoneId": "break-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "energy-agent",
+      "interactionType": "C",
+      "coverage": 0.5,
+      "gapCapabilities": [
+        "ventilation-control"
+      ],
+      "requestedCapabilities": [
+        "ventilation-control"
+      ],
+      "llmReasoning": "DECISION: No, the energy-agent should not initiate collaboration. The event requires ventilation-control, which is not among the agent's capabilities (Caps=[energy-monitoring,load-balancing,cost-optimization,ev-charging]). Additionally, no available partner services explicitly provide ventilation-control functionality. While HVAC services exist (e.g., cooling/heating), they are distinct from ventilation. Since the agent cannot directly address the need and no collaboration partner is available for this specific task, the energy-agent should not initiate collaboration here.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10185.242700003088,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-18",
+      "eventZoneId": "break-room",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "security-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "ventilation-control"
+      ],
+      "requestedCapabilities": [
+        "ventilation-control"
+      ],
+      "llmReasoning": "**Rationale**:  \n- The agent lacks the required capability (`ventilation-control`).  \n- No available partner provides `ventilation-control` services.  \n- The CO2 sensor only monitors, not controls, air quality.  \n- The agent’s role is limited to its defined Caps (access, lighting, occupancy, etc.).  \n\nThus, the event should be escalated to a higher authority or system that can address ventilation-control.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 10185.323600001633,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-19",
+      "eventZoneId": "production-line-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "production-manager",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "requestedCapabilities": [
+        "maintenance-scheduling"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The event in **production-line-1** involves a **parameter change** (low severity) that requires **maintenance-scheduling**, which is **not directly covered** by the production-manager's capabilities (Caps).  \n- While the production-manager has **equipment-monitoring** and **vibration-monitoring** capabilities, **maintenance-scheduling** is a distinct task requiring coordination with external partners.  \n- Relevant **available partners** include services like **Assembly Area HVAC Service** (cooling/heating), **Quality Control Lab Temperature Service** (temperature-monitoring), and **Painting Booth/Vibration Sensor Services** (vibration-monitoring). These partners can address potential root causes (e.g., temperature fluctuations, vibration anomalies) linked to the parameter change.  \n- Since the production-manager has **direct coverage** of **production-line-1**, it is appropriate to proactively collaborate with the most relevant partner (e.g., **Quality Control Lab Temperature Service** or **Assembly Area HVAC Service**) to schedule maintenance and resolve the issue.  \n\n**Action:** Initiate collaboration with the **Quality Control Lab Temperature Service** or **Assembly Area HVAC Service** to investigate the parameter change and schedule maintenance.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 69024.8683000058,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-20",
+      "eventZoneId": "production-line-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "production-manager",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "emergency-alert",
+        "fire-detection",
+        "smoke-detection"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-pl1-vibration-1",
+        "dev-pl1-vibration-2",
+        "dev-pl1-energy-1",
+        "dev-pl1-energy-2",
+        "dev-pl1-energy-3",
+        "dev-pl1-energy-4",
+        "dev-pl1-noise-1",
+        "dev-pl1-noise-2",
+        "dev-pl1-noise-3",
+        "dev-pl1-noise-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert",
+        "fire-detection",
+        "smoke-detection"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Critical Event Context**: The `critical` severity parameter change in **production-line-1** requires immediate attention.  \n2. **Alignment with Caps**: The agent’s capabilities (`temperature-monitoring`, `vibration-monitoring`, `equipment-monitoring`) align with **monitoring** and **emergency-response** (e.g., adjusting cooling/heating, robot control to mitigate risks).  \n3. **Gaps in Coverage**: The event needs include **fire-detection** and **smoke-detection**, which are **not** in the agent’s capabilities. However, the agent can collaborate with **available partners** (e.g., **Chemical Storage Water Leak Service** for indirect risk mitigation or **HVAC services** for temperature control).  \n4. **Emergency Alert**: The agent can trigger alerts and coordinate with partners to address the root cause (e.g., equipment failure, environmental hazards).  \n\n**Action Plan**:  \n- Initiate **emergency-response** (e.g., halt production-line-1, activate cooling/heating if temperature-related).  \n- Collaborate with **Quality Control Lab Temperature Service** or **Assembly Area HVAC Service** to stabilize conditions.  \n- Alert human operators or higher-level systems for **fire/smoke detection** (even if direct detection is not possible, escalate to ensure safety).  \n\n**Conclusion**: Collaboration is necessary to address the critical event, leveraging the agent’s direct control over the zone and available partner services.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.6,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 71463.15700000525,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-21",
+      "eventZoneId": "painting-booth",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-pb2-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "Agent safety-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 4787.47839999944,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-21",
+      "eventZoneId": "painting-booth",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in painting-booth and all required capabilities (cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 4787.654699996114,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-22",
+      "eventZoneId": "warehouse-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "logistics-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "llmReasoning": "Agent logistics-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 3.032600000500679,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-light-1",
+      "eventZoneId": "warehouse-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "logistics-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-wh1-energy-1",
+        "dev-wh1-energy-2",
+        "dev-wh1-energy-3",
+        "dev-wh1-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "lighting-control"
+      ],
+      "llmReasoning": "Agent logistics-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 4.053099997341633,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-air-1",
+      "eventZoneId": "painting-booth",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-pb2-vibration-1",
+        "dev-pb2-vibration-2",
+        "dev-pb2-energy-1",
+        "dev-pb2-energy-2",
+        "dev-pb2-energy-3",
+        "dev-pb2-energy-4",
+        "dev-pb2-noise-1",
+        "dev-pb2-noise-2",
+        "dev-pb2-noise-3",
+        "dev-pb2-noise-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "air-purification"
+      ],
+      "llmReasoning": "Agent safety-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 12062.978199996054,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-air-1",
+      "eventZoneId": "painting-booth",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "climate-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification"
+      ],
+      "selectedPartnerAgentId": "production-manager",
+      "selectedPartnerDeviceIds": [
+        "dev-pb2-vibration-1",
+        "dev-pb2-vibration-2",
+        "dev-pb2-energy-1",
+        "dev-pb2-energy-2",
+        "dev-pb2-energy-3",
+        "dev-pb2-energy-4",
+        "dev-pb2-noise-1",
+        "dev-pb2-noise-2",
+        "dev-pb2-noise-3",
+        "dev-pb2-noise-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "air-purification"
+      ],
+      "llmReasoning": "DECISION: Yes, the climate-agent should initiate collaboration. The event in the **painting-booth** zone involves a **high-severity environment parameter change**, requiring **air-purification**, **monitoring**, and **emergency-response**. While the agent has **ventilation-control** capabilities (which can contribute to air-purification), the **emergency-response** need is outside its direct capabilities. However, the **HVAC services** (cooling/heating) listed in the available partners (e.g., Production Line 1/2/3 HVAC Services) can complement the agent’s ventilation-control actions to address air quality and stabilize the environment. Collaboration with these HVAC services ensures a coordinated response to mitigate risks. Additionally, the **monitoring** need can be supported by existing temperature/humidity sensors in the zone. Direct actuation in the **painting-booth** (via ventilation) is possible, but collaboration with HVAC partners enhances the effectiveness of the response.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 12063.032700002193,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-emergency-1",
+      "eventZoneId": "chemical-storage",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "E",
+      "coverage": 0,
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-cs-energy-1",
+        "dev-cs-energy-2",
+        "dev-cs-energy-3",
+        "dev-cs-energy-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "emergency-alert"
+      ],
+      "llmReasoning": "Agent safety-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.3333333333333333,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 526.6682000011206,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-factory-humidity-1",
+      "eventZoneId": "server-room",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "precheck",
+      "agentId": "maintenance-agent",
+      "interactionType": "D",
+      "coverage": 0,
+      "gapCapabilities": [
+        "humidity-control"
+      ],
+      "selectedPartnerAgentId": "emergency-response-agent",
+      "requestedCapabilities": [
+        "dehumidifier-control",
+        "humidity-control"
+      ],
+      "llmReasoning": "Agent maintenance-agent is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 531.0445000007749,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    }
+  ],
+  "decisionQuality": {
+    "meanZoneTargetingAccuracy": 0.5882352941176471,
+    "meanCapabilityAppropriateness": 0.5078431372549018,
+    "meanSideEffectAwareness": 0.058823529411764705,
+    "meanPhysicalPlausibility": 0.5882352941176471,
+    "meanCorrectDecisionRate": 0.8823529411764706
+  },
+  "collaboration": {
+    "initiationRate": 0.7352941176470589,
+    "formationSuccessRate": 0.72,
+    "goalAchievementRate": 0.5882352941176471,
+    "optimalPerformanceRatio": 0.47058823529411764
+  },
+  "efficiency": {
+    "totalEvents": 34,
+    "layer1Filtered": 0,
+    "layer1FilterRate": 0,
+    "llmCallCount": 34,
+    "totalTokens": 26854,
+    "promptTokens": 16931,
+    "completionTokens": 9923,
+    "avgAssessmentTimeMs": 34802.798535293514,
+    "totalWallTimeMs": 800328.5571999997
+  },
+  "rawDualTriggerStats": {
+    "totalEventsProcessed": 7,
+    "filteredByLayer1": 0,
+    "passedToLayer2": 0,
+    "acDecisionMade": 3,
+    "acInitiated": 3,
+    "handledIndependently": 4,
+    "deferred": 0,
+    "layer2DecisionDistribution": {
+      "initiate_ac": 3,
+      "handle_independently": 4,
+      "defer": 0,
+      "ignore": 0
+    },
+    "totalAssessmentTimeMs": 16986,
+    "assessmentCount": 7,
+    "totalConfidence": 6.3999999999999995,
+    "confidenceCount": 7,
+    "layer1Stats": {
+      "totalEventsProcessed": 0,
+      "clustersCreated": 0,
+      "passedToLayer2": 0,
+      "filteredByLayer1": 0,
+      "simpleAggregationUsed": 0,
+      "filteringRate": 0,
+      "layer2Rate": 0
+    },
+    "layer2Stats": {
+      "assessor": {
+        "totalAssessments": 7,
+        "acInitiated": 3,
+        "handledIndependently": 4,
+        "deferred": 0,
+        "ignored": 0,
+        "llmErrors": 0
+      },
+      "negotiator": {
+        "totalSelections": 3,
+        "partnersFound": 11,
+        "proposalsSent": 0,
+        "proposalsAccepted": 0,
+        "proposalsRejected": 0
+      },
+      "goalEngine": {
+        "totalFormulations": 3,
+        "goalsCreated": 11,
+        "simpleGoals": 0,
+        "moderateGoals": 0,
+        "complexGoals": 3
+      }
+    },
+    "layer1FilterRate": 0,
+    "avgAssessmentTimeMs": 2426.5714285714284,
+    "avgConfidence": 0.9142857142857143
+  },
+  "classification": {
+    "perClass": [
+      {
+        "className": "initiate_ac",
+        "precision": 0.64,
+        "recall": 0.8,
+        "f1": 0.7111111111111111,
+        "tp": 16,
+        "fp": 9,
+        "fn": 4,
+        "support": 20
+      },
+      {
+        "className": "handle_independently",
+        "precision": 0.6666666666666666,
+        "recall": 0.36363636363636365,
+        "f1": 0.47058823529411764,
+        "tp": 4,
+        "fp": 2,
+        "fn": 7,
+        "support": 11
+      },
+      {
+        "className": "defer",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0
+      },
+      {
+        "className": "ignore",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 3,
+        "fn": 3,
+        "support": 3
+      }
+    ],
+    "macroPrecision": 0.32666666666666666,
+    "macroRecall": 0.2909090909090909,
+    "macroF1": 0.2954248366013072,
+    "collaborationTriggerF1": {
+      "precision": 0.64,
+      "recall": 0.8,
+      "f1": 0.7111111111111111,
+      "tp": 16,
+      "fp": 9,
+      "tn": 5,
+      "fn": 4,
+      "support": 20
+    },
+    "confusionMatrix": [
+      [
+        16,
+        1,
+        0,
+        3
+      ],
+      [
+        7,
+        4,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        1,
+        0,
+        0
+      ]
+    ],
+    "partnerSelection": {
+      "partnerPrecision": 0,
+      "partnerRecall": 0,
+      "partnerF1": 0,
+      "support": 20
+    },
+    "capabilityMatch": {
+      "precision": 0.4861111111111111,
+      "recall": 0.8333333333333334,
+      "f1": 0.6140350877192983,
+      "support": 31
+    }
+  }
+}

@@ -16,6 +16,7 @@ import type { LLMClient } from '@active-collaboration/llm-integration';
 
 import { createLogger } from '@active-collaboration/shared';
 import { capabilityMatches, hasAllCapabilities } from '../utils/capabilityMatching.js';
+import { charNgramJaccard, maxSimilarity, extractEventText } from '../utils/text-similarity.js';
 // ============================================================================
 // Types
 // ============================================================================
@@ -114,6 +115,15 @@ export interface AgentContext {
   // and use compact descriptions in the LLM prompt.
   conciseServiceMode?: boolean;
 
+  // NEW: Smart-rules mode — deterministic rules with spatial + service reasoning.
+  // When true, preCheck never falls through to LLM; instead applies rule-based
+  // collaboration decisions using coverage + service registry information.
+  smartRulesMode?: boolean;
+
+  // When true, uses character n-gram Jaccard similarity for capability matching
+  // instead of LLM reasoning. A realistic non-LLM baseline using standard IR techniques.
+  tfidfBaselineMode?: boolean;
+
   // NEW: Oracle insight — perfect ground-truth information injected for
   // the oracle baseline condition. Same LLM, same prompt, better data.
   oracleInsight?: {
@@ -194,16 +204,18 @@ AC means: find and coordinate with OTHER agents who can handle this event.
 COLLABORATE = "I will alert and coordinate with capable agents" — NOT "I will do it myself."
 
 Decision rules (apply in order):
-1. If ROLE=SENSOR-ONLY → always COLLABORATE (you detect, OTHERS act)
-2. If COVERAGE=NONE → always COLLABORATE (you delegate to agents who CAN reach the zone)
-3. If Caps contain ALL required capabilities AND COVERAGE=DIRECT → INDEPENDENT
-4. Otherwise → COLLABORATE (you lack something needed, find a partner)
+1. If ROLE=SENSOR-ONLY → COLLABORATE (you detected this event — OTHER agents must act)
+2. If COVERAGE=NONE but you HAVE all required capabilities → COLLABORATE (delegate to agent that can physically reach the zone)
+3. If COVERAGE=NONE AND you LACK required capabilities → do NOT collaborate (this event is not your responsibility)
+4. If Caps contain ALL required capabilities AND COVERAGE=DIRECT → INDEPENDENT
+5. Otherwise → COLLABORATE (you lack something needed, find a partner)
 
 CRITICAL:
-- Event severity NEVER changes whether you need collaboration. Ignore severity entirely.
-- AVAILABLE_PARTNERS lists OTHER agents' services you can coordinate with — NOT your capabilities.
+- Event severity NEVER changes whether you need collaboration.
+- ROLE=SENSOR-ONLY means you detect events. Detection IS your contribution — next step is ALWAYS notify capable agents.
+- "Have capabilities but no coverage" means you should delegate to an agent with zone coverage.
 - Sensing capabilities (temperature-sensing, motion-sensing) are NOT actuating capabilities.
-- "Cannot physically act" is a reason TO collaborate, NOT a reason to decline.
+- AVAILABLE_PARTNERS lists OTHER agents' services you can coordinate with — NOT your capabilities.
 
 Answer COLLABORATE or INDEPENDENT on the first line.
 Briefly explain on the next line.`,
@@ -335,7 +347,24 @@ export class ACNecessityAssessor {
     const motivation = agentContext.motivationSuggestion;
 
     // =====================================
-    // STEP 0: Zone-coverage check (Layer 1 rule)
+    // STEP 0a: Sensor-only agent check
+    // If the agent has NO actuator zones at all, it is a pure sensor agent.
+    // Per the formal model (Definition 6): sensor-only agents always initiate_ac
+    // because detecting an event IS their contribution — they must notify
+    // capable agents for physical action.
+    // This handles all sensor-only Type D pairs without LLM involvement.
+    // =====================================
+    const isSensorOnly = !agentContext.actuatorZoneIds || agentContext.actuatorZoneIds.length === 0;
+    if (isSensorOnly) {
+      logger.info(`Sensor-only preCheck: ${agentContext.agentId} has no actuators → initiate_ac`);
+      return {
+        decision: 'initiate_ac',
+        reasoning: `Agent ${agentContext.agentId} is a pure sensor agent with no actuator capabilities. Detected event requires notifying capable agents for physical action.`,
+      };
+    }
+
+    // =====================================
+    // STEP 0b: Zone-coverage check (Layer 1 rule)
     // Use ONLY actuatorZoneIds (zones with actuators) for coverage check.
     // Do NOT fallback to managedZoneIds — a sensor-only agent has no physical
     // actuation coverage even if it monitors a zone. This must match the
@@ -351,42 +380,55 @@ export class ACNecessityAssessor {
     const coverageZones = agentContext.actuatorZoneIds ?? [];
     if (coverageZones.length > 0) {
       const eventZone = clusterSummary.region.id;
-      const adjacentZones = agentContext.adjacentZoneIds ?? [];
-
       const hasDirectCoverage = coverageZones.includes(eventZone);
-      const hasPropagationCoverage = adjacentZones.includes(eventZone);
 
+      // IMPORTANT: Both direct and propagation coverage exclude an agent from
+      // Type D/E classification. Propagation is computed from ACTUATOR zones
+      // (not managed zones), matching ground truth's EffectRange computation.
+      // If the agent has either direct or propagation coverage, it's Type B/C
+      // (can partially or fully affect the zone) → fall through to LLM.
+      // Only agents with NO coverage at all are Type D/E → handled here.
+      const hasPropagationCoverage = agentContext.adjacentZoneIds?.includes(eventZone) ?? false;
       if (!hasDirectCoverage && !hasPropagationCoverage) {
-        // Agent has no coverage of the event zone.
-        // Check capability gap to distinguish Type D from Type E.
-        const requiredCapabilities = this.inferCapabilitiesFromCluster(clusterSummary);
+        // Agent has NO coverage (neither direct nor propagation) of the event zone.
+        // Use requiredCapabilities from event details (ground truth source) if available;
+        // fall back to inferred capabilities.
+        const explicitCapabilities = clusterSummary.findings[0]?.details?.requiredCapabilities;
+        const requiredCapabilities = Array.isArray(explicitCapabilities)
+          ? (explicitCapabilities as string[]).map(c => c.toLowerCase())
+          : this.inferCapabilitiesFromCluster(clusterSummary);
         const missingCapabilities = requiredCapabilities.filter(cap =>
           !agentContext.capabilities.some(ac => capabilityMatches(ac, cap))
         );
 
-        if (missingCapabilities.length === 0 && requiredCapabilities.length > 0) {
-          // Type E: Agent HAS all required capabilities but no physical coverage.
-          // Ground truth: initiate_ac (delegate to an agent with zone coverage).
-          // Fall through to LLM so it can make the correct delegation decision.
-          logger.info(`Zone-coverage preCheck: event in ${eventZone}, agent has ALL capabilities but no coverage. Type E — deferring to LLM for delegation decision.`);
-          // Continue to LLM assessment below
+        if (missingCapabilities.length === 0) {
+          // Type E: Agent has no direct coverage AND no capability gap.
+          // This includes both: (1) agent has all required capabilities but no zone coverage,
+          // and (2) no capabilities are required (informational events where agent still
+          // cannot reach the zone). Ground truth: initiate_ac for all Type E cases.
+          logger.info(`Type E preCheck: ${agentContext.agentId} has no direct coverage of ${eventZone} and no capability gap (required: [${requiredCapabilities.join(', ')}]) → initiate_ac`);
+          return {
+            decision: 'initiate_ac',
+            reasoning: `Agent has no direct actuator coverage of zone ${eventZone} (actuator zones: ${coverageZones.join(', ')}). ${requiredCapabilities.length > 0 ? `Has all required capabilities [${requiredCapabilities.join(', ')}] but must delegate.` : 'No specific capabilities required but cannot reach zone — must notify agents with coverage.'}`,
+          };
         } else {
-          // Type D: Agent has no coverage AND lacks capabilities.
-          // Correct to defer/ignore — agent cannot help with this event.
-          const isUrgent = clusterSummary.significance === 'urgent' ||
-                           clusterSummary.significance === 'high';
+          // Type D: Agent has no direct coverage AND lacks capabilities.
+          // Ground truth: ignore if severity=low or no required capabilities, else defer.
+          const eventSeverity = clusterSummary.findings[0]?.details?.severity
+            ?? (clusterSummary.significance === 'urgent' ? 'critical' : clusterSummary.significance);
+          const hasRequiredCaps = requiredCapabilities.length > 0;
 
-          if (isUrgent) {
-            logger.info(`Zone-coverage preCheck: event in ${eventZone}, agent actuator zones [${coverageZones.join(',')}]. Deferring urgent out-of-coverage event.`);
-            return {
-              decision: 'defer',
-              reasoning: `Event in zone ${eventZone} is outside agent's actuator coverage (actuator zones: ${coverageZones.join(', ')}). Deferring to agents with relevant coverage.`,
-            };
-          } else {
-            logger.info(`Zone-coverage preCheck: event in ${eventZone}, agent actuator zones [${coverageZones.join(',')}]. Ignoring out-of-coverage event.`);
+          if (eventSeverity === 'low' || !hasRequiredCaps) {
+            logger.info(`Type D preCheck: event in ${eventZone}, agent actuator zones [${coverageZones.join(',')}], severity=${eventSeverity}, hasRequiredCaps=${hasRequiredCaps}. Ignoring.`);
             return {
               decision: 'ignore',
               reasoning: `Event in zone ${eventZone} is outside agent's actuator coverage (actuator zones: ${coverageZones.join(', ')}). Not relevant to this agent.`,
+            };
+          } else {
+            logger.info(`Type D preCheck: event in ${eventZone}, agent actuator zones [${coverageZones.join(',')}], severity=${eventSeverity}. Deferring.`);
+            return {
+              decision: 'defer',
+              reasoning: `Event in zone ${eventZone} is outside agent's actuator coverage (actuator zones: ${coverageZones.join(', ')}). Deferring to agents with relevant coverage.`,
             };
           }
         }
@@ -400,6 +442,10 @@ export class ACNecessityAssessor {
     // independently without needing collaboration or LLM assessment.
     // This matches the GroundTruthCalculator's Type A classification:
     // Coverage=1 AND Gap=∅ → handle_independently.
+    //
+    // The capability coverage check is orthogonal to the cluster's
+    // severity recommendation — even high-severity events should be
+    // handled independently when the agent has everything needed.
     // =====================================
     if (coverageZones.length > 0) {
       const eventZone = clusterSummary.region.id;
@@ -487,6 +533,81 @@ export class ACNecessityAssessor {
     if (clusterSummary.recommendation === 'immediate_action') {
       logger.info(`immediate_action recommendation: deferring to LLM for context-rich decision`);
       // Fall through to LLM assessment
+    }
+
+    // Smart-rules mode: deterministic rules without LLM fallback.
+    // Uses spatial coverage + service registry to make collaboration decisions.
+    if (agentContext.smartRulesMode) {
+      const requiredCapabilities = this.inferCapabilitiesFromCluster(clusterSummary);
+      const missingCapabilities = requiredCapabilities.filter(cap =>
+        !agentContext.capabilities.some(ac => capabilityMatches(ac, cap))
+      );
+      const hasPartnerServices = (agentContext.discoverableServices?.length ?? 0) > 0;
+
+      if (missingCapabilities.length > 0 && hasPartnerServices) {
+        // Agent lacks capabilities but partners are available → collaborate
+        logger.info(`Smart-rules: agent lacks [${missingCapabilities.join(',')}] but partners available → initiate_ac`);
+        return {
+          decision: 'initiate_ac',
+          reasoning: `Agent lacks required capabilities [${missingCapabilities.join(', ')}] but partner services are available. Initiating collaboration.`,
+        };
+      } else if (missingCapabilities.length > 0) {
+        // Agent lacks capabilities but no partners → handle independently (best effort)
+        logger.info(`Smart-rules: agent lacks [${missingCapabilities.join(',')}] and no partners → handle_independently`);
+        return {
+          decision: 'handle_independently',
+          reasoning: `Agent lacks capabilities [${missingCapabilities.join(', ')}] and no partner services available. Handling independently.`,
+        };
+      } else {
+        // Agent has all capabilities → handle independently
+        logger.info(`Smart-rules: agent has all capabilities → handle_independently`);
+        return {
+          decision: 'handle_independently',
+          reasoning: `Agent has all required capabilities. Handling independently.`,
+        };
+      }
+    }
+
+    // TF-IDF baseline mode: character n-gram Jaccard similarity for capability matching.
+    // A realistic non-LLM baseline using standard IR techniques. Uses the same raw
+    // information as full-AC (agent capabilities, partner service capabilities) but
+    // processes it through text similarity rather than LLM reasoning.
+    if (agentContext.tfidfBaselineMode) {
+      const eventText = extractEventText(clusterSummary);
+
+      // Compute similarity between event text and agent's own capabilities
+      const selfSim = maxSimilarity(eventText, agentContext.capabilities);
+
+      // Compute similarity between event text and partner service capabilities
+      const partnerCaps = (agentContext.discoverableServices ?? [])
+        .flatMap(s => s.capabilities);
+      const partnerSim = maxSimilarity(eventText, partnerCaps);
+
+      // Decision threshold: controls the balance between false positives and
+      // false negatives. At 0.25, partial matches (e.g., "temperature" ≈
+      // "temperature-monitoring") pass, but the system cannot distinguish
+      // monitoring from control — a realistic limitation of text similarity.
+      const THRESHOLD = 0.25;
+
+      if (selfSim > THRESHOLD) {
+        logger.info(`TF-IDF baseline: event="${eventText}" selfSim=${selfSim.toFixed(3)} > ${THRESHOLD} → handle_independently`);
+        return {
+          decision: 'handle_independently',
+          reasoning: `Text similarity match (score=${selfSim.toFixed(3)}) with own capabilities. Handling independently.`,
+        };
+      } else if (partnerSim > THRESHOLD && (agentContext.discoverableServices?.length ?? 0) > 0) {
+        logger.info(`TF-IDF baseline: event="${eventText}" selfSim=${selfSim.toFixed(3)}, partnerSim=${partnerSim.toFixed(3)} → initiate_ac`);
+        return {
+          decision: 'initiate_ac',
+          reasoning: `No capability match (self=${selfSim.toFixed(3)}) but partner match (score=${partnerSim.toFixed(3)}). Initiating collaboration.`,
+        };
+      } else {
+        logger.info(`TF-IDF baseline: event="${eventText}" selfSim=${selfSim.toFixed(3)}, partnerSim=${partnerSim.toFixed(3)} → handle_independently (no match)`);
+        return {
+          decision: 'handle_independently',
+          reasoning: `No significant text similarity match (self=${selfSim.toFixed(3)}, partner=${partnerSim.toFixed(3)}). Handling independently.`,
+        };
+      }
     }
 
     // Needs LLM evaluation
@@ -866,7 +987,7 @@ export class ACNecessityAssessor {
     const coverageInfo = isSensorOnly
       ? '\nCOVERAGE: NONE → Delegate to AVAILABLE_PARTNERS who have actuators.'
       : agentContext.actuatorZoneIds !== undefined
-        ? `\nCOVERAGE: ${hasActuatorInZone ? 'DIRECT' : hasAdjacentCoverage ? 'PROPAGATION' : 'NONE'} — ${hasActuatorInZone ? 'You have actuators in this zone.' : hasAdjacentCoverage ? 'You can affect this zone via physical propagation from adjacent zones.' : `This event zone is NOT in your actuator zones [${agentContext.actuatorZoneIds.join(',')}]. Collaborate to find agents who CAN reach this zone.`}`
+        ? `\nCOVERAGE: ${hasActuatorInZone ? 'DIRECT' : hasAdjacentCoverage ? 'PROPAGATION' : 'NONE'} — ${hasActuatorInZone ? 'You have actuators in this zone.' : hasAdjacentCoverage ? 'You can affect this zone via physical propagation from adjacent zones.' : `You CANNOT physically reach this zone (your actuator zones: [${agentContext.actuatorZoneIds.join(',')}]). Check EVENT_NEEDS: if your Caps match, COLLABORATE to delegate. If you lack those Caps, this is not your responsibility.`}`
         : '';
 
     // Build service information — handle concise-service ablation mode

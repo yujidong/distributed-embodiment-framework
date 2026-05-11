@@ -1,0 +1,970 @@
+{
+  "config": {
+    "id": "exp3-oracle-single-room",
+    "name": "Exp 3 RQ3: oracle single-room",
+    "rq": "RQ3",
+    "scenario": "single-room",
+    "condition": "oracle",
+    "iterations": 5,
+    "llmModel": "qwen3-14b-q4:latest",
+    "timeoutMs": 120000,
+    "multiAgentEval": true,
+    "realisticRouting": true
+  },
+  "iteration": 4,
+  "timestamp": "2026-05-08T12:23:39.930Z",
+  "events": [
+    {
+      "eventId": "evt-sr-1",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (cooling). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 8655.223399999784,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-1",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "climate-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "**Action Steps**:  \n1. Request the HVAC Service to activate cooling/heating in room-1.  \n2. Monitor the situation to ensure temperature stabilizes and prevent escalation (e.g., fire risk from overheating).  \n3. If the event persists, trigger emergency alerts or fire-suppression protocols as needed.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 8655.244899999816,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-1",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "air-quality-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "cooling"
+      ],
+      "selectedPartnerAgentId": "climate-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control"
+      ],
+      "llmReasoning": "**Action:** Request the HVAC service to adjust cooling/heating in **room-1** based on the current environmental conditions.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 8655.270699999994,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-2",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (lighting-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 8719.67470000009,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-2",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "selectedPartnerAgentId": "climate-agent",
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "**Action:** Initiate a request to the Room 1 Light Service to adjust lighting parameters in response to the environment change.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 8719.694200000027,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-2",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "air-quality-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "selectedPartnerAgentId": "climate-agent",
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "DECISION: Yes, the Air Quality Agent should initiate collaboration with the **Room 1 Light Service (lighting-control)** to address the `lighting-control` need triggered by the environment parameter change. While the agent's capabilities do not include direct lighting control, the `EVENT_NEEDS` explicitly requests collaboration in this area, and the Lighting Service is available in the zone. This partnership would allow the agent to coordinate lighting adjustments indirectly, potentially improving air quality or comfort in response to the environmental change (e.g., reducing glare or adjusting lighting based on occupancy/motion data). The low severity of the event suggests a non-urgent but proactive adjustment.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 8719.709700000007,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-3",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.12089999997988343,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-3",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.1300999999511987,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-3",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "air-quality-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.1366999999154359,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-4",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "climate-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-sr-co2-1",
+        "dev-sr-co2-2",
+        "dev-sr-plug-1",
+        "dev-sr-plug-2",
+        "dev-sr-plug-3",
+        "dev-sr-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "The Climate Agent should initiate collaboration with available partners to address the critical event. Here's the rationale:  \n\n1. **Emergency Alert**: The Climate Agent can use **Room 1 Speaker Services** to broadcast emergency alerts, ensuring occupants are notified of the critical situation.  \n\n2. **Occupancy Monitoring**: Collaborate with **Room 1 Motion Sensor Services** to determine if the room is occupied, aiding in emergency response planning (e.g., evacuating or prioritizing assistance).  \n\n3. **Monitoring & Fire Suppression (Partial)**: While the Climate Agent lacks direct fire suppression capabilities, it can:  \n   - Use **CO2 Sensor Services** (if the critical parameter involves air quality) to monitor for hazardous gas levels.  \n   - Coordinate with **Smart Plug Services** to power down non-essential devices, reducing fire risks.  \n\n4. **Lighting Control**: Adjust lighting via its own **lighting-control** capability to improve visibility during emergencies.  \n\nThough fire suppression is not explicitly covered by available partners, the Climate Agent can still mitigate risks by leveraging its capabilities and collaborating on monitoring, alerts, and occupant safety. This aligns with the event needs for **emergency-response** and **emergency-alert**.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 147309.76930000004,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-4",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (fire-suppression, emergency-alert). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 147309.80719999992,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-4",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "air-quality-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-sr-co2-1",
+        "dev-sr-co2-2",
+        "dev-sr-plug-1",
+        "dev-sr-plug-2",
+        "dev-sr-plug-3",
+        "dev-sr-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "fire-suppression",
+        "emergency-alert"
+      ],
+      "llmReasoning": "1. **Event Criticality**: The `severity=critical` parameter change in `room-1` requires immediate action. The event needs include **emergency-response**, **fire-suppression**, and **emergency-alert**, which align with the agent's capabilities in **air-purification**, **ventilation-control**, and **humidity-monitoring** (e.g., mitigating hazardous air conditions).\n\n2. **Capable Actuators**: The agent has direct control over `room-1` actuators, enabling it to:\n   - Adjust ventilation (via `ventilation-control`) to dilute contaminants.\n   - Activate air purification systems if CO2 or particulate levels are unsafe.\n   - Coordinate with **Room 1 Speaker Service** to issue emergency alerts (e.g., \"Evacuate due to poor air quality\").\n\n3. **Collaboration Opportunities**:\n   - **HVAC Service**: Partner with `Room 1 HVAC Service` (cooling/heating) to adjust airflow or temperature if the air quality issue is linked to thermal conditions.\n   - **Motion Sensors**: Use `Room 1 Motion Sensor Service` to check occupancy before initiating emergency protocols (e.g., avoiding unnecessary alerts if the room is unoccupied).\n   - **Fire Suppression**: While the agent does not directly handle fire suppression, it can alert the **fire-suppression** partner if the air quality issue (e.g., high CO2, smoke) indicates a fire risk.\n\n4. **Coverage**: The agent's **DIRECT** coverage in `room-1` ensures it can act autonomously while coordinating with partners to address the critical event comprehensively.\n\n**Conclusion**: The agent must initiate collaboration to address the critical environment parameter change, leveraging its air-quality-related capabilities and partnering with HVAC, speakers, and motion sensors to ensure safety and compliance with emergency protocols.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 147309.81969999988,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-5",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "climate-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "smoke-detection",
+        "fire-suppression"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-sr-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "smoke-detection",
+        "fire-suppression"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Needs vs. Agent Capabilities:**  \n   - The event requires **cooling**, **temperature-control**, **smoke-detection**, and **fire-suppression**.  \n   - The Climate Agent has **cooling** and **temperature-monitoring** capabilities (via its `temperature-monitoring` and `cooling` caps). However, **smoke-detection** and **fire-suppression** are not covered by its own capabilities.  \n\n2. **Available Partners:**  \n   - While the available partners (e.g., motion sensors, smart plugs, humidifiers) do not explicitly list **smoke-detection** or **fire-suppression** services, **collaboration is still possible** for the **cooling/temperature-control** needs.  \n   - For example, the agent could:  \n     - Use **smart plugs** to power down non-essential devices (reducing heat load).  \n     - Use **humidifiers** (if humidity is a factor) to indirectly influence temperature.  \n     - Coordinate with **motion sensors** to optimize lighting and cooling based on occupancy.  \n\n3. **High Severity Alert:**  \n   - The `severity=high` event implies urgency. While the agent cannot directly handle smoke/fire suppression, it can **initiate collaboration** to address **cooling/temperature-control** and **alert occupants** (via speakers) if smoke/fire is detected (even if no direct suppression service exists).  \n\n4. **Coverage and Direct Action:**  \n   - Since the agent has **direct coverage** (actuators in `room-1`), it can **proactively adjust cooling systems** to mitigate the temperature issue.  \n\n**Conclusion:**  \nThe agent should **initiate collaboration** to address **cooling/temperature-control** using its capabilities and available partners (e.g., smart plugs, humidifiers, motion sensors). For **smoke/fire suppression**, the agent should **alert occupants** (via speakers) and escalate the issue if no dedicated service is available.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 16983.037200000137,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-5",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (smoke-detection, fire-suppression). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 16983.08530000015,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-5",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "air-quality-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "smoke-detection",
+        "fire-suppression"
+      ],
+      "selectedPartnerAgentId": "climate-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-hvac-1"
+      ],
+      "requestedCapabilities": [
+        "cooling",
+        "temperature-control",
+        "smoke-detection",
+        "fire-suppression"
+      ],
+      "llmReasoning": "The **smoke-detection** and **fire-suppression** needs are not covered by the agent’s capabilities or available partners, so these would require collaboration with other agents or systems not listed here. However, the agent can proactively engage the HVAC service to mitigate temperature-related risks. \n\n**Action Steps**:  \n1. Request the HVAC service to adjust cooling/heating in **room-1** to stabilize temperature.  \n2. Monitor humidity and ventilation (via the agent’s capabilities) to ensure air quality remains safe during temperature adjustments.  \n3. If smoke/fire risks persist, escalate to external fire-safety systems (not currently available in partners).  \n\nThis collaboration aligns with the agent’s **DIRECT coverage** and prioritizes addressing the high-severity temperature-related event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 16983.100900000194,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-6",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "climate-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification",
+        "ventilation-control"
+      ],
+      "selectedPartnerDeviceIds": [
+        "dev-sr-co2-1",
+        "dev-sr-co2-2",
+        "dev-sr-plug-1",
+        "dev-sr-plug-2",
+        "dev-sr-plug-3",
+        "dev-sr-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "air-purification",
+        "ventilation-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- **Event Needs vs. Agent Caps:**  \n  The EVENT_NEEDS include **air-purification** and **ventilation-control**, which are **not directly covered** by the agent's capabilities (temperature-monitoring, cooling, lighting-control, motion-detection). However, the agent can collaborate with partners to address these needs indirectly.  \n\n- **Available Partners:**  \n  - **CO2 Sensors** (air-quality-monitoring): Can provide data to assess air quality, supporting **air-purification** needs.  \n  - **Humidifiers** (humidity-control, climate-control): Can adjust humidity levels, which may complement **ventilation-control** or **air-purification** efforts.  \n  - **Motion Sensors** (occupancy-monitoring): Can determine if the room is occupied, influencing decisions about ventilation or cooling.  \n  - **Smart Plugs/Speakers**: Could be used to trigger emergency responses (e.g., turning off devices, alerting occupants).  \n\n- **Action Required:**  \n  The agent should request collaboration with **CO2 sensors**, **humidifiers**, and **motion sensors** to address the high-severity parameter change. For example:  \n  - Use CO2 sensors to check air quality and trigger air-purification if needed.  \n  - Use humidifiers to adjust humidity if the parameter change relates to climate control.  \n  - Use motion sensors to determine occupancy and optimize ventilation or cooling.  \n\n**Conclusion:** Collaboration is necessary to fulfill the EVENT_NEEDS beyond the agent's standalone capabilities.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 11655.962000000058,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-6",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification",
+        "ventilation-control"
+      ],
+      "selectedPartnerAgentId": "climate-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-co2-1",
+        "dev-sr-co2-2",
+        "dev-sr-plug-1",
+        "dev-sr-plug-2",
+        "dev-sr-plug-3",
+        "dev-sr-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "air-purification",
+        "ventilation-control"
+      ],
+      "llmReasoning": "1. **Alignment with Caps**: The Safety Agent's capabilities (smoke detection, fire suppression, emergency alerts) directly address the **emergency-response** and **monitoring** needs. These are critical for high-severity events like parameter changes in a room.\n\n2. **Complementary Partners**: While the Safety Agent lacks direct air-purification/ventilation-control capabilities, it can coordinate with available partners:\n   - **Room 1 HVAC Service**: For ventilation-control (cooling/heating).\n   - **Room 1 CO2 Sensor Service**: For air-quality monitoring (linked to air-purification needs).\n   - **Room 1 Humidifier Service**: For humidity management (indirectly supporting air quality).\n   - **Smart Plugs**: To power or control air-purification devices if needed.\n\n3. **Coverage**: The agent has **DIRECT coverage** in Zone room-1, enabling immediate action (e.g., triggering emergency alerts, coordinating fire suppression).\n\n4. **High Severity**: The event is marked as high severity, requiring urgent collaboration to ensure safety and address environmental risks.\n\n**Action Plan**:\n- Initiate emergency alerts and fire suppression protocols.\n- Coordinate with HVAC and CO2 sensors to monitor/adjust ventilation and air quality.\n- Partner with humidifiers or smart plugs if air-purification devices are connected. \n\nThis ensures a comprehensive response to the high-severity event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 11656.023999999976,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-6",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "air-quality-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (air-purification, ventilation-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 11656.069600000046,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-7",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "climate-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-monitoring",
+        "ventilation-control"
+      ],
+      "selectedPartnerAgentId": "air-quality-agent",
+      "requestedCapabilities": [
+        "humidity-control",
+        "humidity-monitoring",
+        "ventilation-control"
+      ],
+      "llmReasoning": "**Rationale**:  \n- The event explicitly requires **humidity-control** and **humidity-monitoring**, which are **not in the Climate Agent's own capabilities** (its Caps include temperature-monitoring, cooling, lighting-control, motion-detection).  \n- The **Room 1 Humidifier Service** is available and directly supports `humidity-control`, aligning with the EVENT_NEEDS.  \n- While **ventilation-control** is also listed in EVENT_NEEDS, no available partner explicitly provides this capability. However, the Humidifier Service can address the immediate humidity-related requirements, and further action (e.g., notifying a ventilation system agent) could be considered if needed.  \n\n**Action**: Collaborate with the Humidifier Service to adjust humidity levels in room-1.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.6666666666666666,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 142621.17669999995,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-7",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "humidity-monitoring",
+        "ventilation-control"
+      ],
+      "selectedPartnerAgentId": "air-quality-agent",
+      "requestedCapabilities": [
+        "humidity-control",
+        "humidity-monitoring",
+        "ventilation-control"
+      ],
+      "llmReasoning": "**Reasoning:**  \n- The EVENT_NEEDS (humidity-control, humidity-monitoring, ventilation-control) are not directly covered by the Safety Agent's own capabilities (smoke-detection, fire-suppression, emergency-alert). However, the **Humidifier Service** (available in the zone) provides **humidity-control** and **humidification**, which aligns with the EVENT_NEEDS.  \n- The Safety Agent has **DIRECT coverage** of the zone (room-1) and can coordinate with the Humidifier Service to address humidity-related risks (e.g., preventing fire hazards from excess moisture or electrical issues).  \n- While the Safety Agent is not primarily responsible for environmental control, the **medium-severity environment parameter change** may indirectly impact safety (e.g., humidity affecting fire suppression systems or electrical equipment). Collaboration ensures the environment is stabilized, reducing potential safety risks.  \n\n**Action:**  \nInitiate collaboration with the **Room 1 Humidifier Service** to address humidity-control and monitoring, ensuring alignment with safety protocols.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0.6666666666666666,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 142621.35149999987,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-7",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "air-quality-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (humidity-monitoring, ventilation-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 142621.4217999999,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-8",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.583600000012666,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-8",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "safety-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.6092000000644475,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-8",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "air-quality-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (none required). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 0.622399999992922,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-9",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "climate-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (lighting-control). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 9174.587400000077,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-9",
+      "eventZoneId": "room-1",
+      "decisionMade": "ignore",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "selectedPartnerAgentId": "climate-agent",
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "DECISION: No, the Safety Agent should not initiate collaboration. The event (low severity parameter change) does not directly relate to the Safety Agent's capabilities (smoke detection, fire suppression, emergency alerts). While \"lighting-control\" is listed in EVENT_NEEDS, the Safety Agent lacks this capability and the event does not indicate an immediate safety threat requiring intervention. The available partners (e.g., Room 1 Light Service) can handle lighting adjustments independently if needed. No action required from the Safety Agent in this context.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": false,
+      "assessmentTimeMs": 9174.661300000036,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-9",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "air-quality-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "lighting-control"
+      ],
+      "selectedPartnerAgentId": "climate-agent",
+      "requestedCapabilities": [
+        "lighting-control"
+      ],
+      "llmReasoning": "**Action:** Request the Room 1 Light Service to adjust lighting settings as needed.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 1,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 9174.738200000022,
+      "goalAchieved": true,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-10",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "climate-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification",
+        "air-quality-monitoring"
+      ],
+      "selectedPartnerAgentId": "air-quality-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-co2-1",
+        "dev-sr-co2-2",
+        "dev-sr-plug-1",
+        "dev-sr-plug-2",
+        "dev-sr-plug-3",
+        "dev-sr-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "air-purification",
+        "air-quality-monitoring"
+      ],
+      "llmReasoning": "1. **Emergency Response**: The high-severity event requires immediate action. The Climate Agent can collaborate with **Room 1 Speaker Service** to issue alerts or warnings (e.g., through audio notifications) and use **Smart Plug Services** to power emergency lighting or devices.\n\n2. **Monitoring**: The agent’s **temperature-monitoring** and **motion-detection** capabilities align with the **monitoring** need. Motion sensors (available partners) can confirm occupancy, while the agent’s lighting-control can adjust lighting based on motion data.\n\n3. **Air Quality & Purification**: While the **CO2 Sensor Service** covers air-quality-monitoring, the **air-purification** need is unmet. However, the **Humidifier Services** (humidity-control) may indirectly support climate stability. If air purification is critical, the agent could request collaboration with external systems (not listed here) or prioritize alerting occupants via speakers.\n\n4. **Direct Coverage**: The agent has direct control over **room-1** actuators (lighting, cooling) and can coordinate with partners like motion sensors and smart plugs to enforce emergency protocols (e.g., turning off non-essential devices, activating alerts).\n\n**Action Plan**:  \n- Use **motion sensors** to confirm occupancy and trigger alerts.  \n- Activate **speakers** for emergency notifications.  \n- Coordinate with **smart plugs** to manage power during emergencies.  \n- Monitor temperature and humidity via existing capabilities.  \n\nThis collaboration ensures a multi-layered response to the high-severity event.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 12559.081900000107,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-10",
+      "eventZoneId": "room-1",
+      "decisionMade": "initiate_ac",
+      "decisionSource": "llm",
+      "agentId": "safety-agent",
+      "interactionType": "B",
+      "coverage": 1,
+      "gapCapabilities": [
+        "air-purification",
+        "air-quality-monitoring"
+      ],
+      "selectedPartnerAgentId": "climate-agent",
+      "selectedPartnerDeviceIds": [
+        "dev-sr-co2-1",
+        "dev-sr-co2-2",
+        "dev-sr-plug-1",
+        "dev-sr-plug-2",
+        "dev-sr-plug-3",
+        "dev-sr-plug-4"
+      ],
+      "requestedCapabilities": [
+        "emergency-response",
+        "monitoring",
+        "air-purification",
+        "air-quality-monitoring"
+      ],
+      "llmReasoning": "**Reasoning:**  \n1. **Event Needs vs. Agent Capabilities:**  \n   - The EVENT_NEEDS include **emergency-response**, **monitoring**, **air-purification**, and **air-quality-monitoring**.  \n   - The Safety Agent's **Caps** include **smoke-detection**, **fire-suppression**, and **emergency-alert** (which align with **emergency-response** and **monitoring**). However, **air-purification** and **air-quality-monitoring** are not directly covered by the Safety Agent's capabilities.  \n\n2. **Available Partners:**  \n   - The **Room 1 CO2 Sensor Service** provides **co2-monitoring** and **air-quality-monitoring** (addressing part of the EVENT_NEEDS).  \n   - The **Room 1 HVAC Service** (cooling/heating) and **Humidifier Service** (humidity-control, climate-control) could indirectly support **air-purification** or **air-quality-monitoring** through environmental adjustments.  \n   - The **Smart Plug Service** could be used to power or control devices (e.g., air purifiers) if needed.  \n\n3. **High Severity Event:**  \n   - The **high severity** of the event (environment.param_changed) demands immediate action. Collaboration with partners is necessary to address **air-quality-monitoring** and **air-purification** gaps, ensuring a comprehensive response.  \n\n4. **Direct Coverage:**  \n   - The Safety Agent has **DIRECT coverage** in **room-1**, enabling it to coordinate with local partners effectively.  \n\n**Action Plan:**  \n- Collaborate with the **CO2 Sensor Service** to monitor air quality.  \n- Engage the **HVAC** or **Humidifier Service** to adjust environmental conditions (if air quality degrades).  \n- Use **Smart Plug Service** to activate air purifiers (if available).  \n- Trigger **emergency alerts** via the Safety Agent’s capabilities if conditions worsen.  \n\n**Conclusion:** Collaboration is critical to address all EVENT_NEEDS and mitigate risks in the high-severity scenario.",
+      "zoneTargetingAccuracy": 1,
+      "capabilityAppropriateness": 0.5,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 1,
+      "correctDecision": true,
+      "assessmentTimeMs": 12559.131500000134,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    },
+    {
+      "eventId": "evt-sr-10",
+      "eventZoneId": "room-1",
+      "decisionMade": "handle_independently",
+      "decisionSource": "precheck",
+      "agentId": "air-quality-agent",
+      "interactionType": "A",
+      "coverage": 1,
+      "llmReasoning": "Agent has direct actuator coverage in room-1 and all required capabilities (air-purification, air-quality-monitoring). Can handle this event independently without collaboration.",
+      "zoneTargetingAccuracy": 0,
+      "capabilityAppropriateness": 0,
+      "sideEffectAwareness": 0,
+      "physicalPlausibility": 0,
+      "correctDecision": true,
+      "assessmentTimeMs": 12559.165200000163,
+      "goalAchieved": false,
+      "eventCategory": "device-originated",
+      "evaluationRole": "managing"
+    }
+  ],
+  "decisionQuality": {
+    "meanZoneTargetingAccuracy": 0.3333333333333333,
+    "meanCapabilityAppropriateness": 0.5444444444444444,
+    "meanSideEffectAwareness": 0,
+    "meanPhysicalPlausibility": 0.3333333333333333,
+    "meanCorrectDecisionRate": 0.9666666666666667
+  },
+  "collaboration": {
+    "initiationRate": 0.5,
+    "formationSuccessRate": 0.7333333333333333,
+    "goalAchievementRate": 0.7,
+    "optimalPerformanceRatio": 0.6666666666666666
+  },
+  "efficiency": {
+    "totalEvents": 30,
+    "layer1Filtered": 0,
+    "layer1FilterRate": 0,
+    "llmCallCount": 30,
+    "totalTokens": 15599,
+    "promptTokens": 5404,
+    "completionTokens": 10195,
+    "avgAssessmentTimeMs": 35767.96704000001,
+    "totalWallTimeMs": 357680.68999999994
+  },
+  "rawDualTriggerStats": {
+    "totalEventsProcessed": 10,
+    "filteredByLayer1": 0,
+    "passedToLayer2": 0,
+    "acDecisionMade": 5,
+    "acInitiated": 5,
+    "handledIndependently": 5,
+    "deferred": 0,
+    "layer2DecisionDistribution": {
+      "initiate_ac": 5,
+      "handle_independently": 5,
+      "defer": 0,
+      "ignore": 0
+    },
+    "totalAssessmentTimeMs": 33359,
+    "assessmentCount": 10,
+    "totalConfidence": 9,
+    "confidenceCount": 10,
+    "layer1Stats": {
+      "totalEventsProcessed": 0,
+      "clustersCreated": 0,
+      "passedToLayer2": 0,
+      "filteredByLayer1": 0,
+      "simpleAggregationUsed": 0,
+      "filteringRate": 0,
+      "layer2Rate": 0
+    },
+    "layer2Stats": {
+      "assessor": {
+        "totalAssessments": 10,
+        "acInitiated": 5,
+        "handledIndependently": 5,
+        "deferred": 0,
+        "ignored": 0,
+        "llmErrors": 0
+      },
+      "negotiator": {
+        "totalSelections": 5,
+        "partnersFound": 8,
+        "proposalsSent": 0,
+        "proposalsAccepted": 0,
+        "proposalsRejected": 0
+      },
+      "goalEngine": {
+        "totalFormulations": 5,
+        "goalsCreated": 18,
+        "simpleGoals": 0,
+        "moderateGoals": 0,
+        "complexGoals": 5
+      }
+    },
+    "layer1FilterRate": 0,
+    "avgAssessmentTimeMs": 3335.9,
+    "avgConfidence": 0.9
+  },
+  "classification": {
+    "perClass": [
+      {
+        "className": "initiate_ac",
+        "precision": 0.6666666666666666,
+        "recall": 0.6666666666666666,
+        "f1": 0.6666666666666666,
+        "tp": 10,
+        "fp": 5,
+        "fn": 5,
+        "support": 15
+      },
+      {
+        "className": "handle_independently",
+        "precision": 0.21428571428571427,
+        "recall": 0.3333333333333333,
+        "f1": 0.2608695652173913,
+        "tp": 3,
+        "fp": 11,
+        "fn": 6,
+        "support": 9
+      },
+      {
+        "className": "defer",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "support": 0
+      },
+      {
+        "className": "ignore",
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "tp": 0,
+        "fp": 1,
+        "fn": 6,
+        "support": 6
+      }
+    ],
+    "macroPrecision": 0.22023809523809523,
+    "macroRecall": 0.25,
+    "macroF1": 0.23188405797101447,
+    "collaborationTriggerF1": {
+      "precision": 0.6666666666666666,
+      "recall": 0.6666666666666666,
+      "f1": 0.6666666666666666,
+      "tp": 10,
+      "fp": 5,
+      "tn": 10,
+      "fn": 5,
+      "support": 15
+    },
+    "confusionMatrix": [
+      [
+        10,
+        5,
+        0,
+        0
+      ],
+      [
+        5,
+        3,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        6,
+        0,
+        0
+      ]
+    ],
+    "partnerSelection": {
+      "partnerPrecision": 0.5,
+      "partnerRecall": 0.2,
+      "partnerF1": 0.2857142857142857,
+      "support": 15
+    },
+    "capabilityMatch": {
+      "precision": 0.5652173913043478,
+      "recall": 0.6666666666666666,
+      "f1": 0.611764705882353,
+      "support": 24
+    }
+  }
+}

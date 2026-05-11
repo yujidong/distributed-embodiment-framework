@@ -149,6 +149,8 @@ export interface DualTriggerConfig {
   disableServiceDiscovery?: boolean; // Hide partner service information from agent context
   oracleMode?: boolean;              // Inject perfect ground truth information into agent context
   conciseServiceMode?: boolean;      // Filter services to event-zone only, compact descriptions
+  smartRulesMode?: boolean;          // Deterministic rules with spatial + service reasoning (no LLM fallback)
+  tfidfBaselineMode?: boolean;      // Character n-gram Jaccard similarity for capability matching (no LLM)
   adjacentZoneIds?: string[];        // Zones adjacent to agent's managed zones (for zone-coverage preCheck)
   actuatorZoneIds?: string[];        // Zones where agent has actuator/hybrid devices (for coverage distinction)
 
@@ -784,7 +786,15 @@ export class DualTriggerACManager {
       if (assessment.decision === 'initiate_ac') {
         // Track AC decision made (regardless of partner availability)
         this.stats.acDecisionMade++;
-        await this.initiateAC(assessment, layer1Result);
+
+        // When autoInitiateAC is false, record the decision but skip execution.
+        // This is used by decisionOnly mode to capture LLM decision metrics
+        // without the expensive physics simulation.
+        if (!this.config.autoInitiateAC) {
+          logger.info(`[DualTriggerACManager:${this.agentId}] AC decision: initiate_ac — but autoInitiateAC is false, skipping execution`);
+        } else {
+          await this.initiateAC(assessment, layer1Result);
+        }
       } else if (assessment.decision === 'handle_independently') {
         this.stats.handledIndependently++;
         logger.info(`Agent will handle independently`);
@@ -923,7 +933,11 @@ export class DualTriggerACManager {
         needsLayer2: true,
       };
 
-      await this.initiateAC(assessment, layer1Result);
+      if (!this.config.autoInitiateAC) {
+        logger.info(`[DualTriggerACManager:${this.agentId}] AC decision: initiate_ac (simple) — but autoInitiateAC is false, skipping execution`);
+      } else {
+        await this.initiateAC(assessment, layer1Result);
+      }
     }
   }
 
@@ -972,8 +986,12 @@ export class DualTriggerACManager {
       // Create a minimal Layer1Result for urgent events using type-safe helper
       const layer1Result = createUrgentLayer1Result(assessment.clusterSummary, startTime);
 
-      // Actually initiate AC
-      await this.initiateAC(assessment, layer1Result);
+      // When autoInitiateAC is false, record the decision but skip execution.
+      if (!this.config.autoInitiateAC) {
+        logger.info(`[DualTriggerACManager:${this.agentId}] AC decision: initiate_ac (urgent) — but autoInitiateAC is false, skipping execution`);
+      } else {
+        await this.initiateAC(assessment, layer1Result);
+      }
 
       return {
         path: 'ac_initiated',
@@ -1221,6 +1239,9 @@ export class DualTriggerACManager {
       discoverableServices: finalDiscoverableServices,
       // Ablation flag for concise service mode
       conciseServiceMode: this.config.conciseServiceMode ?? false,
+      // Smart-rules mode: deterministic rules with spatial + service reasoning (no LLM)
+      smartRulesMode: this.config.smartRulesMode ?? false,
+      tfidfBaselineMode: this.config.tfidfBaselineMode ?? false,
     };
     if (this.config.conciseServiceMode) {
       logger.info(`[DualTriggerACManager:${this.agentId}] conciseServiceMode enabled — services will be filtered to event-zone only`);
