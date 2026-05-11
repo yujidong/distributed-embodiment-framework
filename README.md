@@ -1,16 +1,37 @@
-# Active Collaboration Framework
+# Distributed Embodiment Framework
 
-An IoT framework for **Distributed Embodiment**: enabling autonomous AI agent collaboration through physical IoT infrastructure.
+Code repository for the paper *"Distributed Embodiment: Enabling Autonomous AI Agent Collaboration through IoT Infrastructure"*.
 
-This repository contains the core framework implementation and experimental results for the paper *"Distributed Embodiment: Enabling Autonomous AI Agent Collaboration through IoT Infrastructure"*.
+## Overview
+
+**Distributed Embodiment** proposes a paradigm where one cognitive AI agent interacts with the physical world through N IoT devices distributed across space (1 brain : N bodies). Because no single agent's distributed "body" covers all physical capabilities, agents must autonomously decide when and how to collaborate. This framework implements **Active Collaboration (AC)**, the mechanism by which agents make these decisions.
 
 ## Architecture
 
-The framework consists of three layers:
+The framework implements three layers connected by event-driven data flow:
 
-- **Physical Simulation Layer** -- Continuous 3D spatial model with physics-based effect propagation (heat transfer, spatial propagation, state interpolation)
-- **Agent Layer** -- Cognitive agents with autonomous decision-making (dual-layer decision engine, three-phase resource matching, feedback learning)
-- **Environment Management Layer** -- Event-driven coordination (EventManager, CollaborationManager, ServiceBroker)
+```
+┌─────────────────────────────────────────────────┐
+│          Environment Management Layer            │
+│  EventManager · CollaborationManager            │
+│  ServiceBroker · MessageBroker                  │
+├─────────────────────────────────────────────────┤
+│               Agent Layer                        │
+│  CognitiveAgent (per agent)                     │
+│  ├─ Dual-Trigger Decision Engine (L1: rules,    │
+│  │  L2: LLM reasoning)                          │
+│  ├─ ResourceManager · ServiceRegistry           │
+│  ├─ ProposalHandler · ACExecutor                │
+│  └─ ContextBuilder · OntologyEngine             │
+│          ↕ LLM API                              │
+├─────────────────────────────────────────────────┤
+│         Physical Simulation Layer                │
+│  PhysicalEnvironment (3D spatial, 8+ parameters)│
+│  Device (Sensors · Actuators)                   │
+│  PhysicsEngine (transfer · propagation)         │
+│  Spatiotemporal Constraints                     │
+└─────────────────────────────────────────────────┘
+```
 
 ![Framework Architecture](./docs/fig-architecture.png)
 
@@ -18,126 +39,79 @@ The framework consists of three layers:
 
 ```
 packages/
-  core/                  # Agent, decision engine, collaboration management
+  core/
     src/
-      decision/          # ACNecessityAssessor, DualTriggerACManager
-      utils/
-        text-similarity.ts   # TF-IDF character n-gram similarity
+      decision/            # ACNecessityAssessor, DualTriggerACManager
+      utils/               # text-similarity (TF-IDF baseline)
     tests/
       experiments/
-        execution/       # Main experiment test scripts
-        infrastructure/  # Shared experiment runner, types, ground truth, metrics
+        execution/         # Experiment test scripts
+        infrastructure/    # Runner, types, ground truth, metrics
       experiment-results/
-        unified/         # Final unified results (193 JSON files)
-  simulation/            # Physical environment, physics engine, simulated devices
-  shared/                # Shared types, contracts, and utilities
-  llm-integration/       # LLM client integration (Ollama)
+        unified/           # Final results (193 JSON files)
+  simulation/              # Physical environment, physics engine, devices
+  shared/                  # Shared types and utilities
+  llm-integration/         # LLM client (Ollama)
 config/
-  scenarios/             # Experiment scenario configurations
+  scenarios/               # Scenario configurations
 ```
 
-## Prerequisites
+## Running Experiments
 
-- Node.js >= 18
-- npm >= 9
-- [Ollama](https://ollama.ai) running locally with a compatible model (e.g., `qwen3-14b-q4`)
+### Prerequisites
 
-## Setup
+- Node.js >= 18, npm >= 9
+- [Ollama](https://ollama.ai) running locally with `qwen3-14b-q4`
+
+### Setup
 
 ```bash
 npm install
 npm run build
 ```
 
-## Running Experiments
+### Experiments
 
-Experiments are implemented as Vitest test files in `packages/core/tests/experiments/execution/`:
+| Experiment | Description |
+|------------|-------------|
+| exp-1 | Decision accuracy vs. 5 baselines (RQ1) |
+| exp-2 | Service discovery and spatial precision ablation (RQ2) |
+| exp-3 | Cross-scenario distribution cost (RQ3) |
+| exp-4 | Broadcast resilience under noise (RQ4) |
+| exp-5 | Token consumption and decision latency (RQ5) |
+| exp-6 | End-to-end collaboration execution (RQ6) |
+| exp-7 | Multi-model evaluation |
+| exp-8 | Layer 1 noise filtering |
+| exp-9 | N=5 statistical reliability |
+| tfidf-baseline | TF-IDF non-LLM baseline |
 
-| File | Experiment | Research Question |
-|------|-----------|-------------------|
-| `exp-1-effectiveness.vitest.test.ts` | Decision accuracy vs. baselines (5 conditions, N=5) | RQ1: Paradigm feasibility |
-| `exp-2-mechanism.vitest.test.ts` | Quality-gradient ablation (service discovery, spatial precision) | RQ2: Mechanism analysis |
-| `exp-3-cross-scenario.vitest.test.ts` | Cross-scenario distribution cost | RQ3: Distribution cost |
-| `exp-4-broadcast.vitest.test.ts` | Broadcast resilience under noise | RQ4: Robustness |
-| `exp-5-efficiency.vitest.test.ts` | Token consumption and decision latency | RQ5: Efficiency |
-| `exp-6-execution-phase.vitest.test.ts` | End-to-end collaboration execution | RQ6: Execution validation |
-| `exp-7-multi-model.vitest.test.ts` | Evaluation across multiple LLMs | Generalizability |
-| `exp-8-layer1-validation.vitest.test.ts` | Layer 1 noise filtering effectiveness | Dual-layer validation |
-| `exp-9-7b-n5.vitest.test.ts` | N=5 repetition runs for statistical reliability | Statistical reliability |
-| `tfidf-baseline-experiment.vitest.test.ts` | TF-IDF (character trigram Jaccard) non-LLM baseline | Non-LLM baseline comparison |
-
-### How to Run
-
-Run a specific experiment:
+### Usage
 
 ```bash
+# Run a single experiment
 npx vitest run packages/core/tests/experiments/execution/exp-1-effectiveness.vitest.test.ts
-```
 
-Run all experiments:
-
-```bash
+# Run all
 npx vitest run packages/core/tests/experiments/execution/
 ```
 
-Experiments output results to `packages/core/tests/experiment-results/unified/`. Note: experiments require a running Ollama instance and can take significant time (some experiments run N=5 iterations across multiple scenarios).
+Results are written to `packages/core/tests/experiment-results/unified/`.
 
-## Experiment Results
+## Key Results
 
-Results are stored in `packages/core/tests/experiment-results/unified/` as individual JSON files, one per condition-iteration-scenario combination. File naming convention:
+| Condition | Decision Accuracy |
+|-----------|------------------:|
+| Full AC (qwen3-14b) | 93.3% |
+| Oracle (perfect info) | 94.2% |
+| TF-IDF baseline | 64.0% |
+| Rule-only | 23.0% |
+| Always collaborate | 68.3% |
+| Never collaborate | 36.7% |
 
-```
-A-{condition}-iter{N}-apartment-{model}.json
-```
-
-### Conditions
-
-| Condition | Description |
-|-----------|-------------|
-| `full-ac` | Full Active Collaboration system |
-| `rule-only` | Rule-based decisions (no LLM) |
-| `always-collaborate` | Always initiate AC regardless of context |
-| `never-collaborate` | Never initiate AC regardless of context |
-| `oracle` | Perfect information baseline |
-| `no-service-discovery` | Ablation: service discovery disabled |
-| `no-propagation` | Ablation: spatial propagation disabled |
-| `concise-service` | Ablation: minimal service descriptions |
-| `coverage-aware` | Ablation: coverage-aware matching |
-| `tfidf-baseline` | Character trigram Jaccard similarity (no LLM) |
-
-### Result JSON Structure
-
-Each result file contains:
-
-| Field | Description |
-|-------|-------------|
-| `config` | Experiment configuration (condition, scenario, model) |
-| `decisionQuality.meanCorrectDecisionRate` | Fraction of correct collaboration decisions |
-| `decisionQuality.meanInitiationRate` | Fraction of events where AC was initiated |
-| `events[]` | Per-event results with agent reasoning, decision, and ground truth |
-| `tokenUsage` | Total LLM token consumption |
-| `layer1FilterRate` | Fraction of events filtered by Layer 1 |
-
-### Experiment Infrastructure
-
-Shared experiment infrastructure in `packages/core/tests/experiments/infrastructure/`:
-
-| File | Purpose |
-|------|---------|
-| `types.ts` | Type definitions for experiment configs and results |
-| `paper-experiment-runner.ts` | Unified experiment runner for all conditions |
-| `ground-truth-calculator.ts` | Automatic ground truth computation per event |
-| `metrics-collector.ts` | Decision quality, efficiency, and robustness metrics |
-
-## Key Concepts
-
-**Distributed Embodiment**: A paradigm where one cognitive AI agent interacts with the physical world through N IoT devices distributed across space (1 brain : N bodies).
-
-**Active Collaboration (AC)**: When an agent's distributed "body" does not cover all physical capabilities needed for an event, the agent autonomously decides whether to collaborate with other agents.
-
-**Dual-Layer Decision Engine**: Layer 1 uses rule-based spatial-temporal clustering and significance scoring to filter routine events. Layer 2 uses LLM reasoning for complex decisions.
-
-**Three-Phase Resource Matching**: (1) match against self-resources, (2) match against partner services, (3) broadcast unmatched requirements.
+**Key findings:**
+- Service discovery is the primary mechanism (removing it drops accuracy by 42.5pp)
+- Distribution cost (accuracy gap vs. Oracle) is near zero across all scenarios and models
+- The result holds across 5 LLMs (7B local to state-of-the-art API models)
 
 ## License
 
