@@ -78,7 +78,7 @@ config/
 ### Prerequisites
 
 - **Node.js** >= 18, **npm** >= 9
-- [Ollama](https://ollama.ai) running locally with `qwen3-14b-q4`
+- [Ollama](https://ollama.ai) running locally with any supported model (e.g., `qwen3-14b-q4`, `llama3`, etc.)
 
 ### Installation
 
