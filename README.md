@@ -23,33 +23,6 @@ The framework provides a **complete simulation environment** for studying how au
 
 ## Architecture
 
-The framework implements three layers connected by event-driven data flow:
-
-```
-┌──────────────────────────────────────────────────────┐
-│           Environment Management Layer                │
-│  EnvironmentCenter (EventManager, ServiceBroker,     │
-│  CollaborationManager, MessageBroker)                │
-│                    ↕ Cross-Center Router              │
-├──────────────────────────────────────────────────────┤
-│                  Agent Layer                          │
-│  CognitiveAgent (per agent)                          │
-│  ├─ Dual-Trigger Decision Engine                     │
-│  │   Layer 1: Rule-based event filtering             │
-│  │   Layer 2: LLM reasoning for complex decisions    │
-│  ├─ ResourceManager → ServiceRegistry                │
-│  ├─ ProposalHandler → ACExecutor                     │
-│  └─ ContextBuilder → OntologyEngine                  │
-│                    ↕ LLM API                         │
-├──────────────────────────────────────────────────────┤
-│           Physical Simulation Layer                   │
-│  PhysicalEnvironment (3D spatial, 8+ parameters)     │
-│  Device (Sensors · Actuators)                        │
-│  PhysicsEngine (heat transfer, light propagation)    │
-│  Spatiotemporal Constraints                          │
-└──────────────────────────────────────────────────────┘
-```
-
 ![Framework Architecture](./docs/fig-architecture.png)
 
 ### How It Works
@@ -305,21 +278,6 @@ Each result file contains:
       "assessmentTimeMs": 35325
     }
   ]
-}
-```
-
----
-
-## Citation
-
-If you use this framework in your research, please cite:
-
-```bibtex
-@article{yu2026distributed,
-  title={Distributed Embodiment: Enabling Autonomous {AI} Agent Collaboration through {IoT} Infrastructure},
-  author={Yu, Jidong},
-  journal={Internet of Things},
-  year={2026}
 }
 ```
 
