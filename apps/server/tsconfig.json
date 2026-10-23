@@ -1,0 +1,33 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "paths": {
+      // moduleResolution "node" (node10) cannot see core's package.json
+      // "exports" subpaths; Node's CJS runtime resolves them fine. Map the
+      // subpath for the type-checker only (the emitted require is untouched).
+      "@active-collaboration/core/scenario": ["../../packages/core/dist/scenario/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.vitest.test.ts",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/test-utils.ts"
+  ],
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/llm-integration" },
+    { "path": "../../packages/simulation" }
+  ]
+}

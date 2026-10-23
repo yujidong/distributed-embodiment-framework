@@ -1,0 +1,45 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    "**/.env.*local",
+    "apps/server/openapi.yaml"
+  ],
+  "pipeline": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": [
+        "^lint"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "coverage/**"
+      ]
+    },
+    "test:fast": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

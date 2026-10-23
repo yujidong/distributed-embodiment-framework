@@ -1,0 +1,331 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "community-nursing-home",
+    "name": {
+      "zh": "社区养老院（病房-走廊-护士站种子场景）",
+      "en": "Community nursing home (ward + corridor + nurse-station seed scenario)"
+    },
+    "description": {
+      "zh": "单层社区养老院种子场景（平面 20×10m，坐标单位=米，x 右/y 下，原点左上）：3 间双人病房 + 护士站 + 走廊 + 活动室，室外经围护与走廊耦合。照护链路全线预置：每床心率手环与跌倒检测手表（可穿戴）、床头呼叫器与离床传感垫（照护）、护士站呼叫接收主机；照护监测员只感知、不执行，异常必须经 AC 协作请动值班护士与环境管家。作息：7:00 起床查房、9:00 活动室早操、12:30 午休、15:00 下午茶、21:00 就寝；病房与活动室带声明式 occupantSchedule（病房 12:30–15:00 午休 2 人、活动室 9:00–12:30 早操 15 人）。异常剧本：14:00 102 房跌倒（critical，需 fall-detection + emergency-response 协作）、16:00 103 房午后升温（33°C）、16:30 走廊烟雾（high）、22:30 101 房离床（夜间 high）。验证点：跌倒/离床事件触发照护监测员→值班护士的协作提案；病房升温经邻接走廊缓慢扩散；烟雾事件联动环境管家与护士；内嵌 Flow 在 16:00 升温剧本处确定性触发 103 房自动降温。（v2 刷新：内嵌 2 条确定性 Flow）",
+      "en": "Single-storey community nursing home seed (20×10m footprint, units=meters, x right / y down, origin top-left): 3 double wards + nurse station + corridor + day room; the outdoors couples to the corridor through the envelope. The care chain is pre-deployed: per-bed heart-rate wristbands and fall-detection watches, bedside call buttons and off-bed sensor pads, and the nurse-station call receiver; the care monitor is sense-only, so anomalies must rally the duty nurse and environment butler through AC collaboration. Daily rhythm: 07:00 wake-up rounds, 09:00 morning exercise, 12:30 lunch rest, 15:00 afternoon tea, 21:00 bedtime; wards and the day room carry declarative occupant schedules (wards 12:30–15:00 rest ×2, day room 09:00–12:30 exercise ×15). Anomaly script: 14:00 fall in Ward 102 (critical, fall-detection + emergency-response collaboration), 16:00 Ward 103 afternoon heat rise (33°C), 16:30 corridor smoke (high), 22:30 off-bed in Ward 101 (nighttime high). Verification points: fall/off-bed events trigger care-monitor → duty-nurse collaboration proposals; ward heat diffuses slowly through adjacent corridors; smoke orchestrates butler and nurse; the embedded flow deterministically cools Ward 103 when the 16:00 heat script lands. (v2 refresh: 2 embedded deterministic flows)"
+    },
+    "tagline": {
+      "zh": "14:00，102 房跌倒告警——只有感知能力的监测员如何请动护士与管家跨角色救援",
+      "en": "14:00, a fall alert in Room 102 — how a sense-only monitor agent rallies the nurse and butler across roles."
+    },
+    "heroEventId": "fall-102",
+    "recommendedPlaybackRate": 30,
+    "storeyHeight": 3.0
+  },
+  "zones": [
+    {
+      "id": "ward-101",
+      "name": "101 病房",
+      "type": "ward",
+      "buildingId": "nursing-home",
+      "floor": 0,
+      "bounds": { "minX": 0, "maxX": 5, "minY": 0, "maxY": 5 },
+      "adjacentZoneIds": ["ward-102", "corridor"],
+      "occupancy": 2,
+      "baseline": { "temperature": 26, "humidity": 55, "co2": 650, "light": 250 },
+      "occupantSchedule": { "count": 2, "startSimTimeSec": 45000, "endSimTimeSec": 54000, "repeatDaily": true }
+    },
+    {
+      "id": "ward-102",
+      "name": "102 病房",
+      "type": "ward",
+      "buildingId": "nursing-home",
+      "floor": 0,
+      "bounds": { "minX": 5, "maxX": 10, "minY": 0, "maxY": 5 },
+      "adjacentZoneIds": ["ward-101", "ward-103", "corridor"],
+      "occupancy": 2,
+      "baseline": { "temperature": 26, "humidity": 55, "co2": 650, "light": 250 },
+      "occupantSchedule": { "count": 2, "startSimTimeSec": 45000, "endSimTimeSec": 54000, "repeatDaily": true }
+    },
+    {
+      "id": "ward-103",
+      "name": "103 病房",
+      "type": "ward",
+      "buildingId": "nursing-home",
+      "floor": 0,
+      "bounds": { "minX": 10, "maxX": 15, "minY": 0, "maxY": 5 },
+      "adjacentZoneIds": ["ward-102", "nurse-station", "corridor"],
+      "occupancy": 2,
+      "baseline": { "temperature": 26, "humidity": 55, "co2": 650, "light": 250 },
+      "occupantSchedule": { "count": 2, "startSimTimeSec": 45000, "endSimTimeSec": 54000, "repeatDaily": true }
+    },
+    {
+      "id": "nurse-station",
+      "name": "护士站",
+      "type": "nurse-station",
+      "buildingId": "nursing-home",
+      "floor": 0,
+      "bounds": { "minX": 15, "maxX": 20, "minY": 0, "maxY": 5 },
+      "adjacentZoneIds": ["ward-103", "corridor"],
+      "occupancy": 2,
+      "baseline": { "temperature": 26, "humidity": 55, "light": 400 }
+    },
+    {
+      "id": "corridor",
+      "name": "走廊",
+      "type": "corridor",
+      "buildingId": "nursing-home",
+      "floor": 0,
+      "bounds": { "minX": 0, "maxX": 20, "minY": 5, "maxY": 7 },
+      "adjacentZoneIds": ["activity-room", "outdoor"],
+      "baseline": { "temperature": 27, "humidity": 58, "light": 200 }
+    },
+    {
+      "id": "activity-room",
+      "name": "活动室",
+      "type": "activity-room",
+      "buildingId": "nursing-home",
+      "floor": 0,
+      "bounds": { "minX": 0, "maxX": 20, "minY": 7, "maxY": 10 },
+      "occupancy": 0,
+      "baseline": { "temperature": 26, "humidity": 55, "co2": 500, "light": 350 },
+      "occupantSchedule": { "count": 15, "startSimTimeSec": 32400, "endSimTimeSec": 45000, "repeatDaily": true }
+    },
+    {
+      "id": "outdoor",
+      "name": "室外",
+      "type": "outdoor",
+      "bounds": { "minX": 24, "maxX": 32, "minY": 0, "maxY": 10 },
+      "baseline": { "temperature": 34, "humidity": 65, "light": 20000, "co2": 420, "pm2_5": 45 }
+    }
+  ],
+  "devices": [
+    {
+      "id": "band-101a",
+      "name": "心率手环（101-1床）",
+      "type": "heart-rate-band",
+      "capabilities": ["heart-rate-monitoring"],
+      "zoneId": "ward-101"
+    },
+    {
+      "id": "watch-101a",
+      "name": "跌倒检测手表（101-1床）",
+      "type": "fall-detection-watch",
+      "capabilities": ["fall-detection"],
+      "zoneId": "ward-101"
+    },
+    {
+      "id": "call-101a",
+      "name": "床头呼叫器（101-1床）",
+      "type": "bedside-call-button",
+      "capabilities": ["emergency-call"],
+      "zoneId": "ward-101"
+    },
+    {
+      "id": "bedmat-101a",
+      "name": "离床传感垫（101-1床）",
+      "type": "bed-exit-sensor",
+      "capabilities": ["bed-exit-detection"],
+      "zoneId": "ward-101"
+    },
+    {
+      "id": "band-102a",
+      "name": "心率手环（102-1床）",
+      "type": "heart-rate-band",
+      "capabilities": ["heart-rate-monitoring"],
+      "zoneId": "ward-102"
+    },
+    {
+      "id": "watch-102a",
+      "name": "跌倒检测手表（102-1床）",
+      "type": "fall-detection-watch",
+      "capabilities": ["fall-detection"],
+      "zoneId": "ward-102"
+    },
+    {
+      "id": "call-102a",
+      "name": "床头呼叫器（102-1床）",
+      "type": "bedside-call-button",
+      "capabilities": ["emergency-call"],
+      "zoneId": "ward-102"
+    },
+    {
+      "id": "bedmat-102a",
+      "name": "离床传感垫（102-1床）",
+      "type": "bed-exit-sensor",
+      "capabilities": ["bed-exit-detection"],
+      "zoneId": "ward-102"
+    },
+    {
+      "id": "call-103a",
+      "name": "床头呼叫器（103-1床）",
+      "type": "bedside-call-button",
+      "capabilities": ["emergency-call"],
+      "zoneId": "ward-103"
+    },
+    {
+      "id": "bedmat-103a",
+      "name": "离床传感垫（103-1床）",
+      "type": "bed-exit-sensor",
+      "capabilities": ["bed-exit-detection"],
+      "zoneId": "ward-103"
+    },
+    {
+      "id": "nurse-call-panel",
+      "name": "护士站呼叫接收主机",
+      "type": "nurse-call-panel",
+      "capabilities": ["emergency-call-receiving"],
+      "zoneId": "nurse-station"
+    },
+    {
+      "id": "temp-101",
+      "name": "101 温湿度传感器",
+      "type": "temp-humidity-sensor",
+      "capabilities": ["temperature-reading", "humidity-monitoring"],
+      "zoneId": "ward-101"
+    },
+    {
+      "id": "temp-102",
+      "name": "102 温湿度传感器",
+      "type": "temp-humidity-sensor",
+      "capabilities": ["temperature-reading", "humidity-monitoring"],
+      "zoneId": "ward-102"
+    },
+    {
+      "id": "temp-103",
+      "name": "103 温湿度传感器",
+      "type": "temp-humidity-sensor",
+      "capabilities": ["temperature-reading", "humidity-monitoring"],
+      "zoneId": "ward-103"
+    },
+    {
+      "id": "hvac-101",
+      "name": "101 空调",
+      "type": "hvac",
+      "capabilities": ["temperature-control", "cooling", "heating", "turn-on", "turn-off"],
+      "zoneId": "ward-101"
+    },
+    {
+      "id": "hvac-102",
+      "name": "102 空调",
+      "type": "hvac",
+      "capabilities": ["temperature-control", "cooling", "heating", "turn-on", "turn-off"],
+      "zoneId": "ward-102"
+    },
+    {
+      "id": "hvac-103",
+      "name": "103 空调",
+      "type": "hvac",
+      "capabilities": ["temperature-control", "cooling", "heating", "turn-on", "turn-off"],
+      "zoneId": "ward-103"
+    },
+    {
+      "id": "smoke-corridor",
+      "name": "走廊烟雾传感器",
+      "type": "smoke-sensor",
+      "capabilities": ["smoke-detection"],
+      "zoneId": "corridor"
+    }
+  ],
+  "agents": [
+    {
+      "id": "care-monitor",
+      "name": "照护监测员",
+      "capabilities": ["heart-rate-monitoring", "fall-detection", "bed-exit-detection", "emergency-call"],
+      "managesZoneIds": ["ward-101", "ward-102", "ward-103"],
+      "boundDeviceIds": [
+        "band-101a", "watch-101a", "call-101a", "bedmat-101a",
+        "band-102a", "watch-102a", "call-102a", "bedmat-102a",
+        "call-103a", "bedmat-103a"
+      ],
+      "llm": { "provider": "openai-compatible", "model": "ac-decision-v5" }
+    },
+    {
+      "id": "duty-nurse",
+      "name": "值班护士",
+      "capabilities": ["emergency-response", "emergency-call-receiving", "patient-care"],
+      "managesZoneIds": ["nurse-station", "ward-101", "ward-102", "ward-103", "corridor", "activity-room"],
+      "boundDeviceIds": ["nurse-call-panel"],
+      "llm": { "provider": "openai-compatible", "model": "ac-decision-v5" }
+    },
+    {
+      "id": "env-butler",
+      "name": "环境管家",
+      "capabilities": ["temperature-monitoring", "humidity-monitoring", "smoke-detection", "temperature-control", "cooling", "heating"],
+      "managesZoneIds": ["ward-101", "ward-102", "ward-103", "corridor", "activity-room", "outdoor"],
+      "boundDeviceIds": ["temp-101", "temp-102", "temp-103", "hvac-101", "hvac-102", "hvac-103", "smoke-corridor"],
+      "llm": { "provider": "openai-compatible", "model": "ac-decision-v5" }
+    }
+  ],
+  "events": [
+    { "id": "morning-round-101", "type": "occupancy", "zoneId": "ward-101", "parameter": "occupancy", "value": 3, "atSimTimeSec": 25200, "severity": "low" },
+    { "id": "morning-round-102", "type": "occupancy", "zoneId": "ward-102", "parameter": "occupancy", "value": 3, "atSimTimeSec": 25200, "severity": "low" },
+    { "id": "morning-round-103", "type": "occupancy", "zoneId": "ward-103", "parameter": "occupancy", "value": 3, "atSimTimeSec": 25200, "severity": "low" },
+    { "id": "exercise-start", "type": "occupancy", "zoneId": "activity-room", "parameter": "occupancy", "value": 15, "atSimTimeSec": 32400, "severity": "low" },
+    { "id": "exercise-ward-101", "type": "occupancy", "zoneId": "ward-101", "parameter": "occupancy", "value": 1, "atSimTimeSec": 32400, "severity": "low" },
+    { "id": "exercise-ward-102", "type": "occupancy", "zoneId": "ward-102", "parameter": "occupancy", "value": 1, "atSimTimeSec": 32400, "severity": "low" },
+    { "id": "exercise-ward-103", "type": "occupancy", "zoneId": "ward-103", "parameter": "occupancy", "value": 1, "atSimTimeSec": 32400, "severity": "low" },
+    { "id": "noon-rest-wards", "type": "occupancy", "zoneId": "ward-102", "parameter": "occupancy", "value": 2, "atSimTimeSec": 45000, "severity": "low" },
+    { "id": "noon-rest-activity", "type": "occupancy", "zoneId": "activity-room", "parameter": "occupancy", "value": 0, "atSimTimeSec": 45000, "severity": "low" },
+    { "id": "fall-102", "type": "fall-detected", "zoneId": "ward-102", "parameter": "fall", "value": true, "atSimTimeSec": 50400, "severity": "critical", "requiredCapabilities": ["fall-detection", "emergency-response", "patient-care"] },
+    { "id": "afternoon-tea", "type": "occupancy", "zoneId": "activity-room", "parameter": "occupancy", "value": 12, "atSimTimeSec": 54000, "severity": "low" },
+    { "id": "ward-103-heat", "type": "temperature-spike", "zoneId": "ward-103", "parameter": "temperature", "value": 33, "atSimTimeSec": 57600, "severity": "medium", "requiredCapabilities": ["temperature-control", "cooling"] },
+    { "id": "corridor-smoke", "type": "smoke-detected", "zoneId": "corridor", "parameter": "smoke", "value": true, "atSimTimeSec": 59400, "severity": "high", "requiredCapabilities": ["smoke-detection", "emergency-response", "ventilation"] },
+    { "id": "evening-activity-end", "type": "occupancy", "zoneId": "activity-room", "parameter": "occupancy", "value": 3, "atSimTimeSec": 64800, "severity": "low" },
+    { "id": "night-101", "type": "occupancy", "zoneId": "ward-101", "parameter": "occupancy", "value": 2, "atSimTimeSec": 75600, "severity": "low" },
+    { "id": "night-102", "type": "occupancy", "zoneId": "ward-102", "parameter": "occupancy", "value": 2, "atSimTimeSec": 75600, "severity": "low" },
+    { "id": "night-103", "type": "occupancy", "zoneId": "ward-103", "parameter": "occupancy", "value": 2, "atSimTimeSec": 75600, "severity": "low" },
+    { "id": "night-activity", "type": "occupancy", "zoneId": "activity-room", "parameter": "occupancy", "value": 0, "atSimTimeSec": 75600, "severity": "low" },
+    { "id": "bed-exit-101", "type": "bed-exit", "zoneId": "ward-101", "parameter": "bed-exit", "value": true, "atSimTimeSec": 81000, "severity": "high", "requiredCapabilities": ["bed-exit-detection", "emergency-response", "patient-care"] }
+  ],
+  "flows": [
+    {
+      "id": "ward-night-heating",
+      "name": "夜间病房低温自动供暖",
+      "description": "102 病房夜间温度低于 20°C 时自动开空调供暖到 24°C（确定性执行，不经 LLM 决策）",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "ward-102",
+        "conditions": [
+          { "path": "temperature", "op": "<", "value": 20 }
+        ],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "把夜间过冷的 102 病房供暖到 24 度",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "heating",
+            "assigneeAgentId": "env-butler",
+            "deviceId": "hvac-102",
+            "params": { "targetTemperature": 24 }
+          }
+        ]
+      }
+    },
+    {
+      "id": "ward-overheat-cooling",
+      "name": "病房高温自动降温",
+      "description": "103 病房温度超过 30°C（对应 16:00 午后升温剧本冲 33°C）时自动制冷到 25°C",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "ward-103",
+        "conditions": [
+          { "path": "temperature", "op": ">", "value": 30 }
+        ],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "把 103 病房温度降到 25 度",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "cooling",
+            "assigneeAgentId": "env-butler",
+            "deviceId": "hvac-103",
+            "params": { "targetTemperature": 25 }
+          }
+        ]
+      }
+    }
+  ]
+}

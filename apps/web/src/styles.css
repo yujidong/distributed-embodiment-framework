@@ -1,0 +1,8548 @@
+/**
+ * Control-room theme. Plain CSS, one file, function over beauty.
+ *
+ * Design tokens: `:root` carries the dark theme (default); `[data-theme='light']
+ * overrides it. TS-side overlays (Leaflet / reactflow need concrete values, not
+ * CSS vars) mirror the semantic colors in src/lib/theme.ts — keep both in sync.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Surface 层级：页面底 → 面板 → 抬升元素 */
+  --bg: #0d1117;
+  --bg-panel: #161b22;
+  --bg-raised: #1c2330;
+  /* 浮层（地图上的控件条 / 提示气泡）的半透明底 */
+  --overlay-bg: rgba(22, 27, 34, 0.9);
+  /* 模态遮罩 */
+  --backdrop: rgba(0, 0, 0, 0.55);
+
+  /* 可读性（控制台/世界视图重排）：border 对比略加强，text-dim 调亮一档。 */
+  --border: #39414f;
+  /* 深一档的描边（地图 zone 外框等需要更强分界的场景），随主题派生 */
+  --border-strong: color-mix(in srgb, var(--border) 55%, var(--text-dim));
+  --text: #d6dde6;
+  --text-dim: #9ba6b5;
+
+  /* 语义色 */
+  --accent: #4cc2ff;
+  --sensor: #2dd4bf;
+  --actuator: #f5a524;
+  --hybrid: #b07cf0;
+  --danger: #f2555a;
+  /* 故障注入红：比 danger 更深一档（故障环 / fault badge / 通知角标） */
+  --danger-strong: #e5484d;
+  --ok: #3fb950;
+  --warn: #e8a13c;
+  /* 亮色实底（accent / danger 徽章、按钮）上的文字色 */
+  --on-accent: #0b0e14;
+  --on-danger: #ffffff;
+
+  /* 语义色的透明变体（color-mix 从基色派生，随主题自动适配） */
+  --accent-softer: color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-soft: color-mix(in srgb, var(--accent) 15%, transparent);
+  --accent-strong: color-mix(in srgb, var(--accent) 30%, transparent);
+  --accent-border: color-mix(in srgb, var(--accent) 40%, transparent);
+  --danger-soft: color-mix(in srgb, var(--danger) 12%, transparent);
+  --actuator-soft: color-mix(in srgb, var(--actuator) 12%, transparent);
+
+  /* 圆角 / 阴影 / 焦点环 */
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 8px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent);
+
+  /* UX-W1: 动效时长 / 缓动（浮层与横幅的入场、开合过渡统一取这三档） */
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* UX-W1: 海拔阴影（elev-1 抬升元素 / elev-2 浮层 popover / elev-3 抽屉·对话框） */
+  --elev-1: 0 1px 2px rgb(0 0 0 / 30%), 0 1px 4px rgb(0 0 0 / 20%);
+  --elev-2: 0 4px 12px rgb(0 0 0 / 35%), 0 2px 4px rgb(0 0 0 / 25%);
+  --elev-3: 0 12px 32px rgb(0 0 0 / 45%), 0 4px 8px rgb(0 0 0 / 30%);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f2f4f8;
+  --bg-panel: #ffffff;
+  --bg-raised: #eef1f6;
+  --overlay-bg: rgba(255, 255, 255, 0.92);
+  --backdrop: rgba(15, 23, 42, 0.45);
+
+  /* 亮主题同样加强 border 对比 / text-dim 略加深（白底上"调亮"等于降对比）。 */
+  --border: #c4ccd9;
+  --text: #1c2430;
+  --text-dim: #525c6b;
+
+  /* 同一 accent 色系，调深以保证亮底对比度 */
+  --accent: #0b74bd;
+  --sensor: #0d9488;
+  --actuator: #b45309;
+  --hybrid: #7c3aed;
+  --danger: #cf222e;
+  --danger-strong: #c2252b;
+  --ok: #1a7f37;
+  --warn: #9a5b0b;
+  --on-accent: #ffffff;
+  --on-danger: #ffffff;
+
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.12);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.14);
+
+  /* UX-W1: 亮主题海拔阴影同步调浅（白底上深阴影会显得脏） */
+  --elev-1: 0 1px 2px rgb(15 23 42 / 10%), 0 1px 4px rgb(15 23 42 / 8%);
+  --elev-2: 0 4px 12px rgb(15 23 42 / 12%), 0 2px 4px rgb(15 23 42 / 8%);
+  --elev-3: 0 12px 32px rgb(15 23 42 / 18%), 0 4px 8px rgb(15 23 42 / 10%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', 'Microsoft YaHei', system-ui, sans-serif;
+  font-size: 14px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+select {
+  font: inherit;
+  background: var(--bg-raised);
+  color: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Shell                                                                   */
+/* ----------------------------------------------------------------------- */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-header {
+  height: 48px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+}
+
+.app-header h1 {
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+
+.app-main {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 14px 16px;
+}
+
+.page-note {
+  color: var(--text-dim);
+}
+
+.page-note--error {
+  color: var(--danger);
+}
+
+.error-banner {
+  background: var(--danger-soft);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+
+/* R78-B: quota usage badge on creation surfaces (35/40). */
+.quota-badge {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: color-mix(in srgb, var(--text-dim, #888) 15%, transparent);
+  color: var(--text-dim, #888);
+}
+
+.quota-badge--warn {
+  background: color-mix(in srgb, var(--warning, #b8860b) 18%, transparent);
+  color: var(--warning, #b8860b);
+}
+
+.quota-badge--full {
+  background: color-mix(in srgb, var(--danger, #c0392b) 15%, transparent);
+  color: var(--danger, #c0392b);
+}
+
+/* R75/F1: capability chip no bindable device provides — warning tone, kept
+   selectable (the owner may place the device later) but visually distinct. */
+.chip--unbacked {
+  border-style: dashed;
+  color: var(--warning, #b8860b);
+}
+
+/* R74: rule harness = TEST posture banner on the environments home — amber,
+   quiet, always-on while the server runs the rule harness. */
+.decision-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  background: color-mix(in srgb, var(--warning, #b8860b) 12%, transparent);
+  border: 1px solid var(--warning, #b8860b);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.decision-banner strong {
+  color: var(--warning, #b8860b);
+}
+
+/* R74: configured-but-dead LLM backend — louder danger tone: production
+   posture is actively broken, not merely absent. */
+.decision-banner--unreachable {
+  background: color-mix(in srgb, var(--danger, #c0392b) 12%, transparent);
+  border-color: var(--danger, #c0392b);
+}
+
+.decision-banner--unreachable strong {
+  color: var(--danger, #c0392b);
+}
+
+/* T-713: world-session topology-drift banner (dismissible teaching note). */
+.drift-banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  background: color-mix(in srgb, var(--warning, #b8860b) 12%, transparent);
+  border: 1px solid var(--warning, #b8860b);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.drift-banner__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.drift-banner__list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-dim);
+}
+
+.primary-button {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.danger-button {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  padding: 4px 0;
+}
+
+/* ui/Button 原语：ghost = 无边框图标按钮；sm = 紧凑尺寸 */
+.ghost-button {
+  background: none;
+  border-color: transparent;
+}
+
+.ghost-button:hover:not(:disabled) {
+  border-color: var(--border);
+}
+
+.button--sm {
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+/* lucide 图标与相邻文字基线对齐 */
+.lucide {
+  vertical-align: -2px;
+}
+
+.badge {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.badge--seed {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.badge--user {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.badge--llm {
+  border-color: var(--hybrid);
+  color: var(--hybrid);
+  margin-left: 8px;
+}
+
+.badge--rule {
+  margin-left: 8px;
+}
+
+/* P3d 故障面板 */
+.badge--fault {
+  border-color: var(--danger-strong);
+  color: var(--danger-strong);
+  margin: 2px 4px 2px 0;
+}
+
+.fault-panel__toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fault-panel__active {
+  margin-top: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+.fault-panel__active-item {
+  margin-top: 6px;
+}
+
+.fault-panel__active-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fault-panel__device {
+  font-weight: 600;
+}
+
+.fault-panel__badges {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Scenario list                                                           */
+/* ----------------------------------------------------------------------- */
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.scenario-card {
+  text-align: left;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  /* Fix-46: env cards are clickable as a whole (see EnvironmentsHomePage). */
+  cursor: pointer;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.scenario-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.scenario-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.scenario-card__name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.scenario-card__description {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.scenario-card__counts {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.scenario-card__tagline {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.scenario-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.scenario-card__hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--actuator);
+}
+
+.scenario-card__id {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* ----------------------------------------------------------------------- */
+/* Detail / simulation layout                                              */
+/* ----------------------------------------------------------------------- */
+
+.detail-page,
+.simulation-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 10px;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.detail-header__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.detail-header__id {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.detail-header__description {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+/* Long generated-city descriptions clamp to two lines until expanded so the
+   world map stays above the fold (WorldViewPage expand toggle). */
+.detail-header__description--clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.detail-header__description-toggle {
+  margin-top: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.detail-header__description-toggle:hover {
+  text-decoration: underline;
+}
+
+.detail-body {
+  flex: 1;
+  min-height: 0;
+}
+
+/* 世界视图水平 PanelGroup（react-resizable-panels）：画布 Panel + 拖拽把手 +
+   侧栏 Panel，撑满 detail-body。display 由组件内联设置。 */
+.detail-body__panels {
+  height: 100%;
+}
+
+/* 画布 Panel：侧栏开合钮绝对定位的锚点。 */
+.world-panel--canvas {
+  position: relative;
+}
+
+/* Wave-2 vendor disclaimer（场景详情页页脚）。 */
+.detail-page__disclaimer {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.detail-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.side-panel {
+  width: 300px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  padding: 12px;
+}
+
+.side-panel__title {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Environment map (reactflow)                                             */
+/* ----------------------------------------------------------------------- */
+
+.environment-map {
+  flex: 1;
+  min-height: 420px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg);
+  position: relative;
+}
+
+/* Basemap style switcher (geo map, bottom-right chips). */
+.map-style-switcher {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 1000;
+  display: flex;
+  gap: 6px;
+}
+
+/* Floor switcher (building tier, B-A): storey chips, top-left overlay. */
+.floor-switcher {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 1000;
+  display: flex;
+  gap: 6px;
+}
+
+.map-style-chip {
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--overlay-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(4px);
+}
+
+.map-style-chip:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.map-style-chip--active {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.map-style-chip--disabled,
+.map-style-chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.environment-map .react-flow {
+  background: var(--bg);
+}
+
+/* reactflow 控件（zoom 按钮）跟随主题。 */
+.react-flow .react-flow__controls {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.react-flow .react-flow__controls-button {
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.react-flow .react-flow__controls-button:hover {
+  background: var(--bg-raised);
+}
+
+.react-flow .react-flow__controls-button svg {
+  fill: currentColor;
+}
+
+/* B-D plan-image underlay: sits below the zone layer (node zIndex -1). */
+.plan-image-node {
+  display: block;
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+}
+
+.zone-node {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--bg-raised) 55%, transparent);
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.zone-node__title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.zone-node__subtitle {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* Zone text LOD (R14 P0-3): compact mode (low zoom) keeps a single-line
+   title — ellipsis + the native title tooltip carry the full name. */
+.zone-node--compact .zone-node__title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zone-node__params {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-top: 4px;
+  /* 可读性：11px 在暗色地图上过小。 */
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.zone-node--pulse {
+  animation: zone-pulse 1.2s ease-in-out infinite;
+  border-color: var(--accent);
+}
+
+@keyframes zone-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 18px 4px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+}
+
+.zone-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.adjacency-edge {
+  stroke: var(--text-dim);
+  stroke-dasharray: 6 4;
+  /* T-713: informational edges (adjacency/binding/collab labels) must never
+     intercept clicks aimed at the device dots beneath them. */
+  pointer-events: none;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Agent cards / live panels                                               */
+/* ----------------------------------------------------------------------- */
+
+.agent-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.agent-card__name {
+  font-weight: 600;
+}
+
+.agent-card__id {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.agent-card__stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.agent-card__section {
+  margin-top: 8px;
+}
+
+.agent-card__label {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.agent-card__item {
+  font-size: 12px;
+}
+
+.agent-card__llm {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--hybrid);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.chip {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--accent-softer);
+  border: 1px solid var(--accent-border);
+  color: var(--accent);
+}
+
+.live-panels {
+  width: 360px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.live-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  padding: 12px;
+}
+
+.decision-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+}
+
+.decision-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.decision-item__time {
+  color: var(--text-dim);
+  font-family: ui-monospace, monospace;
+}
+
+.decision-item__agent {
+  color: var(--accent);
+}
+
+.decision-item__decision {
+  font-weight: 600;
+}
+
+.decision-item__source {
+  color: var(--hybrid);
+}
+
+.decision-item__event {
+  color: var(--actuator);
+}
+
+/* R40-A6：认知六区块徽章——情境类型（按紧急度着色）+ 不确定性百分比。 */
+.decision-item__situation {
+  font-size: 11px;
+  padding: 0 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+.decision-item__situation--emergency {
+  color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.decision-item__situation--anomaly {
+  color: #b45309;
+  border-color: #b45309;
+}
+
+.decision-item__situation--opportunity {
+  color: #15803d;
+  border-color: #15803d;
+}
+
+.decision-item__situation--normal {
+  color: var(--text-dim);
+}
+
+.decision-item__uncertainty {
+  font-size: 11px;
+  color: var(--hybrid);
+}
+
+/* defer/失败原因一行（可用性修复）：整行铺开，两行截断，title 兜底全文。 */
+.decision-item__reasoning {
+  flex-basis: 100%;
+  font-size: 11px;
+  color: var(--text-dim);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow-wrap: anywhere;
+}
+
+.device-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.device-table th,
+.device-table td {
+  text-align: left;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.device-table th {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.device-table__state {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ok);
+}
+
+/* ----------------------------------------------------------------------- */
+/* Control bar                                                             */
+/* ----------------------------------------------------------------------- */
+
+.control-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  padding: 8px 12px;
+}
+
+.control-bar__buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.control-bar__speed {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.control-bar__readout {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.control-bar__error {
+  color: var(--danger);
+  font-size: 12px;
+}
+
+/* T3 状态带：控制条 + 头条/LLM 状态/演示剧本收敛为一条带。 */
+.status-band {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-band__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.status-band__meta > * {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+/* T7: 错误 banner 占满整行（控制条是 flex 行）。 */
+.control-bar__banner {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.error-banner--inline {
+  margin-bottom: 0;
+}
+
+/* T1: 停止后的终态引导块。 */
+.control-bar__stopped {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.control-bar__stopped-text strong {
+  color: var(--text);
+  margin-right: 4px;
+}
+
+/* Wave-2「高光时刻」跳转按钮（demo hero event）。 */
+.control-bar__hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-color: var(--actuator);
+  color: var(--actuator);
+}
+
+.control-bar__hero:disabled {
+  border-color: var(--border);
+  color: var(--text-dim);
+}
+
+/* 演示模式最小控制条：仅播放/暂停与速率。 */
+.control-bar--present {
+  justify-content: center;
+  gap: 20px;
+  font-size: 15px;
+}
+
+.control-bar--present .control-bar__simtime {
+  font-size: 18px;
+}
+
+.state-pill {
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.state-pill--running {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.state-pill--paused {
+  border-color: var(--actuator);
+  color: var(--actuator);
+}
+
+.state-pill--stopped {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.state-pill--created {
+  color: var(--text-dim);
+}
+
+/* W7 status header: running pill pulses, readouts tick, chips guide. */
+.state-pill--running {
+  animation: state-pill-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes state-pill-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--ok) 0%, transparent);
+  }
+}
+
+.control-bar__simtime {
+  color: var(--text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.activity-indicator {
+  font-variant-numeric: tabular-nums;
+}
+
+.activity-indicator--fresh {
+  color: var(--ok);
+}
+
+.activity-indicator--stale {
+  color: var(--actuator);
+}
+
+.activity-indicator--quiet {
+  color: var(--danger);
+}
+
+.status-chip {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.status-chip--info {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.status-chip--warn {
+  border-color: var(--actuator);
+  color: var(--actuator);
+}
+
+.status-chip--danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* ----------------------------------------------------------------------- */
+/* W7 canvas-first console layout                                          */
+/* ----------------------------------------------------------------------- */
+
+.focus-toggle {
+  margin-left: auto;
+}
+
+.focus-toggle--active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* 垂直 PanelGroup：主区（地图+回放条）/ 底部事件抽屉，撑满控制台剩余高度。 */
+.console-panels {
+  flex: 1;
+  min-height: 0;
+}
+
+/* 主区 Panel 内部：水平分栏（flex:1）+ ReplayBar（自然高度）排成一列。 */
+.console-panels__main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+
+/* 地图 Panel：抽屉开合钮绝对定位的锚点。 */
+.console-panel--map {
+  position: relative;
+}
+
+/* react-resizable-panels 拖拽把手：6px 热区；hover/拖拽态用 accent 高亮，
+   暗色主题下清晰可见（状态由组件的 data-resize-handle-state 属性给出）。 */
+.resize-handle {
+  flex-shrink: 0;
+  border-radius: 3px;
+  transition: background 0.12s ease;
+}
+
+.resize-handle--vertical {
+  width: 6px;
+}
+
+.resize-handle--horizontal {
+  height: 6px;
+}
+
+.resize-handle:hover,
+.resize-handle[data-resize-handle-state='hover'],
+.resize-handle[data-resize-handle-state='drag'] {
+  background: var(--accent-border);
+}
+
+/* 水平 PanelGroup（react-resizable-panels）：地图 Panel + 拖拽把手 + 右抽屉
+   Panel。display 由组件内联设置，这里只负责在垂直主区里撑满剩余高度。 */
+.console-body {
+  flex: 1;
+  min-height: 0;
+}
+
+.console-main {
+  flex: 1;
+  min-width: 0;
+  /* 分栏 Panel 是普通 div（非 flex 列），地图区需要显式撑满 Panel 高度。 */
+  height: 100%;
+  display: flex;
+  /* Anchors the R14 P0-3 collab-edge toggle overlay. */
+  position: relative;
+}
+
+/* Console map chunk first-load placeholder (lazy map components). */
+.console-map__fallback {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.console-main .environment-map {
+  min-height: 0;
+}
+
+/* Right drawer: injection + live panels; 宽度由外层 Panel 控制（可拖拽），
+   抽屉自身只撑满 Panel 并纵向滚动；整抽屉折叠后只剩地图缘的悬浮开合钮。 */
+.console-drawer {
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 8px;
+}
+
+.console-drawer .live-panels {
+  width: auto;
+  overflow: visible;
+}
+
+/* 抽屉开合钮：分栏布局下吸附在地图 Panel 右缘居中（悬浮在画布之上，因此
+   需要实底 + 描边保证在地图/地理底图上可读）。 */
+.console-drawer__collapse {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  padding: 6px 4px;
+  line-height: 1;
+  color: var(--text-dim);
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+/* ----------------------------------------------------------------------- */
+/* 演示模式（Wave-2）：地图 + 大字号读数条 + 放大叙事时间线                    */
+/* ----------------------------------------------------------------------- */
+
+.simulation-view--present {
+  gap: 14px;
+}
+
+/* 大字号环境读数条：当前聚焦 zone 的温度 / CO₂ / occupancy。 */
+.present-readout {
+  flex-shrink: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 48px;
+  padding: 14px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+}
+
+.present-readout__zone {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.present-readout__metric {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.present-readout__value {
+  font-family: ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.present-readout__value--temperature {
+  color: var(--danger);
+}
+
+.present-readout__value--co2 {
+  color: var(--hybrid);
+}
+
+.present-readout__value--occupancy {
+  color: var(--accent);
+}
+
+.present-readout__label {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* 叙事时间线放大版（演示模式底部区域）。 */
+.present-episodes {
+  flex-shrink: 0;
+  height: 32%;
+  min-height: 180px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  padding: 10px 16px;
+}
+
+.episodes-panel--present {
+  font-size: 16px;
+}
+
+.episodes-panel--present .episode-list {
+  gap: 10px;
+}
+
+.episodes-panel--present .episode-row__main {
+  padding: 10px 12px;
+  gap: 16px;
+  font-size: 16px;
+}
+
+.episodes-panel--present .episode-row__time {
+  font-size: 15px;
+}
+
+.episodes-panel--present .episode-steps {
+  font-size: 15px;
+  gap: 8px;
+}
+
+/* Bottom event-log drawer: header row when collapsed, ~35% when open. */
+.event-drawer {
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 打开态高度由外层垂直 Panel 控制（可拖拽，默认 35%），抽屉撑满 Panel。 */
+.event-drawer--open {
+  height: 100%;
+}
+
+.event-drawer__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 4px 12px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-dim);
+  /* 可读性：抽屉摘要行是高频入口，12px 偏小。 */
+  font-size: 13px;
+}
+
+.event-drawer__header:hover {
+  color: var(--text);
+}
+
+.event-drawer__chevron {
+  font-size: 11px;
+}
+
+.event-drawer__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 12px 12px;
+}
+
+.event-drawer__body .event-log {
+  max-height: none;
+}
+
+.event-drawer__body .live-panel {
+  border: none;
+  padding: 0;
+}
+
+.event-log__decision-source {
+  color: var(--text-dim);
+}
+
+/* 决策理由（defer/失败原因）：独立一行、两行截断，title 兜底全文。 */
+.event-log__reasoning {
+  display: block;
+  /* 可读性：11px 在事件流里读起来费劲。 */
+  font-size: 12px;
+  color: var(--text-dim);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow-wrap: anywhere;
+}
+
+/* --- Simulation LLM status bar (usability fix) ----------------------------- */
+
+.llm-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  font-size: 12px;
+}
+
+.llm-status__mode {
+  font-weight: 600;
+}
+
+.llm-status--rule-only .llm-status__mode {
+  color: var(--text-dim);
+}
+
+.llm-status--warning {
+  border-color: var(--warn);
+}
+
+.llm-status__warning {
+  color: var(--warn);
+}
+
+/* --- Simulation hero line (R14 P0-2「正在发生」头条) ------------------------ */
+/* 与 .llm-status 同一行式容器惯例；reasoning 单行截断 + title 兜底全文。 */
+
+.hero-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  font-size: 12px;
+}
+
+.hero-line__label {
+  font-weight: 600;
+}
+
+.hero-line--idle .hero-line__idle {
+  color: var(--text-dim);
+}
+
+.hero-line__reasoning {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--text-dim);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow-wrap: anywhere;
+}
+
+.hero-line__age {
+  margin-left: auto;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* Bottom-drawer tabs (W8): 叙事 / 原始事件. */
+.event-drawer__tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.event-drawer__tab {
+  border: none;
+  border-radius: 0;
+  background: none;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.event-drawer__tab--active {
+  color: var(--text);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+/* Episode narrative timeline (W8). */
+.episodes-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.episodes-panel__filters {
+  flex-wrap: wrap;
+}
+
+.episode-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.episode-row {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  overflow: hidden;
+}
+
+.episode-row--cursor {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.episode-row__main {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 6px 10px;
+  text-align: left;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.episode-row__status {
+  flex-shrink: 0;
+  width: 14px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.episode-row__status--success {
+  color: var(--ok);
+}
+
+.episode-row__status--partial {
+  color: var(--actuator);
+}
+
+.episode-row__status--failed {
+  color: var(--danger);
+}
+
+.episode-row__status--ongoing {
+  color: var(--accent);
+}
+
+.episode-row__time {
+  flex-shrink: 0;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.episode-row__trigger {
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.episode-row__agents {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  flex-shrink: 1;
+}
+
+.episode-agent-chip {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0 8px;
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.episode-row__summary {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inline detail stepper: 触发 → 决策 → 协作 → 动作 → 结局. */
+.episode-steps {
+  list-style: none;
+  margin: 0;
+  padding: 4px 10px 10px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.episode-steps__item {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.episode-steps__label {
+  flex-shrink: 0;
+  min-width: 32px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.episode-steps__dim {
+  color: var(--text-dim);
+}
+
+.episode-decision,
+.episode-action {
+  display: block;
+}
+
+.episode-reasoning__toggle {
+  font-size: 11px;
+  margin-left: 6px;
+}
+
+.episode-reasoning__body {
+  display: block;
+  margin: 4px 0 4px 8px;
+  padding: 6px 8px;
+  border-left: 2px solid var(--border);
+}
+
+.episode-reasoning__record {
+  display: block;
+}
+
+.episode-reasoning__meta {
+  display: block;
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.episode-reasoning__text {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* On-map AC collaboration edges (reactflow canvas). */
+.collab-map-edge {
+  pointer-events: none;
+}
+
+/* On-map AC collaboration edges (geo canvas): forming dashes march. */
+.geo-collab-edge--forming {
+  animation: geo-collab-march 1s linear infinite;
+}
+
+@keyframes geo-collab-march {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+/* ----------------------------------------------------------------------- */
+/* M3/M4: stream status, event log, collaboration graph, injection, replay  */
+/* ----------------------------------------------------------------------- */
+
+input {
+  font: inherit;
+  background: var(--bg-raised);
+  color: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+}
+
+.llm-select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.stream-badge {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.stream-badge--down {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* --- Event log ---------------------------------------------------------- */
+
+.event-log-panel__filters {
+  margin-bottom: 8px;
+}
+
+.chip--button {
+  cursor: pointer;
+}
+
+.chip--active {
+  background: var(--accent-strong);
+  border-color: var(--accent);
+}
+
+.event-log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 12px;
+}
+
+.event-log__item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.event-log__time {
+  color: var(--text-dim);
+  font-family: ui-monospace, monospace;
+  flex-shrink: 0;
+}
+
+.event-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.event-dot--device {
+  background: var(--sensor);
+}
+
+.event-dot--environment {
+  background: var(--actuator);
+}
+
+.event-dot--collaboration {
+  background: var(--hybrid);
+}
+
+.event-dot--agent {
+  background: var(--accent);
+}
+
+.event-dot--flow {
+  background: var(--ok, #3fb950);
+}
+
+.event-dot--other {
+  background: var(--text-dim);
+}
+
+.event-log__summary {
+  overflow-wrap: anywhere;
+}
+
+/* --- Collaboration graph ------------------------------------------------- */
+
+.collab-graph {
+  position: relative;
+  height: 340px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.collab-graph .react-flow {
+  background: var(--bg);
+}
+
+.collab-graph__title {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  z-index: 5;
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+}
+
+.collab-node {
+  position: relative;
+  width: 132px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-lg);
+  background: var(--bg-raised);
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.collab-node__name {
+  font-weight: 600;
+}
+
+.collab-node__id {
+  color: var(--text-dim);
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.collab-node__badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--hybrid);
+  color: var(--on-accent);
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+
+/* --- Decision bubbles ----------------------------------------------------- */
+
+.decision-bubble {
+  border: 1px solid var(--actuator);
+  border-radius: var(--radius-lg);
+  background: var(--actuator-soft);
+  padding: 6px 8px;
+  font-size: 11px;
+  animation: bubble-in 0.25s ease-out;
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.decision-bubble__text {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.decision-bubble__source {
+  color: var(--actuator);
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+/* --- Event injection panel ------------------------------------------------ */
+
+.inject-panel__form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.inject-panel__form label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-dim);
+}
+
+.inject-panel__form select,
+.inject-panel__form input {
+  flex: 1;
+  min-width: 0;
+  max-width: 230px;
+}
+
+.inject-panel__confirmation {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ok);
+  overflow-wrap: anywhere;
+}
+
+.inject-panel__error {
+  margin: 0;
+  font-size: 12px;
+  color: var(--danger);
+  overflow-wrap: anywhere;
+}
+
+/* --- Replay bar ------------------------------------------------------------ */
+
+.replay-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  padding: 6px 12px;
+  /* 可读性：回放位置/速率读数 12px 偏小。 */
+  font-size: 13px;
+}
+
+.replay-bar--active {
+  border-color: var(--actuator);
+}
+
+.replay-bar__badge {
+  font-weight: 700;
+  color: var(--actuator);
+  font-family: ui-monospace, monospace;
+}
+
+.replay-bar__hint {
+  color: var(--text-dim);
+}
+
+.replay-bar__slider {
+  flex: 1;
+  min-width: 120px;
+  accent-color: var(--actuator);
+}
+
+.replay-bar__position {
+  color: var(--text-dim);
+  font-family: ui-monospace, monospace;
+}
+
+/* echarts 时间轴（ReplayTimeline）：控制条上方独占一行。 */
+.replay-timeline {
+  flex-basis: 100%;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+}
+
+.replay-timeline__canvas {
+  width: 100%;
+  height: 64px;
+}
+
+/* --- 环境曲线面板（EnvSeriesPanel） --------------------------------------- */
+
+.env-chart {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.env-chart__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.env-chart__toolbar select {
+  flex: 1;
+  min-width: 0;
+}
+
+.env-chart__toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.env-chart__canvas {
+  width: 100%;
+  height: 180px;
+}
+
+/* ----------------------------------------------------------------------- */
+/* P2c: auth, environments home, world view                                */
+/* ----------------------------------------------------------------------- */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-header__logo {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.app-header__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.app-header__name {
+  color: var(--text-dim);
+}
+
+/* 头部右侧统一 icon-button 规格（通知铃铛 / 主题切换）。 */
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-color: transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-dim);
+}
+
+.icon-button:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--accent-softer);
+  color: var(--accent);
+}
+
+.app-footer {
+  padding: 6px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-panel);
+  font-size: 12px;
+  text-align: right;
+}
+
+/* Router 导航（react-router NavLink/Link 复用按钮外观） */
+
+.app-nav {
+  display: flex;
+  gap: 2px;
+  align-self: stretch;
+}
+
+.app-nav__tab {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim);
+  text-decoration: none;
+}
+
+.app-nav__tab:hover {
+  color: var(--text);
+}
+
+.app-nav__tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+a.link-button {
+  text-decoration: none;
+}
+
+/* ErrorBoundary 的友好错误页（顶层与局部边界共用） */
+
+.error-boundary {
+  max-width: 520px;
+  margin: 48px auto;
+  padding: 24px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.error-boundary__title {
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: var(--danger);
+}
+
+.error-boundary__actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* --- Auth page ---------------------------------------------------------- */
+
+.auth-page {
+  min-height: 62vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 32px 16px;
+  border-radius: var(--radius-lg);
+  /* 纯 CSS 背景：accent 径向光晕 + 细网格，双主题均走 token 派生。 */
+  background:
+    radial-gradient(640px 320px at 50% -60px, var(--accent-softer), transparent 70%),
+    linear-gradient(color-mix(in srgb, var(--border) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--border) 45%, transparent) 1px, transparent 1px);
+  background-size:
+    auto,
+    28px 28px,
+    28px 28px;
+}
+
+.auth-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.auth-brand__logo {
+  width: 44px;
+  height: 44px;
+  display: block;
+}
+
+.auth-brand__name {
+  font-size: 20px;
+  letter-spacing: 0.02em;
+}
+
+.auth-brand__tagline {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.auth-card {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+/* 登录/注册 segmented 切换 */
+.auth-card__tabs {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+
+.auth-tab {
+  flex: 1;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  padding: 7px 0;
+  color: var(--text-dim);
+}
+
+.auth-tab:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.auth-tab--active {
+  background: var(--bg-panel);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.home-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.home-tab {
+  flex: 1;
+  border-radius: var(--radius-sm);
+}
+
+.home-tab--active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.auth-field,
+.dialog-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.auth-field__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.auth-field input {
+  padding: 9px 12px;
+  font-size: 14px;
+  border-radius: var(--radius);
+}
+
+/* A1: 密码可见性切换——输入框与切换按钮同行。 */
+.auth-field__password {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auth-field__password input {
+  flex: 1;
+  min-width: 0;
+}
+
+.auth-field__toggle-password {
+  flex: 0 0 auto;
+}
+
+/* 邀请码输入下的教学提示（alpha 邀请制注册门）。 */
+.auth-field__hint {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.auth-card__error {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
+  font-size: 12px;
+  color: var(--danger);
+  overflow-wrap: anywhere;
+}
+
+.env-card__error {
+  margin: 0;
+  font-size: 12px;
+  color: var(--danger);
+  overflow-wrap: anywhere;
+}
+
+.auth-card__submit {
+  margin-top: 2px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* --- Environments home ---------------------------------------------------- */
+
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 空状态引导（无环境 / 无通知 / 无场景共用） */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 20px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  text-align: center;
+}
+
+.empty-state__icon {
+  color: var(--accent);
+}
+
+.empty-state__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.empty-state__note {
+  margin: 0;
+  max-width: 440px;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.empty-state__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.home-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.home-toolbar .home-tabs {
+  width: 220px;
+}
+
+.env-card__badges {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.env-card__actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+/* --- Dialog ---------------------------------------------------------------- */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.dialog {
+  width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  padding: 18px;
+  box-shadow: var(--shadow-md);
+}
+
+.dialog__title {
+  font-size: 16px;
+}
+
+.dialog__textarea {
+  font: inherit;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  background: var(--bg-raised);
+  color: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  resize: vertical;
+}
+
+.dialog__issues {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: var(--danger);
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* --- World view layout ------------------------------------------------------ */
+
+.world-canvas {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  /* 分栏 Panel 是普通 div，画布需要显式撑满 Panel 高度。 */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Canvas chunk first-load placeholder (lazy map components). */
+.world-canvas__fallback {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.layer-toggles {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 5;
+  display: flex;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--overlay-bg);
+  padding: 6px 10px;
+  font-size: 12px;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(4px);
+}
+
+/* R14 P0-3: the sim console's「显示全部协作边」toggle docks top-right so it
+   never collides with the floor/building switchers at the top-left. */
+.console-collab-toggle {
+  left: auto;
+  right: 10px;
+}
+
+.layer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--text-dim);
+}
+
+/* 宽度由外层 Panel 控制（可拖拽，原 320–640px 手搓拖拽已移除），侧栏自身
+   撑满 Panel。 */
+.world-sidebar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  overflow: hidden;
+}
+
+.world-sidebar__tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--border);
+  /* Labels never truncate: the bar scrolls horizontally when they don't fit. */
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+/* T10 分组导航：组行（概览/构建/运行/治理）位于 tab 行之上。 */
+.world-sidebar__groups {
+  display: flex;
+  gap: 2px;
+  padding: 4px 8px 0;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.world-group {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  background: none;
+  padding: 6px 10px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  box-shadow: inset 0 -2px 0 transparent;
+}
+
+.world-group:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.world-group--active {
+  color: var(--text);
+  font-weight: 600;
+  background: var(--bg-raised, rgba(127, 127, 127, 0.08));
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.world-tab {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  border: none;
+  border-radius: 0;
+  background: none;
+  padding: 9px 8px;
+  /* 可读性：14 个 tab 是高频导航，12px 偏小。 */
+  font-size: 13px;
+  color: var(--text-dim);
+  box-shadow: inset 0 -2px 0 transparent;
+}
+
+.world-tab:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.world-tab--active {
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+/* T-713: the 业务流 quick link rides the tab bar but navigates to the flows
+   page (Link, not tab) — same look, no active-state underline. */
+.world-tab--link {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.world-tab__count {
+  margin-left: 3px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.world-sidebar__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+/* Tab-panel chunk first-load placeholder (lazy sidebar panels). */
+.world-sidebar__panel-fallback {
+  padding: 16px 8px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* 侧栏开合钮：分栏布局下吸附在画布 Panel 右缘居中（悬浮在画布之上，需要
+   实底 + 描边保证在地图上可读）。 */
+.world-sidebar__collapse {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 20px;
+  padding: 8px 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  color: var(--text-dim);
+}
+
+/* --- Object lists / details -------------------------------------------------- */
+
+.object-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.object-list__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  padding: 7px 9px;
+  border-radius: var(--radius-sm);
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+button.object-list__item:hover:not(:disabled) {
+  background: var(--accent-softer);
+}
+
+.object-list__name {
+  font-weight: 600;
+  /* Names stay fully readable: wrap to at most two lines instead of a hard
+     ellipsis (the full name is also on the item's title attribute). */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.object-list__meta {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.object-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.object-detail__name {
+  margin: 0;
+  font-size: 15px;
+}
+
+.object-detail__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.object-detail__label {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ZoneFloorPlan (R82): mini floor map — footprint outline + positioned room
+   dots; stretched viewBox, so aspect follows the footprint bbox. */
+.zone-floor-plan {
+  width: 100%;
+  height: 140px;
+  margin-top: 8px;
+  border: 1px solid var(--border, #2a3040);
+  border-radius: 6px;
+  background: rgba(127, 127, 127, 0.06);
+}
+.zone-floor-plan__outline {
+  fill: rgba(76, 194, 255, 0.08);
+  stroke: rgba(76, 194, 255, 0.55);
+  stroke-width: 0.8;
+}
+.zone-floor-plan__room {
+  fill: rgba(255, 122, 69, 0.85);
+  stroke: rgba(0, 0, 0, 0.35);
+  stroke-width: 0.3;
+  cursor: help;
+}
+
+.object-detail__section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  align-items: flex-start;
+}
+
+/* Progressive disclosure: collapsible detail sections (default closed). */
+.object-detail__collapsible {
+  width: 100%;
+}
+
+.object-detail__toggle {
+  padding: 0;
+  font-size: 12px;
+}
+
+.object-detail__collapsible-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  padding-left: 16px;
+}
+
+.object-detail__state {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ok);
+  overflow-wrap: anywhere;
+}
+
+.object-detail__link {
+  padding: 0;
+  font-size: 12px;
+  text-align: left;
+}
+
+.owner-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.agent-list-initial {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--hybrid);
+  border: 1px solid var(--hybrid);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+/* --- Members tab ------------------------------------------------------------- */
+
+.member-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.member-list__hint {
+  margin: 0;
+  font-size: 12px;
+}
+
+.member-list__online {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.presence-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+  border: 1px solid var(--border);
+}
+
+.presence-dot--online {
+  background: var(--ok);
+  border-color: var(--ok);
+}
+
+.member-list__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.member-list__name {
+  font-weight: 600;
+}
+
+.member-list__counts {
+  margin-left: auto;
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+/* --- Catalog tab ------------------------------------------------------------- */
+
+.catalog-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.catalog-panel__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* R76-F2: blank-canvas empty state — first-zone guidance + inline creation. */
+.catalog-empty-zones {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+}
+
+.catalog-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  padding: 8px 10px;
+}
+
+.catalog-row__main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* 区域管理 (W6-2): zone rows mirror the catalog row layout. */
+.zone-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.zone-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  padding: 8px 10px;
+}
+
+.zone-row__main {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.catalog-row__name {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.catalog-row__meta {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.catalog-row__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+/* --- Device dots (LOD) -------------------------------------------------------- */
+
+.device-dot {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--text-dim);
+  cursor: pointer;
+}
+
+/* T-713 (R29): enlarge the hover/click hit area beyond the 18px dot — at
+   campus zoom levels the raw dot is a hard target. The transparent ring is
+   invisible but hit-testable (events target the pseudo-element's owner). */
+.device-dot::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+}
+
+/* T-713: hovered dots jump above the collab-edge label layer inline z-index
+   (zones 1 / door gaps 2 / dots 3 / collab edges 5) — brings the dot to the
+   front while aiming at it. */
+.react-flow__node-deviceDot:hover,
+.react-flow__node-agentMarker:hover {
+  z-index: 8 !important;
+}
+
+.device-dot--sensor {
+  background: var(--sensor);
+}
+
+.device-dot--actuator {
+  background: var(--actuator);
+}
+
+.device-dot--hybrid {
+  background: var(--hybrid);
+}
+
+.device-dot--selected {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.device-dot--active {
+  animation: dot-pulse 1.8s ease-in-out infinite;
+}
+
+/* P3d: red ring for devices with an active fault injection. */
+.device-dot--faulted {
+  border-color: var(--danger-strong) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger-strong) 35%, transparent);
+}
+
+@keyframes dot-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+}
+
+/* --- Agent markers (agent layer) ------------------------------------------------ */
+
+.agent-marker {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--hybrid);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  cursor: pointer;
+}
+
+.agent-marker__inner {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-raised);
+  color: var(--hybrid);
+  font-size: 13px;
+  font-weight: 700;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.agent-marker--selected {
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 70%, transparent));
+}
+
+.agent-marker--selected .agent-marker__inner {
+  color: var(--accent);
+}
+
+.zone-node--focused {
+  border-color: var(--hybrid);
+  box-shadow: 0 0 0 1px var(--hybrid);
+}
+
+.binding-edge {
+  stroke: var(--hybrid);
+  stroke-width: 2;
+  /* T-713: informational edge — never intercept device clicks. */
+  pointer-events: none;
+}
+
+/* --- Toasts ---------------------------------------------------------------------- */
+
+.toast-stack {
+  position: fixed;
+  right: 16px;
+  bottom: 40px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast {
+  background: var(--bg-raised);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font-size: 12px;
+  max-width: 320px;
+  text-align: left;
+  animation: bubble-in 0.25s ease-out;
+}
+
+/* T8: 分类着色——成功/失败不再同色。 */
+.toast--success {
+  border-color: var(--ok);
+}
+
+.toast--error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--danger) 40%, transparent);
+}
+
+/* G2: 共享加载占位（Suspense fallback）。 */
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 8px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.loading-indicator__spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: loading-spin 0.8s linear infinite;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ----------------------------------------------------------------------- */
+/* Geo world map (Leaflet canvas, §11.4 geo tier)                          */
+/* ----------------------------------------------------------------------- */
+
+.environment-map .geo-map {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+}
+
+/* Sim console: the map flexes to the leftover height between the control
+   header and the replay/event bars — the 420px floor would overflow the
+   squeezed container and spill UNDER those bars, which then swallow marker
+   clicks. Height:100% keeps Leaflet exactly in its box. */
+.console-main .environment-map .geo-map {
+  min-height: 0;
+}
+
+/* Click-to-place: crosshair over the whole leaflet container. */
+.geo-map.leaflet-container.geo-map--placing {
+  cursor: crosshair;
+}
+
+.placement-banner {
+  position: absolute;
+  /* below .canvas-view-control (10px) AND .perspective-banner (44px) — the
+     three top-centred overlays can coexist (我的视角 + 放置 armed). */
+  top: 78px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 6px 14px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  color: var(--accent);
+  font-size: 13px;
+  pointer-events: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Zone drawing / device pick (W6-2): the banner carries 完成/取消 buttons. */
+.placement-banner--interactive {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Device dots are CircleMarkers (SVG paths) — pulse = stroke-opacity. */
+@keyframes geo-device-pulse {
+  0%, 100% { stroke-opacity: 1; }
+  50% { stroke-opacity: 0.35; }
+}
+
+.geo-device--pulse {
+  animation: geo-device-pulse 1.8s ease-in-out infinite;
+}
+
+/* Zone highlight pulse (decision overlay) — fill-opacity. */
+@keyframes geo-zone-pulse {
+  0%, 100% { fill-opacity: 0.35; }
+  50% { fill-opacity: 0.1; }
+}
+
+.geo-zone--pulse {
+  animation: geo-zone-pulse 1.2s ease-in-out infinite;
+}
+
+/* Binding edges (selected agent → bound devices): marching dashes. */
+@keyframes geo-dash-march {
+  to { stroke-dashoffset: -24; }
+}
+
+.geo-binding-edge {
+  animation: geo-dash-march 1s linear infinite;
+}
+
+/* Agent DivIcon: reset leaflet's default div-icon chrome. */
+.geo-agent-icon {
+  background: none;
+  border: none;
+}
+
+/* Hexagon marker mirroring the grid map's .agent-marker (outer = owner rim). */
+.geo-agent-marker {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--border);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  cursor: pointer;
+}
+
+.geo-agent-marker span {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-raised);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.geo-agent-marker--selected {
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 70%, transparent));
+}
+
+.geo-agent-marker--selected span {
+  color: var(--accent);
+}
+
+/* Tooltips follow the active theme. */
+.environment-map .leaflet-tooltip {
+  background: var(--bg-raised);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  font-size: 12px;
+}
+
+.environment-map .leaflet-tooltip-top::before {
+  border-top-color: var(--border);
+}
+
+.environment-map .leaflet-tooltip-bottom::before {
+  border-bottom-color: var(--border);
+}
+
+.geo-tooltip__dim {
+  color: var(--text-dim);
+}
+
+/* Leaflet 控件（缩放条 / attribution）主题适配。 */
+.environment-map .leaflet-container {
+  background: var(--bg);
+}
+
+.environment-map .leaflet-bar {
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.environment-map .leaflet-bar a {
+  background: var(--bg-panel);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.environment-map .leaflet-bar a:hover {
+  background: var(--bg-raised);
+  color: var(--text);
+}
+
+.environment-map .leaflet-control-attribution {
+  background: var(--overlay-bg);
+  color: var(--text-dim);
+}
+
+.environment-map .leaflet-control-attribution a {
+  color: var(--accent);
+}
+
+.catalog-row__hint {
+  color: var(--accent);
+  font-size: 12px;
+  align-self: center;
+}
+
+/* ---- Service marketplace (W3) ---- */
+
+.service-marketplace__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.service-marketplace__filters select,
+.service-marketplace__search {
+  width: 100%;
+}
+
+.service-group {
+  margin-bottom: 10px;
+}
+
+.service-group__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.service-group__count {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.service-row__unbacked {
+  margin-left: 6px;
+  font-size: 11px;
+  color: var(--warn);
+}
+
+.service-detail__warning {
+  font-size: 12px;
+  color: var(--warn);
+}
+
+.service-detail__interface {
+  margin: 0;
+  padding: 6px;
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ---- User perspective (W5): workbench, perspective toggle, stars, deployment ---- */
+
+/* Div rows (workbench lists, marketplace rows, deployment sections) carry
+   the same chrome as the button rows they replaced. */
+div.object-list__item {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+}
+
+/* 视角切换 — segmented control, top-right of the world canvas. */
+.perspective-control {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1100; /* above Leaflet panes/controls (<=1000) on geo maps */
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--overlay-bg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(4px);
+}
+
+.perspective-control__button {
+  border: none;
+  border-radius: 0;
+  background: none;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.perspective-control__button--active {
+  background: var(--bg-raised);
+  color: var(--accent);
+}
+
+/* "以 X 的视角" banner chip (top-center; pointer-transparent). */
+.perspective-banner {
+  position: absolute;
+  top: 44px; /* below .canvas-view-control (also top-centred at 10px) — Track F overlay fix */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100; /* above Leaflet panes/controls (<=1000) on geo maps */
+  padding: 5px 14px;
+  border: 1px solid var(--hybrid);
+  border-radius: 999px;
+  background: var(--overlay-bg);
+  color: var(--hybrid);
+  font-size: 12px;
+  pointer-events: none;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(4px);
+}
+
+/* 我的视角 dimming: others' objects fade to ~25% and stop responding. */
+.device-dot--dimmed,
+.agent-marker--dimmed {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.geo-agent-marker--dimmed {
+  opacity: 0.25;
+  cursor: default;
+}
+
+/* Marketplace stars (订阅/依赖). */
+.service-star {
+  border: none;
+  background: none;
+  padding: 0 2px;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.service-star:hover:not(:disabled) {
+  border: none;
+  color: var(--accent);
+}
+
+.service-star--filled {
+  color: var(--actuator);
+}
+
+.service-star--filled:hover:not(:disabled) {
+  color: var(--actuator);
+}
+
+/* Marketplace row: star + main click target side by side. */
+.service-row {
+  padding: 4px 6px;
+}
+
+.service-row__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: none;
+  padding: 3px;
+  text-align: left;
+}
+
+.service-row__main:hover:not(:disabled) {
+  border: none;
+}
+
+.service-row__main .object-list__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 「只看我的依赖」 filter chip. */
+.filter-chip {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--text-dim);
+  align-self: flex-start;
+}
+
+.filter-chip--active {
+  border-color: var(--actuator);
+  color: var(--actuator);
+}
+
+/* ---- 工作台 (workbench home) ---- */
+
+.workbench__greeting {
+  margin: 0;
+  font-size: 18px;
+}
+
+.workbench__tagline {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+
+.workbench__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.workbench__env-link {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.workbench__env-link:hover:not(:disabled) {
+  border: none;
+  color: var(--accent);
+}
+
+.workbench__counts {
+  flex-wrap: wrap;
+}
+
+.workbench__totals {
+  margin: 14px 0;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.workbench-section {
+  margin-top: 16px;
+}
+
+.workbench-section__title {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.workbench-row .chip {
+  flex-shrink: 0;
+}
+
+.workbench__hint {
+  margin-top: 18px;
+  font-size: 12px;
+}
+
+/* ---- 平台管理面板 (/admin) ---- */
+
+.admin-mint-form fieldset {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.admin-mint-form legend {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.admin-mint-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.admin-mint-form input {
+  width: 110px;
+}
+
+.admin-minted__code {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ---- 部署清单 (deployment manifest tab) ---- */
+
+.deployment {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.deployment__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.deployment__notes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.deployment__note {
+  margin: 0;
+  padding: 7px 10px;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.deployment__section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.deployment__title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.deployment__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.deployment__table th,
+.deployment__table td {
+  border-bottom: 1px solid var(--border);
+  padding: 5px 6px 5px 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.deployment__table th {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.deployment__table tfoot td {
+  border-bottom: none;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.deployment__buy {
+  text-decoration: none;
+}
+
+/* --- P3b: deployment center (HA bridge + safety console) ----------------- */
+
+.deployment__subtitle {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.deployment__binding-id {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.deployment__row-actions {
+  white-space: nowrap;
+}
+
+.deployment__row-actions .link-button + .link-button {
+  margin-left: 8px;
+}
+
+.deployment__picker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.deployment__picker-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.deployment__picker-controls input {
+  flex: 1;
+  min-width: 0;
+}
+
+.deployment__form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.deployment__form input {
+  flex: 1;
+  min-width: 140px;
+}
+
+.deployment__pending {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 10px;
+}
+
+.deployment__estop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.deployment__estop-state {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.estop-button {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: var(--on-danger);
+  font-weight: 600;
+  padding: 8px 18px;
+}
+
+.badge--hass,
+.badge--binding-hass {
+  border-color: var(--actuator);
+  color: var(--actuator);
+}
+
+.badge--binding-sim {
+  border-color: var(--sensor);
+  color: var(--sensor);
+}
+
+.badge--ok {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.badge--warn {
+  border-color: var(--actuator);
+  color: var(--actuator);
+}
+
+.badge--danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Reputation (P4-1): score chip + track-record bars. */
+.reputation-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.reputation-chip__uses {
+  font-size: 10px;
+  opacity: 0.75;
+}
+
+.track-record {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.track-record__score {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.track-record__bar {
+  flex: 1;
+  min-width: 60px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  overflow: hidden;
+  display: inline-block;
+}
+
+.track-record__fill {
+  display: block;
+  height: 100%;
+  background: var(--text-dim);
+}
+
+.track-record__bar--good .track-record__fill {
+  background: var(--ok);
+}
+
+.track-record__bar--warn .track-record__fill {
+  background: var(--actuator);
+}
+
+.track-record__detail {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.reputation-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.reputation-bar__capability {
+  font-size: 11px;
+  min-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reputation-bar__value {
+  font-size: 11px;
+  color: var(--text-dim);
+  min-width: 34px;
+  text-align: right;
+}
+
+/* Global emergency-stop banner (P3b) — fixed above every view. */
+.estop-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: var(--danger);
+  color: var(--on-danger);
+  font-weight: 600;
+}
+
+.estop-banner__clear {
+  background: color-mix(in srgb, var(--on-danger) 15%, transparent);
+  border-color: var(--on-danger);
+  color: var(--on-danger);
+}
+
+/* ----------------------------------------------------------------------- */
+/* W6: creation layer — agent wizard + service form                         */
+/* ----------------------------------------------------------------------- */
+
+.world-sidebar__create {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.wizard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.wizard__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.wizard__step-chip {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.wizard__step-chip--active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.wizard__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wizard__body input,
+.wizard__body select,
+.wizard__body textarea {
+  width: 100%;
+}
+
+.wizard__body input[type='checkbox'],
+.wizard__body input[type='radio'] {
+  width: auto;
+}
+
+.wizard__params {
+  width: 100%;
+}
+
+.wizard__footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+.wizard__footer-spacer {
+  flex: 1;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-field__label {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.form-field__inline {
+  display: flex;
+  gap: 6px;
+}
+
+.check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.check-list__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  cursor: pointer;
+}
+
+.check-list__item--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.iface-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.agent-owner-group__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 4px;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.object-detail__actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.service-row__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Fix-17: viewer 只读标识 */
+.badge--readonly {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+/* Fix-17: 通知门铃角标 */
+.notification-bell {
+  position: relative;
+}
+
+.notification-bell__badge {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  display: inline-block;
+  min-width: 15px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--danger-strong);
+  color: var(--on-danger);
+  font-size: 10px;
+  line-height: 15px;
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--bg-panel);
+}
+
+/* Fix-17: 通知列表行 */
+.notification-row {
+  flex-wrap: wrap;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.notification-row:hover {
+  border-color: var(--accent-border);
+}
+
+.notification-row--unread {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.notification-row--unread .object-list__name {
+  font-weight: 600;
+}
+
+.notification-row .object-list__meta {
+  font-size: 11px;
+}
+
+.notification-row__actions {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 8px;
+}
+
+/* T-066 surface 1: replyHint 行内决策提示（yourMove / waiting 两种形态） */
+.notification-row__reply {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.notification-row__your-move {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.notification-row__waiting {
+  color: var(--text-dim);
+}
+
+/* Fix-17: 合约面板 */
+.agreement-row {
+  display: block;
+}
+
+.agreement-row__main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.agreement-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.agreement-invoke {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.agreement-invoke label {
+  display: grid;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.agreement-usage {
+  margin-top: 8px;
+}
+
+.agreement-propose {
+  display: grid;
+  gap: 6px;
+}
+
+.agreement-propose label {
+  display: grid;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* T-066 surface 2: 合约详情（协商面板） */
+.agreement-detail .chip,
+.agreement-detail .badge {
+  margin-right: 4px;
+}
+
+.agreement-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.terms-table {
+  display: grid;
+  gap: 2px;
+  margin: 4px 0;
+}
+
+.terms-table__value {
+  font-family: var(--mono-font, monospace);
+  font-size: 11px;
+  word-break: break-all;
+}
+
+.terms-diff {
+  margin-top: 6px;
+}
+
+.terms-diff__title {
+  font-weight: 600;
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+.terms-diff__line {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 2px;
+}
+
+.terms-diff__line--added {
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 10%, transparent);
+}
+
+.terms-diff__line--removed {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+
+.terms-diff__line--changed {
+  color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 12%, transparent);
+}
+
+.agreement-remind {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 6px 0;
+}
+
+.agreement-counter {
+  display: grid;
+  gap: 6px;
+}
+
+.agreement-counter textarea {
+  width: 100%;
+  font-family: var(--mono-font, monospace);
+  font-size: 11px;
+}
+
+/* T-066 surface 3: 数据读取面板（terms.read 消费） */
+.read-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.read-controls label {
+  display: grid;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--text-dim);
+  flex: 1 1 180px;
+}
+
+.read-quota {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.read-quota__label {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.read-quota .track-record__bar {
+  flex: 1;
+  height: 6px;
+}
+
+.read-result {
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.read-result__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+/* A STALE frame must LOOK stale — dimmed with a danger-tinted border. */
+.read-result--stale {
+  opacity: 0.65;
+  border-color: color-mix(in srgb, var(--danger) 45%, var(--border));
+  background: color-mix(in srgb, var(--danger) 5%, transparent);
+}
+
+.read-frame {
+  width: 100%;
+}
+
+.read-provenance {
+  margin-top: 6px;
+}
+
+.read-receipts {
+  margin-top: 8px;
+}
+
+.read-receipts__table {
+  margin-top: 4px;
+}
+
+.read-error__code {
+  font-family: var(--mono-font, monospace);
+  font-weight: 600;
+}
+
+.read-error__teaching {
+  margin-top: 4px;
+}
+
+.read-error__details {
+  font-family: var(--mono-font, monospace);
+  font-size: 11px;
+  word-break: break-all;
+}
+
+/* Fix-17: 协作会话列表 / 场景计划事件 */
+.collaboration-row {
+  flex-wrap: wrap;
+}
+
+.collaboration-row__detail {
+  flex-basis: 100%;
+}
+
+.scenario-events {
+  margin: 8px 16px;
+}
+
+/* Fix-19: 世界导读 / viewer 角色边界 / 世界动态 */
+.world-guide {
+  margin: 0 16px 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+
+.world-guide__title {
+  margin: 0 0 4px;
+  font-size: 13px;
+}
+
+.world-guide p {
+  margin: 2px 0;
+}
+
+.viewer-notice {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.activity-list {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 12px;
+}
+
+.activity-list__time {
+  color: var(--text-dim);
+}
+
+/* Wave-4b: 协作决策链（回放详情页决策链时间轴） */
+.decision-chain-panel {
+  margin: 8px 16px;
+}
+
+.decision-chain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+}
+
+.decision-chain {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.decision-chain__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.decision-chain__party {
+  font-weight: 600;
+}
+
+.decision-chain__dim {
+  color: var(--text-dim);
+}
+
+.decision-chain__steps {
+  list-style: none;
+  margin: 4px 0 0;
+  padding-left: 8px;
+}
+
+.decision-chain__step {
+  display: flex;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.decision-chain__stage {
+  flex-shrink: 0;
+  width: 32px;
+  color: var(--text-dim);
+}
+
+.decision-chain__status--accepted {
+  color: var(--accent);
+}
+
+.decision-chain__status--rejected,
+.decision-chain__status--cancelled {
+  color: var(--danger);
+}
+
+.decision-chain__status--countered,
+.decision-chain__status--deferred,
+.decision-chain__status--pending {
+  color: var(--hybrid);
+}
+
+/* ------------------------------------------------------------------ */
+/* 业务流编辑器（FlowsPage + components/flow）                          */
+/* ------------------------------------------------------------------ */
+
+.flows-page__body {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.flow-list {
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.flow-list__item {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--bg-panel);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.flow-list__item--selected {
+  border-color: var(--accent);
+}
+
+/* UX-09: list filter controls (same shape as service-marketplace__filters). */
+.flow-list__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.flow-list__filters select,
+.flow-list__search {
+  width: 100%;
+}
+
+/* UX-09: list filter controls (same shape as service-marketplace__filters). */
+.flow-list__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.flow-list__filters select,
+.flow-list__search {
+  width: 100%;
+}
+
+.flow-list__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flow-list__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-dim);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.flow-list__delete {
+  margin-left: auto;
+}
+
+.flow-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.flow-dot--success {
+  background: var(--ok, #3fb950);
+}
+
+.flow-dot--partial {
+  background: var(--hybrid, #d29922);
+}
+
+.flow-dot--failed {
+  background: var(--danger);
+}
+
+.flow-editor {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.flow-editor__placeholder {
+  padding: 32px 0;
+}
+
+/* F5: 未选 flow 时的引导空态（居中文案 + CTA）。 */
+.flow-editor__empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 48px 24px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.flow-editor__empty-title {
+  margin: 0;
+  font-size: 14px;
+}
+
+.flow-editor__empty-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* T2: 未保存徽标。 */
+.badge--dirty {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+/* R14 P1-1: 引导式造 Flow 向导（渲染在 flow-editor 主区；R2-UX-20 更名） */
+.flow-wizard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 520px;
+}
+
+.flow-wizard__title {
+  margin: 0;
+  font-size: 15px;
+}
+
+.flow-wizard__step {
+  margin: 0;
+  font-weight: 600;
+}
+
+.flow-wizard__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.flow-wizard__row {
+  display: flex;
+  gap: 8px;
+}
+
+.flow-wizard__summary {
+  margin: 0;
+}
+
+.flow-wizard__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.flow-editor__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.flow-editor__name {
+  width: 180px;
+}
+
+.flow-editor__description {
+  width: 220px;
+}
+
+.flow-editor__goal {
+  flex: 1;
+  min-width: 220px;
+}
+
+.flow-issues {
+  list-style: none;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.flow-issues__item--error {
+  color: var(--danger);
+}
+
+.flow-issues__item--warning {
+  color: var(--hybrid, #d29922);
+}
+
+.flow-editor__main {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.flow-canvas {
+  flex: 1;
+  min-width: 0;
+  height: 68vh;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.flow-node {
+  width: 300px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.flow-node--trigger {
+  border-color: var(--accent-border, var(--accent));
+}
+
+.flow-node--selected {
+  outline: 2px solid var(--accent);
+}
+
+.flow-node--error {
+  outline: 2px solid var(--danger);
+}
+
+.flow-node--warning {
+  outline: 2px solid var(--hybrid, #d29922);
+}
+
+.flow-node__title {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.flow-node__id {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.flow-node__field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.flow-node__field > span {
+  color: var(--text-dim);
+}
+
+.flow-node__field input,
+.flow-node__field select,
+.flow-node__field textarea {
+  font-size: 12px;
+}
+
+.flow-node__error {
+  color: var(--danger);
+}
+
+/* T-051(b): deviceId 钉定字段的教学提示（弱化说明）。 */
+.flow-node__hint {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.flow-conditions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.flow-conditions__row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.flow-conditions__row input {
+  min-width: 0;
+  flex: 1;
+}
+
+.flow-conditions__row select {
+  width: 56px;
+  flex-shrink: 0;
+}
+
+.flow-runs-drawer {
+  flex: 0 0 300px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 68vh;
+}
+
+.flow-runs-drawer__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.flow-runs-drawer__header h4 {
+  margin: 0;
+}
+
+.flow-run {
+  border-top: 1px solid var(--border);
+  padding: 6px 0;
+  font-size: 12px;
+}
+
+.flow-run summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.flow-run__summary {
+  margin: 4px 0;
+  color: var(--text-dim);
+}
+
+.flow-run__nodes {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.flow-run__nodes li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.flow-run__node-id {
+  font-family: monospace;
+}
+
+/* T-714: which sim executed the run (flows are environment-level). */
+.flow-run__sim {
+  font-family: monospace;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.flow-run__error {
+  color: var(--danger);
+}
+
+.flow-run__note {
+  color: var(--text-dim);
+}
+
+/* ----------------------------------------------------------------------- */
+/* V1 floor-plan semantics + A3 comfort/energy visualization               */
+/* ----------------------------------------------------------------------- */
+
+/* --- Zone category tints (subtle over the base fill; heat fill overrides) - */
+
+.zone-node {
+  position: relative;
+}
+
+.zone-node--cat-classroom {
+  background: color-mix(in srgb, var(--accent) 18%, var(--bg-raised) 45%);
+}
+
+.zone-node--cat-dormitory {
+  background: color-mix(in srgb, var(--hybrid) 18%, var(--bg-raised) 45%);
+}
+
+.zone-node--cat-library {
+  background: color-mix(in srgb, var(--sensor) 18%, var(--bg-raised) 45%);
+}
+
+/* R15-D9: medical/clinic zones (nursing-home scenarios) — warm tint. */
+.zone-node--cat-medical {
+  background: color-mix(in srgb, var(--warn) 16%, var(--bg-raised) 45%);
+}
+
+.zone-node--cat-outdoor {
+  background: color-mix(in srgb, var(--ok) 10%, var(--bg-raised) 45%);
+  border-style: dashed;
+}
+
+/* Unclassified zones (classifyZone = 'other', R14 P0-3): neutral light gray
+   so「无类别」reads as intentional and stays distinct from the tinted
+   categories — previously they fell through to the near-white base fill. */
+.zone-node--cat-other {
+  background: color-mix(in srgb, var(--text-dim) 9%, var(--bg-raised) 50%);
+}
+
+/* Corridors / stairwells are circulation space: visually de-emphasized. */
+.zone-node--cat-corridor,
+.zone-node--cat-stairwell {
+  background: color-mix(in srgb, var(--bg-raised) 30%, transparent);
+  border-color: color-mix(in srgb, var(--border) 60%, transparent);
+}
+
+.zone-node--cat-corridor .zone-node__title,
+.zone-node--cat-stairwell .zone-node__title,
+.zone-node--cat-corridor .zone-node__subtitle,
+.zone-node--cat-stairwell .zone-node__subtitle {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+/* --- Zone live overlays -------------------------------------------------- */
+
+.zone-node__comfort {
+  margin-top: 4px;
+}
+
+.zone-node__occupancy {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: color-mix(in srgb, var(--bg-panel) 80%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0 5px;
+  pointer-events: none;
+}
+
+/* Cross-floor adjacency (V1): dashed ⇅ chips on the zone node. */
+.zone-node__vertical-links {
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.zone-node__vertical-link {
+  font-size: 10px;
+  color: var(--text-dim);
+  border: 1px dashed var(--text-dim);
+  border-radius: var(--radius-sm);
+  padding: 0 4px;
+  background: color-mix(in srgb, var(--bg-panel) 80%, transparent);
+}
+
+/* --- Door gaps (V1): short opening on the shared wall of adjacent zones -- */
+
+.door-gap {
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  border: 1px solid var(--text-dim);
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+/* --- Heat legend (matches lib/zoneVisual temperatureHeatColor) ----------- */
+
+.heat-legend {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--text-dim);
+  background: color-mix(in srgb, var(--bg-panel) 85%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+  pointer-events: none;
+}
+
+.heat-legend__bar {
+  width: 72px;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    hsl(215, 80%, 55%),
+    hsl(112, 80%, 55%),
+    hsl(10, 80%, 55%)
+  );
+}
+
+.heat-legend__scale {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.heat-legend__ticks {
+  display: flex;
+  justify-content: space-between;
+  width: 72px;
+}
+
+/* --- Device-dot type icons (V1; plain dot resumes below the LOD zoom) ---- */
+
+.device-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.device-dot__icon {
+  color: #ffffff;
+  pointer-events: none;
+}
+
+/* --- Device energy column (A3) -------------------------------------------- */
+
+.live-panel__energy-total {
+  margin-left: 10px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.device-table__energy {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* --- Blueprints panel (Fix-38; world sidebar 蓝图 tab) -------------------- */
+
+.blueprint-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blueprint-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px;
+  background: var(--bg-raised);
+}
+
+.blueprint-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.blueprint-card__name {
+  font-weight: 600;
+}
+
+.blueprint-card__desc {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.blueprint-card__meta {
+  margin: 6px 0;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.blueprint-card__form {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.blueprint-card__form select {
+  flex: 1;
+  min-width: 0;
+}
+
+/* --- Roster report panel (Fix-37; world sidebar 评分报告 tab) -------------- */
+
+.roster-report__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.roster-report__download {
+  display: inline-block;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.roster-report__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.roster-report__table th,
+.roster-report__table td {
+  border-bottom: 1px solid var(--border);
+  padding: 5px 6px 5px 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.roster-report__table th {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.roster-report__name {
+  font-weight: 600;
+}
+
+.roster-report__email {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.roster-report__inventory-row td {
+  background: var(--bg-raised);
+}
+
+.roster-report__inventory {
+  display: flex;
+  gap: 6px;
+  margin: 2px 0;
+  font-size: 12px;
+}
+
+/* ---------------------------------------------------------------------------
+ * A2 zone scoping — compact multi-select popover in the world header
+ * ------------------------------------------------------------------------- */
+
+.zone-scope {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.zone-scope__toggle {
+  font-size: 12px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-raised);
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.zone-scope__toggle:hover {
+  color: var(--text);
+}
+
+.zone-scope__popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 30;
+  min-width: 180px;
+  max-height: 240px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-raised);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 35%);
+}
+
+.zone-scope__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 3px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.zone-scope__item:hover {
+  background: rgb(128 128 128 / 12%);
+}
+
+/* ---------------------------------------------------------------------------
+ * A5 progressive disclosure — collapsible sections inside the right drawer
+ * ------------------------------------------------------------------------- */
+
+.console-section {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+}
+
+.console-section__header {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* The wrapped panels keep their own h3; the section header replaces it. */
+.console-section > .live-panel > .side-panel__title {
+  display: none;
+}
+
+/* ----------------------------------------------------------------------- */
+/* B1/B2/B3/B5 additions                                                    */
+/* ----------------------------------------------------------------------- */
+
+/* B1: whole-card affordance hint — pushed to the action row's right edge. */
+.env-card__chevron {
+  margin-left: auto;
+  align-self: center;
+  color: var(--text-dim);
+  opacity: 0.5;
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.scenario-card:hover .env-card__chevron {
+  color: var(--accent);
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+/* B3: inbox grouping tabs under the toolbar. */
+.inbox-tabs {
+  width: 260px;
+}
+
+.inbox-tabs .home-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* T-030: the inbox's load-older affordance under the newest page — same
+   cursor contract as the activity feed (?before=). */
+.inbox-load-older {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 4px;
+}
+
+.inbox-load-older .link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* B5: eval metric cards in the console bottom drawer. */
+.eval-report {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.eval-report__meta,
+.eval-report__sources {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* plan-r81 B3: the training-export download entry in the meta row. Border
+   width/style only — color and background come from .primary-button. */
+.eval-report__export {
+  display: inline-block;
+  padding: 2px 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.eval-report__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.eval-report__card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+
+.eval-report__value {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.eval-report__label,
+.eval-report__sub {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.eval-report__notes {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-dim);
+}
+
+/* ----------------------------------------------------------------------- */
+/* V3 trial: pseudo-3D building view (three.js)                            */
+/* ----------------------------------------------------------------------- */
+
+.building3d {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bg-panel);
+}
+
+.building3d canvas {
+  display: block;
+}
+
+/* Empty state (C8): centered inside the 3D container, above floating panels. */
+.building3d__empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.building3d__labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.building3d__label {
+  font-size: 11px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--bg-panel) 72%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1px 5px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.building3d__tooltip {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  max-width: 260px;
+  font-size: 12px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--bg-raised) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px 8px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.building3d__selection {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  background: color-mix(in srgb, var(--bg-raised) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+}
+
+.building3d__selection-name {
+  font-weight: 600;
+}
+
+.building3d__selection-meta {
+  color: var(--text-dim);
+}
+
+/* Canvas view switch (grid / geo / 3D): reuses the perspective-control pill,
+   centered so it never overlaps the top-left layer toggles or the top-right
+   全局/我的 perspective control. */
+.canvas-view-control {
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* World view overlays .layer-toggles at top-left too — stack the switcher
+   row (storey chips + building chips) below them (the console has no layer
+   toggles, so it keeps top:10). */
+.world-canvas .map-switchers {
+  top: 52px;
+}
+
+/* ---------------------------------------------------------------------------
+   W1b: scenario-template cards (create-environment dialog 模板 tab)
+   --------------------------------------------------------------------------- */
+.template-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 340px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.template-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.template-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.template-card__name {
+  font-weight: 600;
+}
+
+.template-card__description {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 13px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.template-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.template-card__counts {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+/* ---------------------------------------------------------------------------
+   W1b: workbench onboarding checklist (新手引导)
+   --------------------------------------------------------------------------- */
+.onboarding {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.onboarding__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.onboarding__title {
+  margin: 0;
+  font-size: 14px;
+}
+
+.onboarding__dismiss {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.onboarding__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.onboarding-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.onboarding-step--done .onboarding-step__title,
+.onboarding-step--done .onboarding-step__note {
+  color: var(--text-dim);
+  text-decoration: line-through;
+}
+
+.onboarding-step__check {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent, #4caf50);
+}
+
+.onboarding-step--done .onboarding-step__check {
+  border-color: currentColor;
+}
+
+.onboarding-step__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.onboarding-step__title {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.onboarding-step__note {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+/* W2 first-visit console tips (SimulationView) */
+.console-tips {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 6px 12px;
+  margin: 0 12px 8px;
+  border: 1px solid var(--accent-border);
+  border-radius: 6px;
+  background: var(--accent-softer);
+  font-size: 12px;
+}
+
+.console-tips__title {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.console-tips__list {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-dim);
+}
+
+.console-tips__dismiss {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* --- LLM enable guide + sim-start mode hint (W3) --------------------------- */
+
+.llm-status__guide-toggle {
+  white-space: nowrap;
+}
+
+.llm-status__guide {
+  flex-basis: 100%;
+  margin: 4px 0 2px;
+  padding-left: 18px;
+  color: var(--text-dim);
+}
+
+.llm-status__guide li {
+  margin: 2px 0;
+}
+
+.llm-status__guide code {
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-size: 11px;
+}
+
+.llm-status__guide-env {
+  margin: 2px 0 0 12px;
+}
+
+.llm-select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.llm-select-group__hint {
+  margin: 0;
+  max-width: 260px;
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* ----------------------------------------------------------------------- */
+/* W4 map visuals: switcher row (floors + buildings), zone selection, hint  */
+/* ----------------------------------------------------------------------- */
+
+/* Top-left overlay row grouping the floor tabs and the building chips. */
+.map-switchers {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 1000;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  max-width: calc(100% - 20px);
+}
+
+.map-switchers .floor-switcher {
+  position: static;
+}
+
+.building-switcher {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Zone click selection (W4): accent outline + soft glow. */
+.zone-node--selected {
+  border-color: var(--accent);
+  border-width: 2px;
+  box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+/* One-time map-interaction hint (world view, bottom-right). */
+.map-hint {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--overlay-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(4px);
+}
+
+.map-hint__dismiss {
+  font-size: 12px;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.map-hint__dismiss:hover {
+  text-decoration: underline;
+}
+
+/* W5: 事件注入「常用事件」快捷 chips */
+.inject-panel__quick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.inject-panel__quick-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-right: 2px;
+}
+
+.inject-panel__chip {
+  font-size: 11px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.inject-panel__chip:hover {
+  background: var(--accent-softer);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+/* W5: DeploymentPanel 向导 stepper + 可折叠步骤段 */
+.deployment-steps {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.deployment-steps__item {
+  display: flex;
+}
+
+.deployment-steps__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.deployment-steps__button:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.deployment-steps__button--current {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.deployment-steps__button--done .deployment-steps__marker {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: var(--bg-panel);
+}
+
+.deployment-steps__marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.deployment-step {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+}
+
+.deployment-step__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.deployment-step__index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  color: var(--text-dim);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.deployment-step__index--done {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: var(--bg-panel);
+}
+
+.deployment-step__title {
+  flex: 1;
+}
+
+.deployment-step__body {
+  padding: 0 12px 10px;
+}
+
+.deployment-step__body[hidden] {
+  display: none;
+}
+
+/* 段内原标题由 step 标题替代，避免重复 */
+.deployment-step__body > .deployment__section > .deployment__title {
+  display: none;
+}
+
+/* --- Member management (成员 tab: batch import dialog + row controls) ------- */
+
+.member-list__role {
+  font: inherit;
+  font-size: 11px;
+  padding: 2px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  color: var(--text);
+}
+
+.member-list__remove {
+  flex-shrink: 0;
+}
+
+.member-import__results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.member-import__summary {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.member-import__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.member-import__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.member-import__row--not_found .member-import__email {
+  color: var(--danger);
+}
+
+.member-import__row--already_member .member-import__email {
+  color: var(--text-dim);
+}
+
+.member-import__email {
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------------------
+ * R12-5c-B usability fixes (真人试点实测发现)
+ * ------------------------------------------------------------------------- */
+
+/* 1. 运行仿真：环境已有活动仿真时的「进入现有 / 新建」选择 popover。 */
+.run-sim {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.run-sim__popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 30;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-raised);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 35%);
+}
+
+/* W2: 多仿真选择列表。 */
+.run-sim__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.run-sim__list-item {
+  width: 100%;
+  text-align: left;
+  font-size: 12px;
+}
+
+.run-sim__hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* 2. 控制台右抽屉 rail：竖排文字标签，让入口可发现。 */
+.console-drawer__collapse {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.console-drawer__collapse-label {
+  writing-mode: vertical-rl;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--accent);
+}
+
+/* 5. 评分报告 owner 明细：限高 + 内部滚动，长清单不再灌满侧栏。 */
+.roster-report__inventory-scroll {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* Track F 信息分级 — 列表行 + 行内简介（名字 → 简介 → 完整详情）。 */
+.object-list__row {
+  display: flex;
+  flex-direction: column;
+}
+
+.object-list__row .object-list__item {
+  width: 100%;
+}
+
+.object-list__chevron {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--text-dim);
+}
+
+.object-list__brief {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  padding: 4px 9px 7px 26px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.object-list__brief-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* 服务简介的描述摘要：最多两行。 */
+.object-list__brief-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.object-list__brief-detail {
+  font-size: 11px;
+}
+
+/* Track F: 行内管理操作（编辑/删除/可见性）视觉弱化。 */
+.service-row__actions .link-button {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* ---- T-016: 批量评估任务（world sidebar 面板） ---- */
+.eval-runs-panel__row {
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+}
+.eval-runs-panel__row:last-child {
+  border-bottom: none;
+}
+.eval-runs-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--text);
+  font-size: 12px;
+}
+.eval-runs-panel__meta {
+  color: var(--text-dim);
+}
+.eval-runs-panel__time {
+  margin-left: auto;
+  color: var(--text-dim);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.eval-runs-panel__digest {
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 2px 0 2px 19px;
+}
+.eval-runs-panel__detail {
+  padding: 4px 0 4px 19px;
+  font-size: 11px;
+}
+.eval-runs-panel__id {
+  color: var(--text-dim);
+  word-break: break-all;
+  margin-bottom: 4px;
+}
+.eval-runs-panel__arms {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.eval-runs-panel__arm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.eval-runs-panel__arm-label {
+  font-weight: 600;
+}
+.eval-runs-panel__arm-metrics {
+  color: var(--text-dim);
+}
+.badge--eval-pending,
+.badge--eval-running {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.badge--eval-failed {
+  background: color-mix(in srgb, var(--danger, #d92d20) 15%, transparent);
+}
+
+/* ---- R15-B1: 回放分享（sidebar 面板 + 匿名只读分享页） ---- */
+.replay-share-panel__intro {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 4px 0 10px;
+}
+.replay-share-panel__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.replay-share-panel__field input {
+  font: inherit;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+}
+.replay-share-panel__quick {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.replay-share-panel__expires input {
+  width: 80px;
+}
+.replay-share-panel__result {
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.replay-share-panel__result h4 {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+.replay-share-panel__result input {
+  width: 100%;
+  font: inherit;
+  font-size: 11px;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+}
+.replay-share-panel__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.replay-share-panel__expiry {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.share-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.share-header__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.share-header__meta h2 {
+  margin: 0;
+}
+.share-header__env {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.share-header__description {
+  margin: 6px 0;
+}
+.share-header__chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 8px 0 4px;
+}
+.share-header__expiry {
+  color: var(--text-dim);
+}
+.share-header__readonly {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 4px 0 0;
+}
+.share-event-log {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* ---- R15-B2: 演示剧本播放条 ---- */
+.demo-playlist {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-raised, var(--bg));
+}
+.demo-playlist__counter {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.demo-playlist__scene {
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.demo-playlist__dots {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+.demo-playlist__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  display: inline-block;
+}
+.demo-playlist__dot--done {
+  background: var(--accent-dim, var(--border));
+}
+.demo-playlist__dot--active {
+  background: var(--accent, currentColor);
+}
+
+/* ---- plan-r81 B2: demo-run narration banner (over the sim console) ---- */
+.demo-run-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: min(720px, calc(100vw - 48px));
+  padding: 8px 12px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg-raised, var(--bg)));
+  box-shadow: 0 4px 16px rgb(0 0 0 / 35%);
+  font-size: 12px;
+}
+.demo-run-banner__icon {
+  display: inline-flex;
+  align-items: center;
+  padding-top: 1px;
+  color: var(--accent);
+}
+.demo-run-banner__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.demo-run-banner__title {
+  font-weight: 600;
+}
+.demo-run-banner__steps {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  color: var(--text-dim);
+}
+.demo-run-banner__step--done {
+  color: var(--accent-dim, var(--text-dim));
+  text-decoration: line-through;
+}
+.demo-run-banner__step--active {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.demo-run-banner__speed {
+  color: var(--text-dim);
+}
+.demo-run-banner__exit {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.demo-run-banner__exit:hover {
+  text-decoration: underline;
+}
+
+/* ---- plan-r81 B1/B2: world-view guest prompt + demo entry ---- */
+.guest-prompt {
+  margin: 4px 0;
+  font-size: 12px;
+}
+.demo-mode-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---- R15-D8: 能耗曲线面板 ---- */
+.energy-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.energy-panel__zones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.energy-panel__zone {
+  font-size: 11px;
+}
+
+/* ---- R15-D10: 待接受邀请列表（成员 tab，owner） ---- */
+.member-invites {
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin: 8px 0;
+}
+.member-invites__title {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+.member-invites__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.member-invites__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.member-invites__email {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.member-invites__hint {
+  margin: 6px 0 0;
+  font-size: 11px;
+}
+.empty-state__invite-hint {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+/* =============================================================================
+   Agent chat panel (cognitive architecture Phase 3 — NL interface)
+   ============================================================================= */
+.agent-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.agent-chat__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.agent-chat__agent {
+  flex: 1;
+}
+/* 可读性（控制台重排）：chat 区是主 NL 入口，字号整体 12→13、11→12；
+   对话流 max-height 260px 放宽到 40vh（抽屉现在可拖高，固定 260px 浪费空间）。 */
+.agent-chat__mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.agent-chat__stopped {
+  font-size: 13px;
+  color: var(--warning, #b45309);
+}
+.agent-chat__log {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+.agent-chat__entry {
+  border-left: 2px solid var(--border, #d1d5db);
+  padding-left: 8px;
+}
+.agent-chat__entry--ask {
+  border-left-color: var(--info, #2563eb);
+}
+.agent-chat__input-line {
+  font-size: 13px;
+  color: var(--text-muted, #6b7280);
+}
+.agent-chat__pending {
+  font-size: 13px;
+  color: var(--text-muted, #6b7280);
+}
+.agent-chat__response {
+  font-size: 13px;
+}
+.agent-chat__actions {
+  margin: 4px 0 0;
+  padding-left: 14px;
+  font-size: 13px;
+  list-style: none;
+}
+.agent-chat__action--ok {
+  color: var(--ok, #15803d);
+}
+.agent-chat__action--fail {
+  color: var(--danger, #b91c1c);
+}
+.agent-chat__error {
+  font-size: 13px;
+  color: var(--danger, #b91c1c);
+}
+/* S3': 历史截断提示。 */
+.agent-chat__truncated {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 2px 0 6px;
+}
+.agent-chat__form {
+  display: flex;
+  gap: 6px;
+}
+.agent-chat__input {
+  flex: 1;
+}
+.agent-chat__empty {
+  font-size: 13px;
+  color: var(--text-muted, #6b7280);
+}
+
+/* R40-B3: world-session lifecycle banner + sandbox panel. */
+.world-session-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.world-session-banner__status {
+  font-weight: 600;
+  padding: 0 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+.world-session-banner__status--active { color: #15803d; border-color: #15803d; }
+.world-session-banner__status--idle { color: var(--text-dim); }
+.world-session-banner__status--hibernated { color: #b45309; border-color: #b45309; }
+
+.world-session-banner__simtime {
+  font-family: ui-monospace, monospace;
+  color: var(--text-dim);
+}
+
+.sandbox-list { list-style: none; margin: 8px 0; padding: 0; }
+.sandbox-item { padding: 8px 0; border-bottom: 1px solid var(--border); }
+.sandbox-item__head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+.sandbox-item__id { font-family: ui-monospace, monospace; color: var(--accent); }
+.sandbox-item__status { font-size: 11px; padding: 0 5px; border: 1px solid var(--border); border-radius: 3px; }
+.sandbox-item__status--active { color: #15803d; border-color: #15803d; }
+.sandbox-item__owner { color: var(--text-dim); font-size: 12px; }
+.sandbox-item__time { color: var(--text-dim); font-size: 11px; }
+.sandbox-item__actions { display: flex; gap: 8px; margin-top: 6px; }
+.sandbox-adopt { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.sandbox-adopt__json { font-family: ui-monospace, monospace; font-size: 12px; }
+.sandbox-adopt__eval { font-size: 12px; }
+
+/* R40-B2: per-agent metacognition block on the eval report. */
+.eval-meta-agents { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.eval-meta-agent { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; display: flex; flex-direction: column; gap: 6px; }
+.eval-meta-agent__head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+.eval-meta-agent__name { font-weight: 600; }
+.eval-meta-agent__boundary, .eval-meta-agent__uncalibrated, .eval-meta-agent__trust { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; font-size: 12px; }
+
+/* R40-B1: chat mode segmented control + verdict badges. */
+.agent-chat__modes { display: flex; gap: 4px; }
+.agent-chat__mode { font-size: 13px; cursor: pointer; }
+.agent-chat__mode--on { font-weight: 600; }
+.agent-chat__verification { margin-top: 4px; font-size: 13px; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border); }
+.agent-chat__verification--improvement { color: #15803d; border-color: #15803d; }
+.agent-chat__verification--degradation { color: #b91c1c; border-color: #b91c1c; font-weight: 600; }
+.agent-chat__verification--neutral { color: var(--text-dim); }
+.agent-chat__deltas { list-style: none; margin: 4px 0 0; padding: 0; font-family: ui-monospace, monospace; font-size: 11px; color: var(--text-dim); }
+
+/* R76-F3: per-message decision-source chip (llm / rules / rules-llm-down). */
+.agent-chat__source { margin-left: 6px; font-size: 11px; padding: 0 5px; border: 1px solid var(--border); border-radius: 3px; color: var(--text-dim); white-space: nowrap; }
+.agent-chat__source--llm { color: #15803d; border-color: #15803d; }
+.agent-chat__source--rules-llm-down { color: #b45309; border-color: #b45309; }
+
+/* ----------------------------------------------------------------------- */
+/* External channel panel (R59) — API keys + event sources                  */
+/* ----------------------------------------------------------------------- */
+
+.api-key-minted {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+}
+
+.api-key-minted__secret {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  word-break: break-all;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  background: var(--bg);
+  border: 1px dashed var(--border);
+}
+
+.mapping-editor {
+  width: 100%;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  resize: vertical;
+}
+
+.member-list .blueprint-card {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.member-list__actions-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.member-list__actions-row input,
+.member-list__actions-col input {
+  flex: 1;
+  min-width: 120px;
+}
+
+.member-list__actions-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.external-row__narrow {
+  max-width: 90px;
+}
+
+.external-row__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.external-row__dim {
+  color: var(--text-dim);
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.external-row__warn {
+  color: var(--danger, #c0392b);
+}
+
+.external-row__actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+/* R68: aggregated repeat badge (×N) in the inbox rows */
+.notification-repeat-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+/* R72: hierarchical device binding rows (Agent wizard) — name gets the full
+   line; type/zone/owner details collapse behind a per-row toggle. */
+.check-list__item {
+  flex-wrap: wrap;
+}
+
+.check-list__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.check-list__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* R79-logi (A3): bind-step rows whose device provides a DECLARED capability
+   carry this match chip (and sort first) — in a 100+ device template world
+   the covering device was unfindable by name alone. */
+.check-list__match {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--ok);
+  white-space: nowrap;
+}
+
+.check-list__toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.check-list__toggle:hover {
+  color: var(--text);
+}
+
+.check-list__details {
+  flex-basis: 100%;
+  padding-left: 26px;
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+/* InteriorWalkPage (R82 phase 1): first-person interior walk. */
+.interior-walk {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  background: #0d1117;
+}
+.interior-walk__canvas {
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+.interior-walk__topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: linear-gradient(rgba(13, 17, 23, 0.85), transparent);
+  z-index: 10;
+}
+.interior-walk__back,
+.interior-walk__entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.interior-walk__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #c9d4e4;
+  font-size: 13px;
+  opacity: 0.9;
+}
+.interior-walk__floor-rail {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+.interior-walk__floor {
+  width: 44px;
+  padding: 7px 0;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(13, 17, 23, 0.7);
+  color: #e6edf6;
+  cursor: pointer;
+  font-size: 13px;
+}
+.interior-walk__floor--active {
+  background: #4cc2ff;
+  border-color: #4cc2ff;
+  color: #0d1117;
+  font-weight: 600;
+}
+/* 楼层按钮上的快捷键数字徽标（键盘 1-5 切层提示） */
+.interior-walk__floor-key {
+  display: block;
+  margin: 0 auto 3px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #8b95a3;
+  font-size: 10px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+.interior-walk__floor--active .interior-walk__floor-key {
+  background: rgba(13, 17, 23, 0.25);
+  color: #0d1117;
+}
+.interior-walk__card {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  min-width: 220px;
+  max-width: 320px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(13, 17, 23, 0.88);
+  color: #e6edf6;
+  z-index: 10;
+}
+.interior-walk__card h4 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+.interior-walk__card p {
+  margin: 0;
+  font-size: 13px;
+  color: #b9c4d4;
+}
+.interior-walk__card-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #8b95a3;
+}
+
+/* deploy bar (R82 phase 2): device palette along the bottom */
+.interior-walk__deploy {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(13, 17, 23, 0.88);
+  z-index: 10;
+}
+.interior-walk__deploy-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #c9d4e4;
+  font-size: 13px;
+}
+.interior-walk__deploy-type {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(13, 17, 23, 0.6);
+  color: #e6edf6;
+  cursor: pointer;
+  font-size: 13px;
+}
+.interior-walk__deploy-type--active {
+  background: #4cc2ff;
+  border-color: #4cc2ff;
+  color: #0d1117;
+  font-weight: 600;
+}
+.interior-walk__deploy-busy {
+  color: #ffb86b;
+  font-size: 12px;
+}
+
+.interior-walk__temp {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 16px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(76, 194, 255, 0.15);
+  border: 1px solid rgba(76, 194, 255, 0.4);
+  color: #7dd3fc;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.interior-walk__crosshair--locked {
+  background: #4cc2ff;
+  box-shadow: 0 0 8px rgba(76, 194, 255, 0.8);
+}
+.interior-walk__crosshair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  z-index: 10;
+}
+.interior-walk__minimap {
+  position: absolute;
+  right: 16px;
+  bottom: 76px;
+  width: 220px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  z-index: 10;
+  opacity: 0.96;
+}
+.interior-walk__prompt {
+  position: absolute;
+  bottom: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(13, 17, 23, 0.88);
+  color: #e6edf6;
+  font-size: 13px;
+  z-index: 10;
+}
+
+/* R87b: 目的地信标 HUD + 到达闪光 + 音效开关提示 */
+.interior-walk__beacon {
+  position: absolute;
+  bottom: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(8, 47, 56, 0.88);
+  color: #67e8f9;
+  font-size: 12.5px;
+  z-index: 10;
+  pointer-events: none;
+}
+.interior-walk__reached {
+  position: absolute;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: rgba(22, 101, 52, 0.92);
+  color: #dcfce7;
+  font-size: 13px;
+  z-index: 12;
+  animation: interior-walk-fade 2.2s ease forwards;
+  pointer-events: none;
+}
+.interior-walk__soundchip {
+  position: absolute;
+  top: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(13, 17, 23, 0.85);
+  color: #e6edf6;
+  font-size: 13px;
+  z-index: 11;
+  animation: interior-walk-fade 1.6s ease forwards;
+  pointer-events: none;
+}
+@keyframes interior-walk-fade {
+  0% { opacity: 0; }
+  12% { opacity: 1; }
+  78% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* R87b: Enter 房间搜索面板（松开指针的“地图屏”模式） */
+.interior-walk__search {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 10, 18, 0.55);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  z-index: 20;
+}
+.interior-walk__search-card {
+  width: min(420px, 92vw);
+  border-radius: 12px;
+  background: var(--panel-bg, rgba(13, 17, 23, 0.97));
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  padding: 14px 16px;
+  color: #e6edf6;
+}
+.interior-walk__search-card h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #9fb3cd;
+}
+.interior-walk__search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(2, 6, 12, 0.6);
+  color: #e6edf6;
+  font-size: 14px;
+  outline: none;
+}
+.interior-walk__search-input:focus {
+  border-color: #22d3ee;
+}
+.interior-walk__search-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.interior-walk__search-hit {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  color: #e6edf6;
+}
+.interior-walk__search-hit b {
+  color: #67e8f9;
+  margin-right: 6px;
+}
+.interior-walk__search-hit:hover {
+  background: rgba(34, 211, 238, 0.12);
+}
+.interior-walk__search-empty {
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+.interior-walk__search-tip {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.interior-walk__onboarding {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 17, 23, 0.82);
+  z-index: 20;
+}
+.interior-walk__onboarding-card {
+  max-width: 460px;
+  padding: 28px 32px;
+  border-radius: 12px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  color: #e6edf6;
+}
+.interior-walk__onboarding-card h3 {
+  margin: 0 0 18px;
+  font-size: 18px;
+  color: #7dd3fc;
+}
+.interior-walk__onboarding-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+  margin-bottom: 16px;
+}
+.interior-walk__onboarding-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+.interior-walk__onboarding-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: #21262d;
+  border: 1px solid #30363d;
+  color: #7dd3fc;
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.interior-walk__onboarding-tip {
+  margin: 0 0 18px;
+  font-size: 13px;
+  color: #8b949e;
+}
+.interior-walk__onboarding-start {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #1f6feb;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.interior-walk__onboarding-start:hover {
+  background: #388bfd;
+}
+
+/* ----------------------------------------------------------------------- */
+/* 窄屏（≤1280px）：抽屉/侧栏默认收窄一档                                    */
+/* ----------------------------------------------------------------------- */
+
+/* 分栏 defaultSize 的窄屏档在页面组件里（narrowViewport()，只影响无持久化
+   布局时的初始百分比）；这里同步收窄抽屉内边距，把空间让给画布。 */
+@media (max-width: 1280px) {
+  .console-drawer {
+    padding-left: 4px;
+    gap: 8px;
+  }
+
+  .world-sidebar__body {
+    padding: 8px;
+  }
+}
+
+
+/* R6-D-M1: quest levels panel (world sidebar 关卡 tab). */
+.quest-progress-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  margin: 6px 0 10px;
+  overflow: hidden;
+}
+
+.quest-progress-bar__fill {
+  display: block;
+  height: 100%;
+  background: var(--accent, #3b82f6);
+}
+
+.quest-entry {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.quest-entry:last-child {
+  border-bottom: none;
+}
+
+.quest-entry--locked {
+  opacity: 0.6;
+}
+
+.quest-entry__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quest-entry__name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.quest-entry__desc {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.quest-entry__guidance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+
+/* ----------------------------------------------------------------------- */
+/* ── UX-W1: console device actions ──                                      */
+/* 设备直达操作卡（DeviceActionSheet）：点选地图设备点后吸附在地图区底部，   */
+/* 悬浮在画布之上（实底 + 描边，与抽屉开合钮同一可读性纪律）。              */
+/* ----------------------------------------------------------------------- */
+
+.device-action-sheet {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  /* 720 > Leaflet popup pane (700)：geo 控制台的 zone 多边形/marker 图层 (z-400~600) 会把 z-6 的卡片整个压住，按钮点不到（ux-w1 探针实证）。 */
+  z-index: 720;
+  width: min(360px, calc(100% - 20px));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 10px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+.device-action-sheet__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.device-action-sheet__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.device-action-sheet__meta {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.device-action-sheet__close {
+  line-height: 1;
+  padding: 2px;
+}
+
+.device-action-sheet__state {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.device-action-sheet__state-label {
+  flex-shrink: 0;
+  color: var(--text-dim);
+}
+
+.device-action-sheet__state-value {
+  font-family: var(--font-mono, monospace);
+  word-break: break-all;
+}
+
+.device-action-sheet__commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.device-action-sheet__command {
+  padding: 3px 10px;
+  font-size: 12px;
+  font-family: var(--font-mono, monospace);
+  color: var(--text);
+  background: var(--accent-softer);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.device-action-sheet__command--active {
+  background: var(--accent-strong);
+}
+
+.device-action-sheet__exec {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.device-action-sheet__exec input {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.device-action-sheet__exec button {
+  flex-shrink: 0;
+}
+
+/* UX-W1：ControlBar 停止按钮的就地二次确认行（原 window.confirm）。 */
+.control-bar__confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+}
+
+.control-bar__confirm-text {
+  font-size: 12px;
+  color: var(--text-dim);
+  max-width: 420px;
+}
+
+/* ── UX-W1: design system ── */
+/* 新增 token（只加不改既有名）：更大的浮层阴影 + 动效时长。 */
+:root {
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --motion-fast: 150ms;
+  --motion-med: 250ms;
+}
+
+[data-theme='light'] {
+  --shadow-lg: 0 8px 32px rgba(15, 23, 42, 0.18);
+}
+
+/* Button 层次化：secondary = 次强调实底（介于 primary 与 ghost 之间）。 */
+.secondary-button {
+  background: var(--bg-raised);
+  border-color: var(--border-strong);
+}
+
+/* danger 实底主按钮（ConfirmDialog 危险档确认键；轮廓 .danger-button 不变）。 */
+.danger-button--solid {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: var(--on-danger);
+}
+
+.danger-button--solid:hover:not(:disabled) {
+  border-color: var(--danger-strong);
+  background: var(--danger-strong);
+}
+
+/* ConfirmDialog —— alertdialog 模态（backdrop 复用 --backdrop token）。 */
+.confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--backdrop);
+  animation: confirm-fade-in var(--motion-fast) ease-out;
+}
+
+.confirm-dialog {
+  width: min(420px, calc(100vw - 32px));
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 16px;
+  animation: confirm-pop-in var(--motion-med) ease-out;
+}
+
+.confirm-dialog--warn {
+  border-color: color-mix(in srgb, var(--warn) 55%, var(--border));
+}
+
+.confirm-dialog--danger {
+  border-color: color-mix(in srgb, var(--danger) 55%, var(--border));
+}
+
+.confirm-dialog__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.confirm-dialog__icon {
+  flex: none;
+  color: var(--accent);
+}
+
+.confirm-dialog--warn .confirm-dialog__icon {
+  color: var(--warn);
+}
+
+.confirm-dialog--danger .confirm-dialog__icon {
+  color: var(--danger);
+}
+
+.confirm-dialog__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.confirm-dialog__body {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  white-space: pre-line;
+}
+
+/* 无标题的单条消息对话：正文升一档当主角。 */
+.confirm-dialog__body--solo {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+@keyframes confirm-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes confirm-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+/* Toast 结构升级：整条不再可点（显式关闭钮 + 独立动作钮）。
+   原 .toast 是 <button>，此处同优先级覆盖为 flex 容器（追加在后即生效）。 */
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: default;
+  color: var(--text);
+}
+
+.toast--warn {
+  border-color: var(--warn);
+}
+
+.toast__icon {
+  flex: none;
+  margin-top: 1px;
+  color: var(--accent);
+}
+
+.toast--success .toast__icon {
+  color: var(--ok);
+}
+
+.toast--warn .toast__icon {
+  color: var(--warn);
+}
+
+.toast--error .toast__icon {
+  color: var(--danger);
+}
+
+.toast__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast__title {
+  margin: 0 0 2px;
+  font-weight: 600;
+}
+
+.toast__text {
+  margin: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.toast__action {
+  margin-top: 6px;
+  padding: 2px 8px;
+  font-size: 12px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+}
+
+.toast__close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+}
+
+.toast__close:hover:not(:disabled) {
+  border-color: var(--border);
+  color: var(--text);
+}
+
+/* EmptyState 紧凑档：小列表/面板空态。 */
+.empty-state--compact {
+  gap: 6px;
+  padding: 16px 12px;
+}
+
+.empty-state--compact .empty-state__title {
+  font-size: 13px;
+}
+
+
+/* ── UX-W1: banner stack & responsive ── */
+
+/* BannerStack：页面级横幅统一收纳（components/BannerStack.tsx）。
+   级别色条语言：safety=danger / governance=warn / info=accent；
+   EstopBanner / DemoModeBanner 不迁栈，只用同一色条语言对齐（见下）。 */
+.banner-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.banner-stack__item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  box-shadow: var(--elev-1);
+  animation: uxw1-fade-in var(--dur-2) var(--ease-out);
+}
+
+.banner-stack__item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  background: var(--accent);
+}
+
+.banner-stack__item--safety::before { background: var(--danger); }
+.banner-stack__item--governance::before { background: var(--warn); }
+.banner-stack__item--info::before { background: var(--accent); }
+
+.banner-stack__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.banner-stack__dismiss {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+}
+
+.banner-stack__dismiss:hover:not(:disabled) {
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.banner-stack__toggle {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: var(--accent);
+  background: none;
+  border: 1px dashed var(--border);
+  transition: border-color var(--dur-1) var(--ease-out);
+}
+
+@keyframes uxw1-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* 迁入栈的横幅去掉各自的外盒（边框/外边距/底色由栈条目统一提供）。 */
+.banner-stack__item .drift-banner,
+.banner-stack__item .decision-banner,
+.banner-stack__item .world-guide {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.banner-stack__item .world-session-banner {
+  padding: 0;
+  border-bottom: none;
+}
+
+/* 浮层 / 抽屉 / 对话框先吃新海拔 token（UX-W1 token 应用面第一波）。 */
+.dialog { box-shadow: var(--elev-3); }
+.zone-scope__popover,
+.run-sim__popover { box-shadow: var(--elev-2); }
+
+/* 不迁栈的横幅视觉对齐：同一色条语言 + 海拔。 */
+.estop-banner {
+  border-top: 3px solid var(--danger-strong);
+  box-shadow: var(--elev-2);
+}
+
+.demo-run-banner {
+  border-left: 3px solid var(--accent);
+  box-shadow: var(--elev-2);
+}
+
+/* ≤1024px：世界页右侧栏 / 控制台右抽屉变覆盖式抽屉（悬浮钮开合）。
+   Panel 内联样式只有 flex 三件套，position/width 可由 CSS 接管；
+   控制台侧「默认收起」在 SimulationView 的初始布局里（drawerViewport）。 */
+@media (max-width: 1024px) {
+  .detail-body__panels,
+  .console-body {
+    position: relative;
+  }
+
+  .world-panel--sidebar,
+  .console-panel--drawer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(380px, 88vw);
+    z-index: 40;
+    background: var(--bg-panel);
+    border-left: 1px solid var(--border);
+    box-shadow: var(--elev-3);
+    animation: uxw1-fade-in var(--dur-2) var(--ease-out);
+  }
+
+  /* 分栏拖拽把手在抽屉模式下没有意义。 */
+  .detail-body__panels > .resize-handle--vertical,
+  .console-body > .resize-handle--vertical {
+    display: none;
+  }
+
+  /* 抽屉内的控制台面板去掉分栏内边距（抽屉自带边框分隔）。 */
+  .console-panel--drawer .console-drawer {
+    padding: 8px 12px;
+  }
+
+  /* 开合钮变悬浮按钮：脱离分栏边缘，钉在视口右下。 */
+  .world-sidebar__collapse,
+  .console-drawer__collapse {
+    position: fixed;
+    right: 14px;
+    bottom: 18px;
+    top: auto;
+    transform: none;
+    z-index: 90;
+    flex-direction: row;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: var(--bg-panel);
+    box-shadow: var(--elev-2);
+  }
+
+  .console-drawer__collapse-label {
+    writing-mode: horizontal-tb;
+    letter-spacing: normal;
+  }
+}
+
+/* ≤768px：单列布局 + 头部操作换行收纳。 */
+@media (max-width: 768px) {
+  .detail-header {
+    gap: 8px 10px;
+  }
+
+  .detail-header__meta {
+    flex-basis: 100%;
+    flex-wrap: wrap;
+  }
+
+  .home-toolbar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  /* 抽屉铺满：窄屏不再保留画布缝隙。 */
+  .world-panel--sidebar,
+  .console-panel--drawer {
+    width: 100vw;
+    border-left: none;
+  }
+}
+
+
+/* ----------------------------------------------------------------------- */
+/* ── UX-W1 fixpack（探针回归）：窄屏控制台地图残高兜底。                  */
+/* ≤768px 时头部控制条/状态带换行吃掉固定视口高度，纵向分栏把地图压到      */
+/* ~70px（ux-w1 探针实证）——给地图 Panel 一个可用的最小高度。            */
+/* ----------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .console-panel--map {
+    min-height: 42vh;
+  }
+}
+
+/* ----------------------------------------------------------------------- */
+/* ── UX-W2: geo world & vocab ──                                           */
+/* 空白世界创建放开 geo（中心点 lat/lng + 可选 zoom 的表单行），以及        */
+/* zoneVisual 新增 industrial / commercial 两个 zone 类别的 2D 着色 token   */
+/* 与 tint（3D 配色见 lib/building3d.ts ZONE_CATEGORY_COLORS）。           */
+/* ----------------------------------------------------------------------- */
+
+:root {
+  --industrial: #e06c2b;
+  --commercial: #f27ab5;
+}
+
+[data-theme='light'] {
+  --industrial: #b34a12;
+  --commercial: #c2417f;
+}
+
+.zone-node--cat-industrial {
+  background: color-mix(in srgb, var(--industrial) 16%, var(--bg-raised) 45%);
+}
+
+.zone-node--cat-commercial {
+  background: color-mix(in srgb, var(--commercial) 14%, var(--bg-raised) 45%);
+}
+
+/* geo 中心点 lat/lng 并排两个数字输入（dialog-field 是纵向 label 流）。 */
+.geo-center-row {
+  display: flex;
+  gap: 8px;
+}
+
+.geo-center-row .dialog-field {
+  flex: 1;
+}
+
+/* ----------------------------------------------------------------------- */
+/* ── UX-W2: environment builder ──                                         */
+/* Zone 行内动作组 / geo 顶点编辑手柄 / grid 边界编辑态 / 楼栋生成器预览。  */
+/* ----------------------------------------------------------------------- */
+
+.zone-row__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.form-field__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* geo 顶点编辑：可拖拽顶点手柄 + 边中点插入点。 */
+.geo-vertex-handle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  cursor: grab;
+  box-shadow: 0 0 4px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.geo-vertex-handle:active {
+  cursor: grabbing;
+}
+
+.geo-vertex-midpoint {
+  cursor: copy;
+}
+
+/* grid 边界编辑态：虚线高亮（节点此时可拖拽移动）。 */
+.zone-node--editing {
+  border: 2px dashed var(--accent);
+  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--accent) 30%, transparent);
+  cursor: move;
+}
+
+/* 楼栋生成器：生成预览清单（批量可滚动）。 */
+.building-generator__preview {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.building-generator__preview-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+}
+
+/* ── UX-W3: import wizards ──                                             */
+/* 导入草案审阅（ImportDraftReview）：摘要行 + zone 表格 + 告警区。 */
+.import-review {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.import-review__summary {
+  margin: 0;
+  font-size: 13px;
+}
+
+.import-review__zones {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.import-review__zones th,
+.import-review__zones td {
+  text-align: left;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.import-review__zones th {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.import-review__zones input {
+  width: 100%;
+}
+
+.import-review__zone-id {
+  font-family: monospace;
+  color: var(--text-dim);
+}
+
+.import-review__warnings {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  padding: 6px 8px;
+  max-height: 140px;
+  overflow-y: auto;
+  font-size: 12px;
+}
+
+.import-review__warnings-title {
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+
+.import-review__warnings ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* 图纸车道：503 教学态 + 比例尺建议行。 */
+.import-teaching {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.import-teaching__title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.import-teaching__server {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-dim);
+  word-break: break-all;
+}
+
+.import-scale-suggestion {
+  margin: 0;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* 参数化模板表单（模板卡片列表内联替换）。 */
+.template-vars-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template-vars-form__title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* 设备模板候选 chips（DeviceForm / CatalogPanel 共用）。 */
+.device-templates {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.device-templates__note {
+  word-break: break-all;
+}
+
+/* 室内漫游部署调色板：全量目录（分组 + 搜索 + 命名）。 */
+.interior-walk__deploy-search,
+.interior-walk__deploy-name {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 12px;
+  padding: 3px 8px;
+  min-width: 120px;
+}
+
+.interior-walk__deploy-list {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-height: 96px;
+  overflow-y: auto;
+  flex-wrap: wrap;
+}
+
+.interior-walk__deploy-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.interior-walk__deploy-cat {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.interior-walk__deploy-degraded {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* ── UX-W4: position picker ── */
+/* ZonePositionPicker: DeviceForm 内嵌的 zone 平面图——grid 档点击回填 X/Y，
+   geo 档只读预览（位置仍走大地图点选）。 */
+.zone-position-picker-wrap {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.zone-position-picker {
+  display: block;
+  width: 100%;
+  height: 150px;
+  border: 1px solid var(--border, #2a3040);
+  border-radius: 6px;
+  background: rgba(127, 127, 127, 0.06);
+}
+.zone-position-picker--interactive {
+  cursor: crosshair;
+}
+.zone-position-picker__outline {
+  fill: rgba(76, 194, 255, 0.08);
+  stroke: rgba(76, 194, 255, 0.55);
+  stroke-width: 0.8;
+}
+.zone-position-picker__room {
+  fill: rgba(255, 122, 69, 0.5);
+  stroke: rgba(0, 0, 0, 0.3);
+  stroke-width: 0.3;
+}
+.zone-position-picker__device {
+  fill: rgba(160, 170, 190, 0.7);
+  stroke: rgba(0, 0, 0, 0.35);
+  stroke-width: 0.3;
+}
+.zone-position-picker__marker {
+  fill: rgba(76, 194, 255, 0.95);
+  stroke: #ffffff;
+  stroke-width: 0.6;
+}
+
+/* ── UX-W4: campus-walk traversal ── */
+/* campus-3d 楼层感知放置：focus 楼栋时的楼层 chips 浮层（顶部居中，
+   与 building3d__selection 同一浮层语言）。 */
+.building3d__floor-chips {
+  position: absolute;
+  /* 52px：让开同坐标（top≈12px 居中）的 .canvas-view-control——重叠时
+     elementFromPoint 命中的永远是视图切换钮，chips 鼠标路径全死
+     （ux-w4 探针 B5）。 */
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  background: color-mix(in srgb, var(--bg-raised) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+}
+
+.building3d__floor-chips-label {
+  color: var(--text-dim);
+  margin-right: 2px;
+}
+
+.building3d__floor-chip {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font-size: 12px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.building3d__floor-chip:hover {
+  border-color: var(--accent);
+}
+
+.building3d__floor-chip--active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.building3d__floor-chips-hint {
+  color: var(--text-dim);
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+/* 漫游顶栏的「返回校园 3D」按钮与既有返回键同距排列。 */
+.interior-walk__back-campus {
+  margin-left: 8px;
+}
+
+/* ── UX-W4: universal walk ──                                            */
+/* 漫游实时层 HUD toast（楼内事件 / 告警进入）与 E 房间卡片升级。 */
+
+.interior-walk__toasts {
+  position: absolute;
+  top: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  pointer-events: none; /* HUD 注记：不挡点击、不打断移动 */
+  z-index: 30;
+}
+
+.interior-walk__toast {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(13, 17, 23, 0.82);
+  color: #e2e8f0;
+  font-size: 12.5px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  animation: interior-walk-toast-in 0.25s ease-out;
+}
+
+.interior-walk__toast--alert {
+  background: rgba(69, 10, 10, 0.88);
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.55);
+}
+
+@keyframes interior-walk-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.interior-walk__card-live {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.interior-walk__card-devices {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+  border-top: 1px solid var(--border, rgba(148, 163, 184, 0.25));
+  padding-top: 6px;
+}
+
+.interior-walk__card-devices-title {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.interior-walk__card-device {
+  text-align: left;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+/* ── UX-W5: world header declutter ──
+   世界页头部减负：核心动作（进入世界仿真 / 运行仿真）是唯一 primary；
+   业务流深链、LLM 选择器、zone 范围、演示模式收进「⋯ 更多」菜单；
+   会话概念引导（世界会话 vs 私有仿真）是运行按钮旁的说明 popover。 */
+
+.header-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.header-menu__toggle {
+  font-size: 12px;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-raised);
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.header-menu__toggle:hover {
+  color: var(--text);
+}
+
+.header-menu__popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 1200; /* > .perspective-control 1100（ux-w5 探针：菜单被视图切换浮条压住） */
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-raised);
+  box-shadow: var(--elev-2);
+}
+
+.header-menu__item {
+  font-size: 12.5px;
+}
+
+/* 菜单内的 zone 范围清单不再悬浮第二层 popover——就地展开，避免嵌套浮层。 */
+.header-menu__popover .zone-scope__popover {
+  position: static;
+  box-shadow: none;
+  margin-top: 4px;
+}
+
+.session-guide {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.session-guide__hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.session-guide__toggle {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.session-guide__popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 1200; /* > .perspective-control 1100（ux-w5 探针：菜单被视图切换浮条压住） */
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-raised);
+  box-shadow: var(--elev-2);
+}
+
+.session-guide__popover p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+/* App.tsx 页脚：旧版场景浏览器降级进「高级 / Legacy」折叠。 */
+.app-footer__legacy {
+  display: inline-block;
+}
+
+.app-footer__legacy summary {
+  cursor: pointer;
+  color: var(--text-dim);
+  list-style-position: inside;
+}
+
+.app-footer__legacy summary:hover {
+  color: var(--text);
+}
+
+.app-footer__legacy[open] summary {
+  margin-bottom: 4px;
+}
+
+/* ── UX-W5: governance inbox ── */
+/* 治理组「收件箱」tab：统一裁决队列的行布局——类型徽标 + 摘要 + 内联动作。
+   摘要弹性占满，长文本截断；窄侧栏下动作按钮换行不挤压摘要。 */
+.governance-inbox__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.governance-inbox__summary {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── UX-W5: share replay ── */
+/* 世界名片段：头部卡片化，冻结回放的身份信息（名称/描述/导出时间）。 */
+.share-world-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-raised);
+  padding: 14px 16px;
+}
+.share-header__exported {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* 回放播放条：纯客户端时钟驱动，贴在世界名片片段下方。 */
+.share-replay-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px 0 2px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.share-replay-bar__slider {
+  flex: 1;
+  min-width: 160px;
+  accent-color: var(--accent);
+}
+.share-replay-bar__time {
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.share-replay-bar__speed {
+  font-size: 12px;
+}
+
+/* 事件日志点亮：当前条目高亮 + 呼吸，未到的条目调暗。 */
+.share-event-log .decision-item--replay-future {
+  opacity: 0.35;
+}
+.share-event-log .decision-item--replay-past {
+  opacity: 0.85;
+}
+.share-event-log .decision-item--replay-current {
+  border-left: 3px solid var(--accent);
+  padding-left: 6px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-radius: 4px;
+  animation: share-replay-current-pulse 1.6s ease-in-out infinite;
+}
+@keyframes share-replay-current-pulse {
+  0%,
+  100% {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+  50% {
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+}
+
+/* 决策链点亮：与事件日志同一口径。 */
+.decision-chain--replay-future {
+  opacity: 0.35;
+}
+.decision-chain--replay-current {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* 世界快照放大面板：分享页的「冻结帧」主视觉（2D 世界图，不引 3D 包体）。 */
+.share-map-panel .environment-map {
+  min-height: 420px;
+}
+
+/* ── UX-R2: flow editor ── */
+
+/* R2-BUG-03(b): dirty 徽标槽位常驻挂载——visibility 切换而非插入/移除 DOM。
+   旧写法在 mousedown blur 提交期间首次插入节点，Chromium 因此不再把
+   mouseup/click 派发给保存按钮（保存静默失效）。槽位常驻后布局零抖动。 */
+.badge--dirty--hidden {
+  visibility: hidden;
+}
+
+/* R2-UX-17: 运行历史改覆盖式右抽屉——原 flex 内联占位（300px）挤压画布，
+   定宽 300px 的节点被裁；与 UX-W1 抽屉化纪律一致改为 overlay。 */
+.flow-editor__main {
+  position: relative;
+}
+.flow-runs-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  flex: none;
+  width: 320px;
+  max-height: none;
+  z-index: 6;
+  box-shadow: -8px 0 16px rgba(0, 0, 0, 0.25);
+}
+
+/* ── UX-R2: walk fixes ── */
+/* R2-UX-01: 漫游部署降级提示是 flex 行内唯一可收缩文本节点，被压到
+   min-content（CJK 任意字间断行 = 竖排单字）——禁止收缩 + 限宽；
+   容器补 min-width:0 让模板列表先收缩。 */
+.interior-walk__deploy-degraded {
+  flex-shrink: 0;
+  max-width: 18em;
+}
+.interior-walk__deploy-list {
+  min-width: 0;
+}
+
+/* ── UX-R2: governance & notify ── */
+/* R2-FEAT-03: 合约行尾短 id（重复 propose 的克隆条目可区分）——等宽弱化，
+   不参与 auto 间距挤压。 */
+.agreement-row__id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  opacity: 0.75;
+}
+
+/* ── UX-R2: create & build ── */
+/* 批次 6（创建/构建道）：OSM bbox 表单溢出 / 对话框 ✕ 关闭 / 本地化文件
+   选择按钮 / 窄屏地图切换条 / 设备模板 chip 区分 / 新手推荐标。 */
+
+/* R2-UX-02（商场#2）：.geo-center-row 四个 .dialog-field 无 min-width:0，
+   input min-content 宽度把 4 列撑出 480px 对话框 —— 横向溢出连带把错误条
+   左缘裁掉（「南纬」列整列不可见）。字段可缩 + input 充满字段即不再溢出。 */
+.geo-center-row .dialog-field {
+  min-width: 0;
+}
+
+.geo-center-row .dialog-field input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* R2-UX-22b（新手 F11）：创建对话框标题栏 + 显式 ✕ 关闭（floorplan/ifc/osm
+   车道连取消按钮都不渲染，此前只能点 backdrop）。 */
+.dialog__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dialog__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.dialog__close:hover {
+  background: var(--bg-raised);
+  color: var(--text);
+}
+
+/* R2-UX-22a：FilePickButton —— 原生 file input 的触发文案跟随浏览器
+   locale，换成本地化按钮 + 已选文件名；input 视觉隐藏但保留可聚焦/可测。 */
+.file-pick {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.file-pick__button {
+  flex-shrink: 0;
+}
+
+.file-pick__name {
+  font-size: 12px;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 260px;
+}
+
+.file-pick__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* R2-UX-22c（新手 F11）：窄屏下 .map-switchers 浮层换行会压到 top-left
+   zone 的标题 —— 收成单行横向滚动，只占一条 chip 高度。 */
+@media (max-width: 768px) {
+  .map-switchers {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+}
+
+/* R2-FEAT-08（工厂 F11）：模板 chip 与类型 chip 同形不同效（一个只填类型
+   字段、一个带类型+能力）——模板 chip 加左侧点标与描边色区分。 */
+.chip--template {
+  border-style: dashed;
+}
+
+.chip--template::before {
+  content: '◆';
+  margin-right: 4px;
+  font-size: 9px;
+  color: var(--accent);
+}
+
+/* R2-FEAT-09（新手 F3）：starter-home 钉首 + 「新手推荐」标。 */
+.template-card__badge-beginner {
+  background: color-mix(in srgb, var(--accent) 22%, var(--bg-raised));
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ── UX-R2: world & map ── */
+
+/* R2-FEAT-02：世界页实况告警横幅（BannerStack safety 条内）——标题 + zone
+   名单一行排布，与 drift-banner 同一图文对齐惯例。 */
+.world-alert-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  font-size: 12px;
+}
+
+.world-alert-banner__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--danger);
+}
+
+.world-alert-banner__zones {
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+/* R2-FEAT-10：LLM 离线部署告警头条——danger 描边与底纹，与决策头条
+   （中性边框）视觉区分，避免被读成一条普通决策。 */
+.hero-line--llm-down {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.hero-line--llm-down .hero-line__text {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* ── UX-R2: onboarding ── */
+
+/* R2-FEAT-07：三步全完成的一次性庆祝态——accent 描边 + 柔和底纹，与普通
+   引导卡（中性边框）区分；关闭后卡片才真正隐藏。 */
+.onboarding--celebration {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-raised));
+}
+
+.onboarding--celebration .onboarding__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+}
+
+.onboarding__celebrate-note {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* R2-UX-12：「世界会话活跃」徽标与运行中仿真按钮同排，垂直对齐。 */
+.env-card__actions .badge--world-session {
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* R2-UX-21a：AuthPage 行内校验错误（取代浏览器原生英文气泡）。 */
+.auth-field__error {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--danger);
+}
+
+.auth-field input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+/* ── UX-R2: console polish ──
+ * 批次 7（控制台呈现）：
+ * - DeviceActionSheet 命令按钮：显示名 + 原命令副标两行布局（PM 补充）；
+ * - LLM 徽标运行时健康态（R2-FEAT-10）；
+ * - 控制台急停入口（R2-UX-04 上浮，范围文案不撒谎）；
+ * - 急停横幅 / 部署安全闸的范围正向说明（R2-UX-04）。
+ */
+
+/* 命令按钮：中文显示名为主、原命令 token 为副标（token 保持等宽可辨认）。 */
+.device-action-sheet__command {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  font-family: inherit;
+}
+
+.device-action-sheet__command-label {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.device-action-sheet__command-raw {
+  font-size: 10px;
+  font-family: var(--font-mono, monospace);
+  opacity: 0.65;
+  line-height: 1.2;
+}
+
+/* LLM 徽标运行时健康态：声明 llm 但后端不可达——醒目的危险色，不再假装健康。 */
+.badge--llm-down {
+  border-color: var(--danger);
+  color: var(--danger);
+  margin-left: 8px;
+}
+
+/* 控制台急停入口（控制条右侧）：危险色描边，与 EstopBanner 同色语言。 */
+.estop-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.estop-entry:hover {
+  background: var(--danger);
+  color: var(--on-danger);
+}
+
+/* 急停横幅范围说明：主文案之后的次级小字。 */
+.estop-banner__scope {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+/* 部署安全闸区急停块下的范围正向说明。 */
+.deployment__estop-scope {
+  margin: 6px 0 0;
+}
+
+/* ── UX-R2: create & build（续）── */
+/* R2-FEAT-04: 世界页标题旁的环境改名 —— ✎ 入口与行内编辑行。 */
+.detail-header__rename-toggle {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.detail-header__rename-toggle:hover {
+  background: var(--bg-raised);
+  color: var(--text);
+}
+
+.detail-header__rename {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.detail-header__rename input {
+  min-width: 220px;
+}
+
+/* ── UX-W5: NL one-sentence import lane ──                                  */
+.import-nl__examples {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 4px 0 8px;
+}

@@ -1,0 +1,259 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "hospital-ward",
+    "name": {
+      "zh": "参数化医院住院楼（楼层数 × 每层病房数可调）",
+      "en": "Parameterized hospital ward building (floors × wards per floor)"
+    },
+    "description": {
+      "zh": "可调规模的住院楼：楼层数、每层病房数、每病房床位数都能在创建前调整。每层 = N 间病房 + 1 个护士站 + 1 个楼梯井；病房 24 小时按床位满员作息；内嵌 2 条自动化（病房过热自动制冷、22:00 夜间空调回设）。",
+      "en": "An inpatient building with adjustable scale: floors, wards per floor, and beds per ward can all be tuned before creation. Each floor is N wards + 1 nurse station + 1 stairwell; wards run a 24-hour schedule at bed capacity; two automations are embedded (ward overheat cooling, 22:00 night setback)."
+    },
+    "tagline": {
+      "zh": "病房温湿度与 24h 人流的住院楼日常",
+      "en": "Ward climate and round-the-clock occupancy in one inpatient block."
+    },
+    "storeyHeight": 3.8,
+    "vars": [
+      {
+        "name": "floors",
+        "label": { "zh": "楼层数", "en": "Floors" },
+        "type": "int",
+        "min": 1,
+        "max": 8,
+        "default": 3
+      },
+      {
+        "name": "wardsPerFloor",
+        "label": { "zh": "每层病房数", "en": "Wards per floor" },
+        "type": "int",
+        "min": 1,
+        "max": 8,
+        "default": 4
+      },
+      {
+        "name": "bedsPerWard",
+        "label": { "zh": "每病房床位数", "en": "Beds per ward" },
+        "type": "int",
+        "min": 1,
+        "max": 12,
+        "default": 6
+      }
+    ]
+  },
+  "zones": [
+    {
+      "$repeat": {
+        "var": "floors",
+        "as": "f",
+        "body": [
+          {
+            "$repeat": {
+              "var": "wardsPerFloor",
+              "as": "r",
+              "body": {
+                "id": "ward-f$var.f$-r$var.r$",
+                "name": "$var.f+1$0$var.r+1$ 病房",
+                "type": "ward",
+                "buildingId": "inpatient",
+                "floor": "$var.f$",
+                "bounds": { "minX": "$var.r*10$", "maxX": "$var.r*10+10$", "minY": 0, "maxY": 7 },
+                "adjacentZoneIds": ["nurse-station-f$var.f$"],
+                "occupancy": 0,
+                "baseline": { "temperature": 24, "humidity": 50, "co2": 550, "light": 250 },
+                "occupantSchedule": {
+                  "count": "$var.bedsPerWard$",
+                  "startSimTimeSec": 0,
+                  "endSimTimeSec": 86400,
+                  "repeatDaily": true
+                }
+              }
+            }
+          },
+          {
+            "id": "nurse-station-f$var.f$",
+            "name": "$var.f+1$F 护士站",
+            "type": "corridor",
+            "buildingId": "inpatient",
+            "floor": "$var.f$",
+            "bounds": { "minX": 0, "maxX": "$var.wardsPerFloor*10+8$", "minY": 7, "maxY": 11 },
+            "baseline": { "temperature": 24, "humidity": 50, "co2": 500, "light": 350 }
+          },
+          {
+            "id": "stairwell-f$var.f$",
+            "name": "$var.f+1$F 楼梯井",
+            "type": "stairwell",
+            "buildingId": "inpatient",
+            "floor": "$var.f$",
+            "bounds": { "minX": "$var.wardsPerFloor*10$", "maxX": "$var.wardsPerFloor*10+8$", "minY": 0, "maxY": 7 },
+            "adjacentZoneIds": ["nurse-station-f$var.f$", "stairwell-f$var.f-1$", "stairwell-f$var.f+1$"],
+            "baseline": { "temperature": 25, "humidity": 52, "co2": 450, "light": 150 }
+          }
+        ]
+      }
+    }
+  ],
+  "devices": [
+    {
+      "$repeat": {
+        "var": "floors",
+        "as": "f",
+        "body": [
+          {
+            "$repeat": {
+              "var": "wardsPerFloor",
+              "as": "r",
+              "body": {
+                "id": "hvac-f$var.f$-r$var.r$",
+                "name": "$var.f+1$0$var.r+1$ 病房空调",
+                "type": "hvac",
+                "capabilities": ["temperature-control", "cooling", "heating", "turn-on", "turn-off"],
+                "zoneId": "ward-f$var.f$-r$var.r$"
+              }
+            }
+          },
+          {
+            "$repeat": {
+              "var": "wardsPerFloor",
+              "as": "r",
+              "body": {
+                "id": "env-f$var.f$-r$var.r$",
+                "name": "$var.f+1$0$var.r+1$ 病房环境传感器",
+                "type": "temp-humidity-sensor",
+                "capabilities": ["temperature-reading", "humidity-reading", "co2-reading"],
+                "zoneId": "ward-f$var.f$-r$var.r$"
+              }
+            }
+          },
+          {
+            "id": "nurse-display-f$var.f$",
+            "name": "$var.f+1$F 护士站信息屏",
+            "type": "display-panel",
+            "capabilities": ["get-state", "set-state", "show-message", "update-status"],
+            "zoneId": "nurse-station-f$var.f$"
+          }
+        ]
+      }
+    }
+  ],
+  "agents": [
+    {
+      "id": "charge-nurse",
+      "name": "护士长（楼宇运营）",
+      "capabilities": ["temperature-monitoring", "temperature-control", "air-quality-monitoring"],
+      "managesZoneIds": [
+        {
+          "$repeat": {
+            "var": "floors",
+            "as": "f",
+            "body": [
+              {
+                "$repeat": {
+                  "var": "wardsPerFloor",
+                  "as": "r",
+                  "body": "ward-f$var.f$-r$var.r$"
+                }
+              },
+              "nurse-station-f$var.f$",
+              "stairwell-f$var.f$"
+            ]
+          }
+        }
+      ],
+      "boundDeviceIds": [
+        {
+          "$repeat": {
+            "var": "floors",
+            "as": "f",
+            "body": [
+              {
+                "$repeat": {
+                  "var": "wardsPerFloor",
+                  "as": "r",
+                  "body": "hvac-f$var.f$-r$var.r$"
+                }
+              },
+              {
+                "$repeat": {
+                  "var": "wardsPerFloor",
+                  "as": "r",
+                  "body": "env-f$var.f$-r$var.r$"
+                }
+              },
+              "nurse-display-f$var.f$"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "ward-heat-spike",
+      "type": "temperature-spike",
+      "zoneId": "ward-f0-r0",
+      "atSimTimeSec": 43200,
+      "severity": "high",
+      "value": 31,
+      "description": "正午西晒导致首间病房温度骤升（演示事件）"
+    },
+    {
+      "id": "rounds-start",
+      "type": "occupancy",
+      "zoneId": "nurse-station-f0",
+      "parameter": "occupancy",
+      "value": 8,
+      "atSimTimeSec": 28800,
+      "severity": "low"
+    }
+  ],
+  "flows": [
+    {
+      "id": "ward-overheat-cooling",
+      "name": "病房过热自动制冷",
+      "description": "首间病房（f0-r0）温度超过 28°C 时确定性开空调制冷到 24°C（病房温控要求高，确定性优先；其余病房由 agent 决策响应）。",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "ward-f0-r0",
+        "conditions": [{ "path": "temperature", "op": ">", "value": 28 }],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "把过热病房的温度降到 24°C",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "cooling",
+            "assigneeAgentId": "charge-nurse",
+            "deviceId": "hvac-f0-r0",
+            "params": { "targetTemperature": 24 }
+          }
+        ]
+      }
+    },
+    {
+      "id": "night-setback",
+      "name": "夜间空调回设",
+      "description": "22:00 夜间将首间病房空调回设到 26°C（确定性执行；全楼回设策略可在此基础上扩展）。",
+      "enabled": true,
+      "trigger": {
+        "kind": "schedule",
+        "atSimTimeSec": 79200
+      },
+      "plan": {
+        "goal": "夜间病房空调回设到 26°C",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "cooling",
+            "assigneeAgentId": "charge-nurse",
+            "deviceId": "hvac-f0-r0",
+            "params": { "targetTemperature": 26 }
+          }
+        ]
+      }
+    }
+  ]
+}

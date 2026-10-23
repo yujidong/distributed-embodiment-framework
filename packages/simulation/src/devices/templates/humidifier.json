@@ -1,0 +1,64 @@
+{
+  "id": "humidifier-v1",
+  "name": "Humidifier",
+  "description": "Humidifier for increasing indoor humidity levels",
+  "category": "actuator",
+  "type": "humidifier",
+  "capabilities": [
+    {
+      "name": "set-target-humidity",
+      "type": "write",
+      "description": "Set target humidity level",
+      "parameters": [
+        {
+          "name": "humidity",
+          "type": "number",
+          "required": true,
+          "description": "Target humidity percentage (30-90)"
+        }
+      ]
+    },
+    {
+      "name": "set-mode",
+      "type": "write",
+      "description": "Set operating mode",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "string",
+          "required": true,
+          "description": "Operating mode: auto, high, or silent"
+        }
+      ]
+    },
+    {
+      "name": "turn-on",
+      "type": "write",
+      "description": "Turn on the humidifier",
+      "parameters": []
+    },
+    {
+      "name": "turn-off",
+      "type": "write",
+      "description": "Turn off the humidifier",
+      "parameters": []
+    }
+  ],
+  "defaultState": {
+    "status": "off",
+    "power": false,
+    "targetHumidity": 55,
+    "mode": "auto"
+  },
+  "physicalEffects": [
+    {
+      "parameter": "humidity",
+      "effect": "humidity",
+      "magnitude": 0.3,
+      "radius": 5,
+      "condition": "power == true"
+    }
+  ],
+  "semanticDescription": "A humidifier that increases indoor humidity for comfort in dry environments. Important in winter months and arid climates.",
+  "tags": ["humidity", "climate", "actuator", "humidifier"]
+}

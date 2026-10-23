@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://active-collaboration.dev/schemas/world-document.schema.json",
+  "title": "EAF World Document",
+  "description": "Declarative environment definition applied with `eaf apply -f world.yaml`. YAML or JSON (by file extension). The environment is matched by exact name among the caller's own environments and created when missing; devices and agents are upserted BY NAME (additive only, unless `eaf apply --prune`).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "environment"],
+  "properties": {
+    "version": {
+      "const": "1.0",
+      "description": "Document format version. Must be the string \"1.0\"."
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Identity of the environment (exact-name match against environments you own)."
+        },
+        "description": { "type": "string" },
+        "visibility": {
+          "enum": ["public", "private"],
+          "description": "Used when the environment is created (default: private)."
+        },
+        "map": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "zones"],
+          "description": "Required to create a new environment; on an existing environment it is patched in when changed.",
+          "properties": {
+            "type": { "enum": ["grid", "geo"] },
+            "center": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["lat", "lng"],
+              "properties": {
+                "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+                "lng": { "type": "number", "minimum": -180, "maximum": 180 }
+              },
+              "description": "Geo maps only: projection origin + default view."
+            },
+            "zoom": { "type": "number", "minimum": 1, "maximum": 19 },
+            "storeyHeight": { "type": "number", "exclusiveMinimum": 0, "description": "Building tier: floor-to-floor height in meters." },
+            "slabAttenuation": { "type": "number", "minimum": 0, "maximum": 1, "description": "Building tier: cross-floor diffusion flux multiplier." },
+            "envelopeU": { "type": "number", "minimum": 0, "maximum": 1, "description": "Building tier: default envelope flux multiplier (indoor↔outdoor)." },
+            "occupancyHeatW": { "type": "number", "minimum": 0, "description": "Building tier: per-person sensible heat (W)." },
+            "occupancyCo2Rate": { "type": "number", "minimum": 0, "description": "Building tier: per-person CO2 emission rate (ppm/s)." },
+            "zones": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "name": { "type": "string" },
+                  "type": { "type": "string", "description": "Zone kind, e.g. living-room, kitchen." },
+                  "buildingId": { "type": "string", "description": "Building tier: owning building id (absent = single-building world)." },
+                  "floor": { "type": "integer", "description": "Building tier: storey number (0 = ground)." },
+                  "occupancy": { "type": "number", "minimum": 0, "description": "Building tier: current headcount (drives occupancy heat/CO2 sources)." },
+                  "envelopeU": { "type": "number", "minimum": 0, "maximum": 1, "description": "Building tier: per-zone envelope flux multiplier; wins over map envelopeU." },
+                  "bounds": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["minX", "maxX", "minY", "maxY"],
+                    "properties": {
+                      "minX": { "type": "number" },
+                      "maxX": { "type": "number" },
+                      "minY": { "type": "number" },
+                      "maxY": { "type": "number" }
+                    },
+                    "description": "Grid maps: rectangle in meters."
+                  },
+                  "polygon": {
+                    "type": "array",
+                    "minItems": 3,
+                    "items": {
+                      "type": "array",
+                      "prefixItems": [
+                        { "type": "number", "minimum": -90, "maximum": 90 },
+                        { "type": "number", "minimum": -180, "maximum": 180 }
+                      ],
+                      "minItems": 2,
+                      "maxItems": 2
+                    },
+                    "description": "Geo maps only: [lat, lng] ring (>= 3 points)."
+                  },
+                  "adjacentZoneIds": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Grid maps: neighboring zone ids (geo adjacency is derived)."
+                  },
+                  "baseline": {
+                    "type": "object",
+                    "additionalProperties": { "type": ["number", "boolean"] },
+                    "description": "Initial environmental parameters (temperature, humidity, co2, light, ...)."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "devices": {
+      "type": "array",
+      "description": "Device instances, upserted by name. Each entry references a catalog model OR carries an inline spec.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["zone"],
+        "oneOf": [
+          { "required": ["model"] },
+          { "required": ["spec", "name"] }
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Catalog model id (`eaf catalog list`). Type/brand/capabilities are copied from the model."
+          },
+          "spec": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "capabilities"],
+            "properties": {
+              "type": { "type": "string", "minLength": 1 },
+              "brand": { "type": "string" },
+              "capabilities": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Upsert identity. Optional with `model` (defaults to the catalog display name); required with `spec`."
+          },
+          "zone": { "type": "string", "minLength": 1, "description": "Zone id from environment.map.zones." },
+          "position": {
+            "type": "object",
+            "description": "Geo environments: {lat, lng}. Grid: {x, y}."
+          },
+          "initialState": {
+            "type": "object",
+            "description": "Initial device state (spec devices only), e.g. {power: false}."
+          }
+        }
+      }
+    },
+    "agents": {
+      "type": "array",
+      "description": "Agent instances, upserted by name.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "capabilities"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "capabilities": { "type": "array", "items": { "type": "string" } },
+          "bind": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Device names (resolved within the environment) or raw device ids."
+          },
+          "zones": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Managed zone ids (events in these zones reach the agent)."
+          },
+          "llm": {
+            "type": "object",
+            "description": "LLM hint, e.g. {provider: \"openai-compatible\", model: \"ac-decision-v5\"}."
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "description": "Scheduled events baked into the world's map data; they fire in simulations created from the environment.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "zoneId"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1, "description": "e.g. temperature-spike, smoke-detected." },
+          "zoneId": { "type": "string", "minLength": 1 },
+          "parameter": { "type": "string" },
+          "value": { "type": ["number", "boolean", "string"] },
+          "severity": { "enum": ["low", "medium", "high", "critical"] },
+          "atSimTimeSec": { "type": "number", "minimum": 0 },
+          "requiredCapabilities": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "simulation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional plan: when present, `eaf apply` creates AND starts a simulation and prints its id. If live simulations already run on the environment, apply warns and lists them; pass `--reuse-sim` to attach to the newest live simulation instead of creating another (repeated creates hit the running_sims_per_user quota).",
+      "properties": {
+        "llm": {
+          "enum": ["auto", "ollama", "none"],
+          "description": "\"none\" = deterministic rule-only agents (no Ollama needed)."
+        },
+        "speed": { "type": "number", "exclusiveMinimum": 0, "description": "Sim-seconds advanced per tick." },
+        "tickMs": { "type": "number", "exclusiveMinimum": 0, "description": "Real milliseconds per tick." }
+      }
+    }
+  }
+}

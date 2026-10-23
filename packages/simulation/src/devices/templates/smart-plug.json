@@ -1,0 +1,51 @@
+{
+  "id": "smart-plug-v1",
+  "name": "Smart Plug",
+  "description": "Controllable power outlet",
+  "category": "actuator",
+  "type": "smart-plug",
+  "capabilities": [
+    {
+      "name": "turn-on",
+      "type": "write",
+      "description": "Turn on the plug",
+      "parameters": []
+    },
+    {
+      "name": "turn-off",
+      "type": "write",
+      "description": "Turn off the plug",
+      "parameters": []
+    },
+    {
+      "name": "read-power-state",
+      "type": "read",
+      "description": "Check if plug is on",
+      "parameters": [],
+      "outputType": "boolean"
+    },
+    {
+      "name": "read-power-consumption",
+      "type": "read",
+      "description": "Read current power draw in watts",
+      "parameters": [],
+      "outputUnit": "watts"
+    }
+  ],
+  "defaultState": {
+    "status": "off",
+    "power": false,
+    "powerConsumption": 0
+  },
+  "physicalEffects": [
+    {
+      "parameter": "energy",
+      "effect": "energy-reduction",
+      "magnitude": -0.5,
+      "radius": 5,
+      "condition": "power == false"
+    }
+  ],
+  "semanticDescription": "A smart power outlet that can be switched on/off remotely. Can monitor power consumption of connected devices.",
+  "tags": ["energy", "smart-home", "actuator", "power"]
+}

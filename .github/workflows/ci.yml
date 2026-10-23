@@ -1,0 +1,51 @@
+# Fix-23 (Roadmap v5): CI gate — build + full test suite on every push/PR.
+#
+# Why this exists: 2026-08-16 incident — the localized-text migration left 12
+# tests red on the working tree for weeks with nobody noticing (no CI), while
+# three geo city templates silently stopped seeding. The whole gate (build +
+# `npm test`, which includes the openapi drift check in
+# apps/server/src/openapi.vitest.test.ts) is the systematic fix: red is
+# visible at PR time, not discovered by a user test round.
+#
+# Notes:
+# - `npm run build` (turbo) is also the typecheck: every workspace compiles
+#   with tsc before vitest runs.
+# - `npm test` = `turbo run test` — all workspaces (core/server/cli/web/
+#   shared/llm-integration/simulation), including the openapi contract test
+#   (registered Fastify routes vs openapi.yaml, both directions).
+# - Windows-specific shell quirks are avoided; suites are OS-portable.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    # 45min was enough while slow simulation tests failed fast at their 5s/20s
+    # vitest timeouts; with explicit per-test budgets they now run to
+    # completion and the full suite crosses 45min on a loaded hosted runner.
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build (turbo, includes tsc typecheck)
+        run: npm run build
+
+      - name: Test (all workspaces, includes openapi drift check)
+        run: npm test

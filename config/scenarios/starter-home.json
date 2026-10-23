@@ -1,0 +1,146 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "starter-home",
+    "name": {
+      "zh": "十分钟最小世界（新手 onboarding）",
+      "en": "Ten-minute minimal world (newcomer onboarding)"
+    },
+    "description": {
+      "zh": "最小的可跑世界，新手的第一站：3 个区域（客厅 / 卧室 / 阳台）+ 3 台设备（温度传感器、空调、智能灯）+ 1 个绑定全部设备的 Agent「小管家」。演示弧（推荐 speed=10）：家人回家 → 客厅升温 → 小管家自动开空调降温 → CO₂ 升高提示房间变闷 → 天色渐暗自动开灯。内嵌 2 条确定性业务流（超温自动制冷、光线暗自动开灯），不依赖 LLM 也能跑通，是理解「事件 → 感知 → 决策 → 执行」的最短入口；跑通后再挑战教学楼、酒店、养老院、农场模板。",
+      "en": "The smallest runnable world and the best first stop: 3 zones (living room / bedroom / balcony) + 3 devices (temperature sensor, AC, smart light) + 1 agent (\"Home Butler\") bound to every device. Demo arc (recommended speed=10): the family comes home → the living room heats up → the butler turns on the AC → CO₂ builds up → dusk falls and the lights come on. Two deterministic flows are embedded (auto-cool when hot, lights-on when dark) — no LLM required, the shortest path to grasping \"event → sense → decide → act\". Once it runs clean, try the teaching building, hotel, nursing-home, or farm templates."
+    },
+    "tagline": {
+      "zh": "回家、升温、开空调——一条完整的「事件-感知-决策-执行」演示弧，无需 LLM 也能跑通",
+      "en": "Come home, heat spikes, the AC kicks in — a full sense-decide-act demo arc that works even without an LLM."
+    },
+    "heroEventId": "heat-demo",
+    "recommendedPlaybackRate": 10
+  },
+  "zones": [
+    {
+      "id": "living-room",
+      "name": "客厅",
+      "type": "living-room",
+      "bounds": { "minX": 0, "maxX": 6, "minY": 0, "maxY": 5 },
+      "adjacentZoneIds": ["bedroom", "balcony"],
+      "occupancy": 0,
+      "occupantSchedule": {
+        "count": 2,
+        "startSimTimeSec": 61200,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      },
+      "baseline": { "temperature": 29, "humidity": 65, "co2": 550, "light": 300 }
+    },
+    {
+      "id": "bedroom",
+      "name": "卧室",
+      "type": "bedroom",
+      "bounds": { "minX": 0, "maxX": 6, "minY": 5, "maxY": 9 },
+      "baseline": { "temperature": 29, "humidity": 65, "co2": 500, "light": 150 }
+    },
+    {
+      "id": "balcony",
+      "name": "阳台",
+      "type": "balcony",
+      "bounds": { "minX": 6, "maxX": 10, "minY": 0, "maxY": 5 },
+      "baseline": { "temperature": 32, "humidity": 60, "light": 2000 }
+    }
+  ],
+  "devices": [
+    {
+      "id": "lr-temp-sensor",
+      "name": "客厅温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": ["temperature-reading", "co2-monitoring"],
+      "zoneId": "living-room"
+    },
+    {
+      "id": "lr-hvac",
+      "name": "客厅空调",
+      "type": "hvac",
+      "capabilities": ["temperature-control", "cooling", "heating", "turn-on", "turn-off"],
+      "zoneId": "living-room",
+      "initialState": { "power": false, "mode": "off", "targetTemperature": 26 }
+    },
+    {
+      "id": "lr-light",
+      "name": "客厅智能灯",
+      "type": "smart-light",
+      "capabilities": ["lighting-control", "turn-on", "turn-off", "set-brightness"],
+      "zoneId": "living-room",
+      "initialState": { "power": false, "brightness": 80 }
+    }
+  ],
+  "agents": [
+    {
+      "id": "home-butler",
+      "name": "小管家",
+      "capabilities": ["temperature-monitoring", "temperature-control", "cooling", "heating", "lighting-control"],
+      "managesZoneIds": ["living-room", "bedroom", "balcony"],
+      "boundDeviceIds": ["lr-temp-sensor", "lr-hvac", "lr-light"],
+      "llm": { "provider": "openai-compatible", "model": "ac-decision-v5" }
+    }
+  ],
+  "events": [
+    { "id": "homecoming", "type": "occupancy", "zoneId": "living-room", "parameter": "occupancy", "value": 2, "atSimTimeSec": 60, "severity": "low" },
+    { "id": "heat-demo", "type": "temperature-spike", "zoneId": "living-room", "parameter": "temperature", "value": 34, "atSimTimeSec": 180, "severity": "medium", "requiredCapabilities": ["temperature-control", "cooling"] },
+    { "id": "co2-stuffy", "type": "co2-rise", "zoneId": "living-room", "parameter": "co2", "value": 1200, "atSimTimeSec": 480, "severity": "low" },
+    { "id": "evening-dim", "type": "light-change", "zoneId": "living-room", "parameter": "light", "value": 120, "atSimTimeSec": 720, "severity": "low", "requiredCapabilities": ["lighting-control"] }
+  ],
+  "flows": [
+    {
+      "id": "living-room-overheat-cooling",
+      "name": "客厅高温自动制冷",
+      "description": "客厅温度超 32°C 时空调确定性制冷到 24°C。确定性业务流：触发即执行，不经过 LLM，与小管家的 Agent 决策并存。",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "living-room",
+        "conditions": [
+          { "path": "temperature", "op": ">", "value": 32 }
+        ],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "把客厅温度降到 24 度",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "cooling",
+            "assigneeAgentId": "home-butler",
+            "deviceId": "lr-hvac",
+            "params": { "targetTemperature": 24 }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dusk-auto-lighting",
+      "name": "天色变暗自动开灯",
+      "description": "客厅照度低于 150 时自动开智能灯（亮度 80）。确定性业务流：触发即执行，不经过 LLM。",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "living-room",
+        "conditions": [
+          { "path": "light", "op": "<", "value": 150 }
+        ],
+        "cooldownSimSec": 900
+      },
+      "plan": {
+        "goal": "天黑后打开客厅灯",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "lighting-control",
+            "assigneeAgentId": "home-butler",
+            "deviceId": "lr-light",
+            "params": { "brightness": 80 }
+          }
+        ]
+      }
+    }
+  ]
+}

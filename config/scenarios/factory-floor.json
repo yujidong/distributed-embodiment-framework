@@ -1,0 +1,256 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "factory-floor",
+    "name": {
+      "zh": "参数化工厂车间（产线数 × 每线工位数可调）",
+      "en": "Parameterized factory floor (lines × cells per line)"
+    },
+    "description": {
+      "zh": "可调规模的单层工厂车间：产线数、每条产线的工位数都能在创建前调整。布局 = 产线 × 工位（机器 + 温度传感器）+ 每条线 1 条过道 + 1 个仓库；工位执行 8:00–20:00 两班作息；内嵌 2 条自动化（机器过热自动停机、20:00 收工全机台停机）。",
+      "en": "A single-storey factory floor with adjustable scale: production lines and cells per line can be tuned before creation. The layout is lines × cells (one machine + one temperature sensor each) plus one aisle per line and a warehouse; cells run a two-shift 08:00–20:00 schedule; two automations are embedded (overheated machine auto-stop, 20:00 all-stop)."
+    },
+    "tagline": {
+      "zh": "机台发热、过道巡检——一个可缩放的数字车间",
+      "en": "Machine heat and aisle patrols — a scalable digital workshop."
+    },
+    "storeyHeight": 6,
+    "vars": [
+      {
+        "name": "productionLines",
+        "label": { "zh": "产线数", "en": "Production lines" },
+        "type": "int",
+        "min": 1,
+        "max": 8,
+        "default": 3
+      },
+      {
+        "name": "cellsPerLine",
+        "label": { "zh": "每产线工位数", "en": "Cells per line" },
+        "type": "int",
+        "min": 1,
+        "max": 10,
+        "default": 4
+      }
+    ]
+  },
+  "zones": [
+    {
+      "$repeat": {
+        "var": "productionLines",
+        "as": "l",
+        "body": [
+          {
+            "$repeat": {
+              "var": "cellsPerLine",
+              "as": "c",
+              "body": {
+                "id": "line-$var.l$-cell-$var.c$",
+                "name": "产线 $var.l+1$ · 工位 $var.c+1$",
+                "type": "workshop",
+                "buildingId": "plant",
+                "floor": 0,
+                "bounds": { "minX": "$var.c*12$", "maxX": "$var.c*12+12$", "minY": "$var.l*14$", "maxY": "$var.l*14+10$" },
+                "adjacentZoneIds": ["aisle-$var.l$"],
+                "occupancy": 0,
+                "baseline": { "temperature": 27, "humidity": 45, "co2": 500, "light": 400, "noise": 70 },
+                "occupantSchedule": {
+                  "count": 4,
+                  "startSimTimeSec": 28800,
+                  "endSimTimeSec": 72000,
+                  "repeatDaily": true
+                }
+              }
+            }
+          },
+          {
+            "id": "aisle-$var.l$",
+            "name": "产线 $var.l+1$ 过道",
+            "type": "corridor",
+            "buildingId": "plant",
+            "floor": 0,
+            "bounds": { "minX": 0, "maxX": "$var.cellsPerLine*12$", "minY": "$var.l*14+10$", "maxY": "$var.l*14+14$" },
+            "baseline": { "temperature": 27, "humidity": 45, "co2": 480, "light": 300, "noise": 60 }
+          }
+        ]
+      }
+    },
+    {
+      "id": "warehouse",
+      "name": "仓库",
+      "type": "warehouse",
+      "buildingId": "plant",
+      "floor": 0,
+      "bounds": { "minX": "$var.cellsPerLine*12$", "maxX": "$var.cellsPerLine*12+16$", "minY": 0, "maxY": 14 },
+      "adjacentZoneIds": ["aisle-0"],
+      "baseline": { "temperature": 26, "humidity": 50, "co2": 450, "light": 200 }
+    }
+  ],
+  "devices": [
+    {
+      "$repeat": {
+        "var": "productionLines",
+        "as": "l",
+        "body": [
+          {
+            "$repeat": {
+              "var": "cellsPerLine",
+              "as": "c",
+              "body": {
+                "id": "machine-l$var.l$-c$var.c$",
+                "name": "产线 $var.l+1$ 工位 $var.c+1$ 机台",
+                "type": "machine",
+                "capabilities": ["turn-on", "turn-off", "vibration-reading", "temperature-control"],
+                "zoneId": "line-$var.l$-cell-$var.c$"
+              }
+            }
+          },
+          {
+            "$repeat": {
+              "var": "cellsPerLine",
+              "as": "c",
+              "body": {
+                "id": "temp-l$var.l$-c$var.c$",
+                "name": "产线 $var.l+1$ 工位 $var.c+1$ 温度传感器",
+                "type": "temperature-sensor",
+                "capabilities": ["temperature-reading"],
+                "zoneId": "line-$var.l$-cell-$var.c$"
+              }
+            }
+          },
+          {
+            "id": "air-l$var.l$",
+            "name": "产线 $var.l+1$ 过道空气质量传感器",
+            "type": "air-quality-sensor",
+            "capabilities": ["pm2_5-reading", "co2-reading", "detect-pollution-alert"],
+            "zoneId": "aisle-$var.l$"
+          }
+        ]
+      }
+    }
+  ],
+  "agents": [
+    {
+      "id": "production-supervisor",
+      "name": "车间主任",
+      "capabilities": ["temperature-monitoring", "temperature-control", "equipment-monitoring", "emergency-response"],
+      "managesZoneIds": [
+        {
+          "$repeat": {
+            "var": "productionLines",
+            "as": "l",
+            "body": [
+              {
+                "$repeat": {
+                  "var": "cellsPerLine",
+                  "as": "c",
+                  "body": "line-$var.l$-cell-$var.c$"
+                }
+              },
+              "aisle-$var.l$"
+            ]
+          }
+        },
+        "warehouse"
+      ],
+      "boundDeviceIds": [
+        {
+          "$repeat": {
+            "var": "productionLines",
+            "as": "l",
+            "body": [
+              {
+                "$repeat": {
+                  "var": "cellsPerLine",
+                  "as": "c",
+                  "body": "machine-l$var.l$-c$var.c$"
+                }
+              },
+              {
+                "$repeat": {
+                  "var": "cellsPerLine",
+                  "as": "c",
+                  "body": "temp-l$var.l$-c$var.c$"
+                }
+              },
+              "air-l$var.l$"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "machine-overheat",
+      "type": "temperature-spike",
+      "zoneId": "line-0-cell-0",
+      "atSimTimeSec": 36000,
+      "severity": "high",
+      "value": 38,
+      "description": "首个工位机台轴承异常导致局部过热（演示事件）"
+    }
+  ],
+  "flows": [
+    {
+      "id": "cell-overheat-stop",
+      "name": "工位过热自动停机",
+      "description": "首个工位（l0-c0）温度超过 35°C 时确定性停该机台（安全优先，无 LLM 依赖；其余工位由 agent 决策响应）。",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "line-0-cell-0",
+        "conditions": [{ "path": "temperature", "op": ">", "value": 35 }],
+        "cooldownSimSec": 900
+      },
+      "plan": {
+        "goal": "停掉过热工位的机台",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "turn-off",
+            "assigneeAgentId": "production-supervisor",
+            "deviceId": "machine-l0-c0",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "end-of-shift-stop",
+      "name": "收工全机台停机",
+      "description": "20:00 收工时确定性停止全部工位机台。",
+      "enabled": true,
+      "trigger": {
+        "kind": "schedule",
+        "atSimTimeSec": 72000
+      },
+      "plan": {
+        "goal": "停止全部工位机台",
+        "nodes": [
+          {
+            "$repeat": {
+              "var": "productionLines",
+              "as": "l",
+              "body": [
+                {
+                  "$repeat": {
+                    "var": "cellsPerLine",
+                    "as": "c",
+                    "body": {
+                      "id": "stop-l$var.l$-c$var.c$",
+                      "capability": "turn-off",
+                      "assigneeAgentId": "production-supervisor",
+                      "deviceId": "machine-l$var.l$-c$var.c$",
+                      "params": {}
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

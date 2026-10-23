@@ -1,0 +1,783 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "teaching-building",
+    "name": {
+      "zh": "三层教学楼（B-A 楼层模型种子场景）",
+      "en": "Three-storey teaching building (B-A floor-model seed scenario)"
+    },
+    "description": {
+      "zh": "三层教学楼种子场景（B-A 楼层模型，平面 24×10m，x 右/y 下，原点左上，各层共用平面坐标）：每层 2 间教室 + 1 条走廊 + 1 个楼梯井，楼梯井跨层显式邻接（stairwell-f0↔f1↔f2）是楼层间唯一热耦合通道；storeyHeight=3.5m，slabAttenuation 缺省 0.15，envelopeU 缺省 0.1；outdoor 经围护与 1F 走廊单向耦合。教室带声明式 occupantSchedule（8:00–18:00 满员 40 人，午间/夜间由课表事件覆盖为 5/0）；14:00 冷空气过境示例（outdoor 降至 18°C 持续生效）。验证点：楼下开空调不影响楼上非井道房间；井道上下层缓慢耦合；室外降温经围护缓慢渗入邻接房间；上课时段教室 CO2 上升；内嵌 Flow 在教室满员升温时确定性开空调制冷、18:00 课后确定性关闭全部教室空调（本场景无照明执行器，节能策略落在空调上）。（v2 刷新：内嵌 2 条确定性 Flow）（v2.2 刷新：全部 agent 配置 LLM）",
+      "en": "Three-storey teaching-building seed (B-A floor model, 24×10m footprint per floor, x right / y down, origin top-left, shared plan per storey): each floor has 2 classrooms + 1 corridor + 1 stairwell, with stairwells explicitly adjacent across storeys (stairwell-f0↔f1↔f2) as the only cross-floor thermal channel; storeyHeight=3.5m, slabAttenuation defaults to 0.15, envelopeU defaults to 0.1; the outdoors couples one-way to the 1F corridor via the envelope. Classrooms carry declarative occupant schedules (08:00–18:00 ×40, midday/night overridden by timetable events to 5/0); a 14:00 cold-air-outbreak example drops the outdoors to 18°C persistently. Verification points: lower-floor AC does not affect non-stairwell upper rooms; the stairwell couples slowly across storeys; outdoor cooling seeps through the envelope; classroom CO₂ climbs during class; the embedded flows deterministically cool a classroom when a full class heats it and shut all classroom AC units off after the 18:00 last class (this seed has no lighting actuators, so the after-class energy-saving policy lands on AC). (v2 refresh: 2 embedded deterministic flows) (v2.2 refresh: all agents LLM-configured)"
+    },
+    "tagline": {
+      "zh": "40 人涌进教室，温度与 CO₂ 同步爬升——一栋教学楼的课表日常与跨层热耦合实验场",
+      "en": "Forty students walk in, temperature and CO₂ climb together — a school-day timetable plus cross-floor thermal coupling lab."
+    },
+    "heroEventId": "class-101-start",
+    "recommendedPlaybackRate": 30,
+    "storeyHeight": 3.5
+  },
+  "map": {
+    "floorPlans": [
+      {
+        "buildingId": "main",
+        "floor": 0,
+        "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221536%22%20height%3D%22640%22%20viewBox%3D%220%200%201536%20640%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221536%22%20height%3D%22640%22%20fill%3D%22%23fbfaf7%22%2F%3E%3Crect%20data-zone-id%3D%22classroom-101%22%20x%3D%220%22%20y%3D%220%22%20width%3D%22512%22%20height%3D%22384%22%20fill%3D%22%23edf2f8%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20data-zone-id%3D%22classroom-102%22%20x%3D%22512%22%20y%3D%220%22%20width%3D%22512%22%20height%3D%22384%22%20fill%3D%22%23edf2f8%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20data-zone-id%3D%22stairwell-f0%22%20x%3D%221024%22%20y%3D%220%22%20width%3D%22512%22%20height%3D%22384%22%20fill%3D%22%23f0eaf3%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20data-zone-id%3D%22corridor-f0%22%20x%3D%220%22%20y%3D%22384%22%20width%3D%221536%22%20height%3D%22256%22%20fill%3D%22%23f5f2ea%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221536%22%20height%3D%22640%22%20fill%3D%22none%22%20stroke%3D%22%235b564c%22%20stroke-width%3D%224%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22192%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E101%20%E6%95%99%E5%AE%A4%3C%2Ftext%3E%3Ctext%20x%3D%22768%22%20y%3D%22192%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E102%20%E6%95%99%E5%AE%A4%3C%2Ftext%3E%3Ctext%20x%3D%221280%22%20y%3D%22192%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E%E6%A5%BC%E6%A2%AF%E4%BA%95%EF%BC%881F%EF%BC%89%3C%2Ftext%3E%3Ctext%20x%3D%22768%22%20y%3D%22512%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E1F%20%E8%B5%B0%E5%BB%8A%3C%2Ftext%3E%3Cg%20transform%3D%22translate(1496%2C46)%22%20opacity%3D%220.9%22%3E%3Ccircle%20r%3D%2218%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%238a857a%22%20stroke-width%3D%221.5%22%2F%3E%3Cpolygon%20points%3D%220%2C-12%204.5%2C5%200%2C1.5%20-4.5%2C5%22%20fill%3D%22%23b8433a%22%2F%3E%3Ctext%20y%3D%22-24%22%20text-anchor%3D%22middle%22%20font-size%3D%2212%22%20fill%3D%22%234a463d%22%20font-family%3D%22sans-serif%22%3EN%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E",
+        "pixelsPerMeter": 64
+      },
+      {
+        "buildingId": "main",
+        "floor": 1,
+        "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221536%22%20height%3D%22640%22%20viewBox%3D%220%200%201536%20640%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221536%22%20height%3D%22640%22%20fill%3D%22%23fbfaf7%22%2F%3E%3Crect%20data-zone-id%3D%22classroom-201%22%20x%3D%220%22%20y%3D%220%22%20width%3D%22512%22%20height%3D%22384%22%20fill%3D%22%23edf2f8%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20data-zone-id%3D%22classroom-202%22%20x%3D%22512%22%20y%3D%220%22%20width%3D%22512%22%20height%3D%22384%22%20fill%3D%22%23edf2f8%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20data-zone-id%3D%22stairwell-f1%22%20x%3D%221024%22%20y%3D%220%22%20width%3D%22512%22%20height%3D%22384%22%20fill%3D%22%23f0eaf3%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20data-zone-id%3D%22corridor-f1%22%20x%3D%220%22%20y%3D%22384%22%20width%3D%221536%22%20height%3D%22256%22%20fill%3D%22%23f5f2ea%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221536%22%20height%3D%22640%22%20fill%3D%22none%22%20stroke%3D%22%235b564c%22%20stroke-width%3D%224%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22192%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E201%20%E6%95%99%E5%AE%A4%3C%2Ftext%3E%3Ctext%20x%3D%22768%22%20y%3D%22192%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E202%20%E6%95%99%E5%AE%A4%3C%2Ftext%3E%3Ctext%20x%3D%221280%22%20y%3D%22192%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E%E6%A5%BC%E6%A2%AF%E4%BA%95%EF%BC%882F%EF%BC%89%3C%2Ftext%3E%3Ctext%20x%3D%22768%22%20y%3D%22512%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E2F%20%E8%B5%B0%E5%BB%8A%3C%2Ftext%3E%3Cg%20transform%3D%22translate(1496%2C46)%22%20opacity%3D%220.9%22%3E%3Ccircle%20r%3D%2218%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%238a857a%22%20stroke-width%3D%221.5%22%2F%3E%3Cpolygon%20points%3D%220%2C-12%204.5%2C5%200%2C1.5%20-4.5%2C5%22%20fill%3D%22%23b8433a%22%2F%3E%3Ctext%20y%3D%22-24%22%20text-anchor%3D%22middle%22%20font-size%3D%2212%22%20fill%3D%22%234a463d%22%20font-family%3D%22sans-serif%22%3EN%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E",
+        "pixelsPerMeter": 64
+      },
+      {
+        "buildingId": "main",
+        "floor": 2,
+        "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221536%22%20height%3D%22640%22%20viewBox%3D%220%200%201536%20640%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221536%22%20height%3D%22640%22%20fill%3D%22%23fbfaf7%22%2F%3E%3Crect%20data-zone-id%3D%22classroom-301%22%20x%3D%220%22%20y%3D%220%22%20width%3D%22512%22%20height%3D%22384%22%20fill%3D%22%23edf2f8%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20data-zone-id%3D%22classroom-302%22%20x%3D%22512%22%20y%3D%220%22%20width%3D%22512%22%20height%3D%22384%22%20fill%3D%22%23edf2f8%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20data-zone-id%3D%22stairwell-f2%22%20x%3D%221024%22%20y%3D%220%22%20width%3D%22512%22%20height%3D%22384%22%20fill%3D%22%23f0eaf3%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20data-zone-id%3D%22corridor-f2%22%20x%3D%220%22%20y%3D%22384%22%20width%3D%221536%22%20height%3D%22256%22%20fill%3D%22%23f5f2ea%22%20stroke%3D%22%23b9b3a6%22%20stroke-width%3D%221.5%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221536%22%20height%3D%22640%22%20fill%3D%22none%22%20stroke%3D%22%235b564c%22%20stroke-width%3D%224%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22192%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E301%20%E6%95%99%E5%AE%A4%3C%2Ftext%3E%3Ctext%20x%3D%22768%22%20y%3D%22192%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E302%20%E6%95%99%E5%AE%A4%3C%2Ftext%3E%3Ctext%20x%3D%221280%22%20y%3D%22192%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E%E6%A5%BC%E6%A2%AF%E4%BA%95%EF%BC%883F%EF%BC%89%3C%2Ftext%3E%3Ctext%20x%3D%22768%22%20y%3D%22512%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22central%22%20font-size%3D%2226%22%20fill%3D%22%234a463d%22%20font-family%3D%22'PingFang%20SC'%2C'Microsoft%20YaHei'%2Csans-serif%22%3E3F%20%E8%B5%B0%E5%BB%8A%3C%2Ftext%3E%3Cg%20transform%3D%22translate(1496%2C46)%22%20opacity%3D%220.9%22%3E%3Ccircle%20r%3D%2218%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%238a857a%22%20stroke-width%3D%221.5%22%2F%3E%3Cpolygon%20points%3D%220%2C-12%204.5%2C5%200%2C1.5%20-4.5%2C5%22%20fill%3D%22%23b8433a%22%2F%3E%3Ctext%20y%3D%22-24%22%20text-anchor%3D%22middle%22%20font-size%3D%2212%22%20fill%3D%22%234a463d%22%20font-family%3D%22sans-serif%22%3EN%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E",
+        "pixelsPerMeter": 64
+      }
+    ]
+  },
+  "zones": [
+    {
+      "id": "classroom-101",
+      "name": "101 教室",
+      "type": "classroom",
+      "buildingId": "main",
+      "floor": 0,
+      "bounds": {
+        "minX": 0,
+        "maxX": 8,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "classroom-102",
+        "corridor-f0"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 26,
+        "humidity": 55,
+        "co2": 600,
+        "light": 300
+      },
+      "occupantSchedule": {
+        "count": 40,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 64800,
+        "repeatDaily": true
+      },
+      "rooms": [
+        {
+          "code": "101A",
+          "name": "器材角",
+          "type": "storage"
+        },
+        {
+          "code": "101B",
+          "name": "讨论间",
+          "type": "seminar",
+          "hours": "Mon-Fri 9:00-17:00"
+        }
+      ]
+    },
+    {
+      "id": "classroom-102",
+      "name": "102 教室",
+      "type": "classroom",
+      "buildingId": "main",
+      "floor": 0,
+      "bounds": {
+        "minX": 8,
+        "maxX": 16,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "corridor-f0"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 26,
+        "humidity": 55,
+        "co2": 600,
+        "light": 300
+      },
+      "occupantSchedule": {
+        "count": 40,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 64800,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "stairwell-f0",
+      "name": "楼梯井（1F）",
+      "type": "stairwell",
+      "buildingId": "main",
+      "floor": 0,
+      "bounds": {
+        "minX": 16,
+        "maxX": 24,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "corridor-f0",
+        "stairwell-f1"
+      ],
+      "baseline": {
+        "temperature": 27,
+        "humidity": 55,
+        "light": 150
+      }
+    },
+    {
+      "id": "corridor-f0",
+      "name": "1F 走廊",
+      "type": "corridor",
+      "buildingId": "main",
+      "floor": 0,
+      "bounds": {
+        "minX": 0,
+        "maxX": 24,
+        "minY": 6,
+        "maxY": 10
+      },
+      "adjacentZoneIds": [
+        "outdoor"
+      ],
+      "baseline": {
+        "temperature": 27,
+        "humidity": 58,
+        "light": 200
+      }
+    },
+    {
+      "id": "classroom-201",
+      "name": "201 教室",
+      "type": "classroom",
+      "buildingId": "main",
+      "floor": 1,
+      "bounds": {
+        "minX": 0,
+        "maxX": 8,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "classroom-202",
+        "corridor-f1"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 26,
+        "humidity": 55,
+        "co2": 600,
+        "light": 300
+      },
+      "occupantSchedule": {
+        "count": 40,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 64800,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "classroom-202",
+      "name": "202 教室",
+      "type": "classroom",
+      "buildingId": "main",
+      "floor": 1,
+      "bounds": {
+        "minX": 8,
+        "maxX": 16,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "corridor-f1"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 26,
+        "humidity": 55,
+        "co2": 600,
+        "light": 300
+      },
+      "occupantSchedule": {
+        "count": 40,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 64800,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "stairwell-f1",
+      "name": "楼梯井（2F）",
+      "type": "stairwell",
+      "buildingId": "main",
+      "floor": 1,
+      "bounds": {
+        "minX": 16,
+        "maxX": 24,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "corridor-f1",
+        "stairwell-f2"
+      ],
+      "baseline": {
+        "temperature": 27,
+        "humidity": 55,
+        "light": 150
+      }
+    },
+    {
+      "id": "corridor-f1",
+      "name": "2F 走廊",
+      "type": "corridor",
+      "buildingId": "main",
+      "floor": 1,
+      "bounds": {
+        "minX": 0,
+        "maxX": 24,
+        "minY": 6,
+        "maxY": 10
+      },
+      "baseline": {
+        "temperature": 27,
+        "humidity": 58,
+        "light": 200
+      }
+    },
+    {
+      "id": "classroom-301",
+      "name": "301 教室",
+      "type": "classroom",
+      "buildingId": "main",
+      "floor": 2,
+      "bounds": {
+        "minX": 0,
+        "maxX": 8,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "classroom-302",
+        "corridor-f2"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 26,
+        "humidity": 55,
+        "co2": 600,
+        "light": 300
+      },
+      "occupantSchedule": {
+        "count": 40,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 64800,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "classroom-302",
+      "name": "302 教室",
+      "type": "classroom",
+      "buildingId": "main",
+      "floor": 2,
+      "bounds": {
+        "minX": 8,
+        "maxX": 16,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "corridor-f2"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 26,
+        "humidity": 55,
+        "co2": 600,
+        "light": 300
+      },
+      "occupantSchedule": {
+        "count": 40,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 64800,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "stairwell-f2",
+      "name": "楼梯井（3F）",
+      "type": "stairwell",
+      "buildingId": "main",
+      "floor": 2,
+      "bounds": {
+        "minX": 16,
+        "maxX": 24,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "corridor-f2"
+      ],
+      "baseline": {
+        "temperature": 27,
+        "humidity": 55,
+        "light": 150
+      }
+    },
+    {
+      "id": "corridor-f2",
+      "name": "3F 走廊",
+      "type": "corridor",
+      "buildingId": "main",
+      "floor": 2,
+      "bounds": {
+        "minX": 0,
+        "maxX": 24,
+        "minY": 6,
+        "maxY": 10
+      },
+      "baseline": {
+        "temperature": 27,
+        "humidity": 58,
+        "light": 200
+      }
+    },
+    {
+      "id": "outdoor",
+      "name": "室外",
+      "type": "outdoor",
+      "bounds": {
+        "minX": 28,
+        "maxX": 36,
+        "minY": 0,
+        "maxY": 10
+      },
+      "baseline": {
+        "temperature": 33,
+        "humidity": 70,
+        "light": 20000,
+        "co2": 420,
+        "pm2_5": 40
+      }
+    }
+  ],
+  "devices": [
+    {
+      "id": "hvac-101",
+      "name": "101 空调",
+      "type": "hvac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "classroom-101"
+    },
+    {
+      "id": "hvac-201",
+      "name": "201 空调",
+      "type": "hvac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "classroom-201"
+    },
+    {
+      "id": "hvac-301",
+      "name": "301 空调",
+      "type": "hvac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "classroom-301"
+    },
+    {
+      "id": "temp-101",
+      "name": "101 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "classroom-101"
+    },
+    {
+      "id": "temp-102",
+      "name": "102 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "classroom-102"
+    },
+    {
+      "id": "temp-201",
+      "name": "201 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "classroom-201"
+    },
+    {
+      "id": "temp-202",
+      "name": "202 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "classroom-202"
+    },
+    {
+      "id": "temp-301",
+      "name": "301 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "classroom-301"
+    },
+    {
+      "id": "temp-302",
+      "name": "302 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "classroom-302"
+    },
+    {
+      "id": "temp-stairwell-f0",
+      "name": "楼梯井 1F 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "stairwell-f0"
+    },
+    {
+      "id": "temp-stairwell-f1",
+      "name": "楼梯井 2F 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "stairwell-f1"
+    },
+    {
+      "id": "temp-stairwell-f2",
+      "name": "楼梯井 3F 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "stairwell-f2"
+    }
+  ],
+  "agents": [
+    {
+      "id": "facility-manager",
+      "name": "楼宇设施管理员",
+      "capabilities": [
+        "temperature-monitoring",
+        "temperature-control"
+      ],
+      "managesZoneIds": [
+        "classroom-101",
+        "classroom-102",
+        "stairwell-f0",
+        "corridor-f0",
+        "classroom-201",
+        "classroom-202",
+        "stairwell-f1",
+        "corridor-f1",
+        "classroom-301",
+        "classroom-302",
+        "stairwell-f2",
+        "corridor-f2",
+        "outdoor"
+      ],
+      "boundDeviceIds": [
+        "hvac-101",
+        "hvac-201",
+        "hvac-301",
+        "temp-101",
+        "temp-102",
+        "temp-201",
+        "temp-202",
+        "temp-301",
+        "temp-302",
+        "temp-stairwell-f0",
+        "temp-stairwell-f1",
+        "temp-stairwell-f2"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "class-101-start",
+      "type": "occupancy",
+      "zoneId": "classroom-101",
+      "parameter": "occupancy",
+      "value": 40,
+      "atSimTimeSec": 28800,
+      "severity": "low"
+    },
+    {
+      "id": "class-102-start",
+      "type": "occupancy",
+      "zoneId": "classroom-102",
+      "parameter": "occupancy",
+      "value": 40,
+      "atSimTimeSec": 28800,
+      "severity": "low"
+    },
+    {
+      "id": "class-201-start",
+      "type": "occupancy",
+      "zoneId": "classroom-201",
+      "parameter": "occupancy",
+      "value": 40,
+      "atSimTimeSec": 28800,
+      "severity": "low"
+    },
+    {
+      "id": "class-202-start",
+      "type": "occupancy",
+      "zoneId": "classroom-202",
+      "parameter": "occupancy",
+      "value": 40,
+      "atSimTimeSec": 28800,
+      "severity": "low"
+    },
+    {
+      "id": "class-301-start",
+      "type": "occupancy",
+      "zoneId": "classroom-301",
+      "parameter": "occupancy",
+      "value": 40,
+      "atSimTimeSec": 28800,
+      "severity": "low"
+    },
+    {
+      "id": "class-302-start",
+      "type": "occupancy",
+      "zoneId": "classroom-302",
+      "parameter": "occupancy",
+      "value": 40,
+      "atSimTimeSec": 28800,
+      "severity": "low"
+    },
+    {
+      "id": "noon-101",
+      "type": "occupancy",
+      "zoneId": "classroom-101",
+      "parameter": "occupancy",
+      "value": 5,
+      "atSimTimeSec": 43200,
+      "severity": "low"
+    },
+    {
+      "id": "noon-102",
+      "type": "occupancy",
+      "zoneId": "classroom-102",
+      "parameter": "occupancy",
+      "value": 5,
+      "atSimTimeSec": 43200,
+      "severity": "low"
+    },
+    {
+      "id": "noon-201",
+      "type": "occupancy",
+      "zoneId": "classroom-201",
+      "parameter": "occupancy",
+      "value": 5,
+      "atSimTimeSec": 43200,
+      "severity": "low"
+    },
+    {
+      "id": "noon-202",
+      "type": "occupancy",
+      "zoneId": "classroom-202",
+      "parameter": "occupancy",
+      "value": 5,
+      "atSimTimeSec": 43200,
+      "severity": "low"
+    },
+    {
+      "id": "noon-301",
+      "type": "occupancy",
+      "zoneId": "classroom-301",
+      "parameter": "occupancy",
+      "value": 5,
+      "atSimTimeSec": 43200,
+      "severity": "low"
+    },
+    {
+      "id": "noon-302",
+      "type": "occupancy",
+      "zoneId": "classroom-302",
+      "parameter": "occupancy",
+      "value": 5,
+      "atSimTimeSec": 43200,
+      "severity": "low"
+    },
+    {
+      "id": "cold-front",
+      "type": "weather-change",
+      "zoneId": "outdoor",
+      "parameter": "temperature",
+      "value": 18,
+      "atSimTimeSec": 50400,
+      "severity": "low"
+    },
+    {
+      "id": "night-101",
+      "type": "occupancy",
+      "zoneId": "classroom-101",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 64800,
+      "severity": "low"
+    },
+    {
+      "id": "night-102",
+      "type": "occupancy",
+      "zoneId": "classroom-102",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 64800,
+      "severity": "low"
+    },
+    {
+      "id": "night-201",
+      "type": "occupancy",
+      "zoneId": "classroom-201",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 64800,
+      "severity": "low"
+    },
+    {
+      "id": "night-202",
+      "type": "occupancy",
+      "zoneId": "classroom-202",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 64800,
+      "severity": "low"
+    },
+    {
+      "id": "night-301",
+      "type": "occupancy",
+      "zoneId": "classroom-301",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 64800,
+      "severity": "low"
+    },
+    {
+      "id": "night-302",
+      "type": "occupancy",
+      "zoneId": "classroom-302",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 64800,
+      "severity": "low"
+    }
+  ],
+  "flows": [
+    {
+      "id": "classroom-overheat-cooling",
+      "name": "教室上课高温自动降温",
+      "description": "101 教室满员（40 人体热）升温超过 29°C 时自动开空调制冷到 26°C（确定性执行，不经 LLM 决策）",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "classroom-101",
+        "conditions": [
+          {
+            "path": "temperature",
+            "op": ">",
+            "value": 29
+          }
+        ],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "把满员升温的 101 教室温度降回 26 度",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "cooling",
+            "assigneeAgentId": "facility-manager",
+            "deviceId": "hvac-101",
+            "params": {
+              "targetTemperature": 26
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "after-class-hvac-off",
+      "name": "课后自动关空调节能",
+      "description": "18:00 课表清场后统一关闭 101/201/301 教室空调（课后关灯关空调节能策略；本场景无照明执行器，节能落在空调）",
+      "enabled": true,
+      "trigger": {
+        "kind": "schedule",
+        "atSimTimeSec": 64800
+      },
+      "plan": {
+        "goal": "课后关闭全部教室空调节能",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "turn-off",
+            "assigneeAgentId": "facility-manager",
+            "deviceId": "hvac-101",
+            "params": {}
+          },
+          {
+            "id": "n2",
+            "capability": "turn-off",
+            "assigneeAgentId": "facility-manager",
+            "deviceId": "hvac-201",
+            "params": {}
+          },
+          {
+            "id": "n3",
+            "capability": "turn-off",
+            "assigneeAgentId": "facility-manager",
+            "deviceId": "hvac-301",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://active-collaboration.io/schemas/decision-v1.json",
+  "title": "Cognitive Decision Schema v1",
+  "version": "v1",
+  "description": "F0-2 (docs/plan-r84-verification-framework.md): the versioned six-block agent decision contract (situation/goals/actionPlan/explanation/collaboration/uncertainty). This file is the SINGLE source of truth: the TypeScript wire schema handed to vLLM guided decoding (COGNITIVE_DECISION_SCHEMA) and the server-side validator (validateDecisionV1) both derive from it. camelCase keys mirror the CognitiveDecision TypeScript contract 1:1; the tolerant parser additionally accepts the design-doc snake_case aliases ONLY on the non-guided degradation path. Bump the file name (decision-v2.json) for any BREAKING change; additive optional fields may stay on v1.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "situation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string", "enum": ["normal", "anomaly", "emergency", "opportunity"] },
+        "severity": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "affectedZones": { "type": "array", "items": { "type": "string" } },
+        "rootCauseHypothesis": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "required": ["type", "severity", "confidence"]
+    },
+    "goals": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "goal": { "type": "string" },
+          "priority": { "type": "integer", "minimum": 1 },
+          "deadline": { "type": "string" }
+        },
+        "required": ["goal", "priority"]
+      }
+    },
+    "actionPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "primary": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "type": "string",
+              "enum": [
+                "handle_independently", "initiate_ac", "defer",
+                "escalate", "wait", "invoke_flow", "consume_service"
+              ]
+            },
+            "reasoning": { "type": "string" },
+            "deviceActions": {
+              "type": "array",
+              "maxItems": 8,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "deviceId": { "type": "string" },
+                  "command": { "type": "string" },
+                  "deviceName": { "type": "string" },
+                  "params": { "type": "object" }
+                },
+                "required": ["deviceId", "command"]
+              }
+            },
+            "collaboration": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "partnerCapabilities": { "type": "array", "items": { "type": "string" } },
+                "proposedTerms": { "type": "object" }
+              },
+              "required": ["partnerCapabilities"]
+            },
+            "flowId": { "type": "string" },
+            "flowParams": { "type": "object" },
+            "serviceTarget": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "serviceId": { "type": "string" },
+                "serviceName": { "type": "string" },
+                "terms": { "type": "object" }
+              }
+            }
+          },
+          "required": ["action", "reasoning"]
+        },
+        "fallback": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "action": { "type": "string" },
+            "reasoning": { "type": "string" }
+          },
+          "required": ["action", "reasoning"]
+        },
+        "escalationCondition": { "type": "string" }
+      },
+      "required": ["primary"]
+    },
+    "explanation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string" },
+        "factors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "weight": { "type": "number" }
+            },
+            "required": ["name", "weight"]
+          }
+        },
+        "tradeoffs": { "type": "string" },
+        "alternativesConsidered": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["summary"]
+    },
+    "collaboration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "needed": { "type": "boolean" },
+        "partnerType": { "type": "string" },
+        "reasoning": { "type": "string" }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "overall": { "type": "number", "minimum": 0, "maximum": 1 },
+        "dataQuality": { "type": "number", "minimum": 0, "maximum": 1 },
+        "riskFactors": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["overall"]
+    }
+  },
+  "required": ["situation", "actionPlan", "uncertainty"]
+}

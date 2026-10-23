@@ -1,0 +1,265 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "teaching-building-flex",
+    "name": {
+      "zh": "参数化教学楼（楼层数 × 每层教室数可调）",
+      "en": "Parameterized teaching building (floors × classrooms per floor)"
+    },
+    "description": {
+      "zh": "可调规模的教学楼：楼层数、每层教室数、教室容量都能在创建前调整。每层 = N 间教室 + 1 条走廊 + 1 个楼梯井（楼层间唯一的热耦合通道）；教室带 8:00–18:00 满员作息；内嵌 2 条自动化（教室过热自动制冷、18:00 课后统一关空调）。",
+      "en": "A teaching building with adjustable scale: floors, classrooms per floor, and class size can all be tuned before creation. Each floor is N classrooms + 1 corridor + 1 stairwell (the only vertical thermal channel); classrooms run an 08:00–18:00 full-class schedule; two automations are embedded (overheat cooling, all-AC-off at 18:00)."
+    },
+    "tagline": {
+      "zh": "调两个数，得到一栋你自己的教学楼",
+      "en": "Two knobs — your own teaching building."
+    },
+    "storeyHeight": 3.5,
+    "vars": [
+      {
+        "name": "floors",
+        "label": { "zh": "楼层数", "en": "Floors" },
+        "type": "int",
+        "min": 1,
+        "max": 10,
+        "default": 3
+      },
+      {
+        "name": "classroomsPerFloor",
+        "label": { "zh": "每层教室数", "en": "Classrooms per floor" },
+        "type": "int",
+        "min": 1,
+        "max": 6,
+        "default": 2
+      },
+      {
+        "name": "classSize",
+        "label": { "zh": "教室容量（人）", "en": "Class size (people)" },
+        "type": "int",
+        "min": 1,
+        "max": 120,
+        "default": 40
+      }
+    ]
+  },
+  "zones": [
+    {
+      "$repeat": {
+        "var": "floors",
+        "as": "f",
+        "body": [
+          {
+            "$repeat": {
+              "var": "classroomsPerFloor",
+              "as": "r",
+              "body": {
+                "id": "classroom-f$var.f$-r$var.r$",
+                "name": "$var.f+1$0$var.r+1$ 教室",
+                "type": "classroom",
+                "buildingId": "main",
+                "floor": "$var.f$",
+                "bounds": { "minX": "$var.r*8$", "maxX": "$var.r*8+8$", "minY": 0, "maxY": 6 },
+                "adjacentZoneIds": ["corridor-f$var.f$"],
+                "occupancy": 0,
+                "baseline": { "temperature": 26, "humidity": 55, "co2": 600, "light": 300 },
+                "occupantSchedule": {
+                  "count": "$var.classSize$",
+                  "startSimTimeSec": 28800,
+                  "endSimTimeSec": 64800,
+                  "repeatDaily": true
+                }
+              }
+            }
+          },
+          {
+            "id": "corridor-f$var.f$",
+            "name": "$var.f+1$F 走廊",
+            "type": "corridor",
+            "buildingId": "main",
+            "floor": "$var.f$",
+            "bounds": { "minX": 0, "maxX": "$var.classroomsPerFloor*8+8$", "minY": 6, "maxY": 10 },
+            "baseline": { "temperature": 26, "humidity": 55, "co2": 500, "light": 200 }
+          },
+          {
+            "id": "stairwell-f$var.f$",
+            "name": "$var.f+1$F 楼梯井",
+            "type": "stairwell",
+            "buildingId": "main",
+            "floor": "$var.f$",
+            "bounds": { "minX": "$var.classroomsPerFloor*8$", "maxX": "$var.classroomsPerFloor*8+8$", "minY": 0, "maxY": 6 },
+            "adjacentZoneIds": ["corridor-f$var.f$", "stairwell-f$var.f-1$", "stairwell-f$var.f+1$"],
+            "baseline": { "temperature": 26, "humidity": 55, "co2": 450, "light": 150 }
+          }
+        ]
+      }
+    }
+  ],
+  "devices": [
+    {
+      "$repeat": {
+        "var": "floors",
+        "as": "f",
+        "body": [
+          {
+            "$repeat": {
+              "var": "classroomsPerFloor",
+              "as": "r",
+              "body": {
+                "id": "hvac-f$var.f$-r$var.r$",
+                "name": "$var.f+1$0$var.r+1$ 空调",
+                "type": "hvac",
+                "capabilities": ["temperature-control", "cooling", "heating", "turn-on", "turn-off"],
+                "zoneId": "classroom-f$var.f$-r$var.r$"
+              }
+            }
+          },
+          {
+            "$repeat": {
+              "var": "classroomsPerFloor",
+              "as": "r",
+              "body": {
+                "id": "temp-f$var.f$-r$var.r$",
+                "name": "$var.f+1$0$var.r+1$ 温湿度传感器",
+                "type": "temp-humidity-sensor",
+                "capabilities": ["temperature-reading", "humidity-reading", "co2-reading"],
+                "zoneId": "classroom-f$var.f$-r$var.r$"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "agents": [
+    {
+      "id": "facility-manager",
+      "name": "楼宇设施管理员",
+      "capabilities": ["temperature-monitoring", "temperature-control", "air-quality-monitoring"],
+      "managesZoneIds": [
+        {
+          "$repeat": {
+            "var": "floors",
+            "as": "f",
+            "body": [
+              {
+                "$repeat": {
+                  "var": "classroomsPerFloor",
+                  "as": "r",
+                  "body": "classroom-f$var.f$-r$var.r$"
+                }
+              },
+              "corridor-f$var.f$",
+              "stairwell-f$var.f$"
+            ]
+          }
+        }
+      ],
+      "boundDeviceIds": [
+        {
+          "$repeat": {
+            "var": "floors",
+            "as": "f",
+            "body": [
+              {
+                "$repeat": {
+                  "var": "classroomsPerFloor",
+                  "as": "r",
+                  "body": "hvac-f$var.f$-r$var.r$"
+                }
+              },
+              {
+                "$repeat": {
+                  "var": "classroomsPerFloor",
+                  "as": "r",
+                  "body": "temp-f$var.f$-r$var.r$"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "morning-class-start",
+      "type": "occupancy",
+      "zoneId": "classroom-f0-r0",
+      "parameter": "occupancy",
+      "value": "$var.classSize$",
+      "atSimTimeSec": 28800,
+      "severity": "low"
+    },
+    {
+      "id": "after-class-empty",
+      "type": "occupancy",
+      "zoneId": "classroom-f0-r0",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 64800,
+      "severity": "low"
+    }
+  ],
+  "flows": [
+    {
+      "id": "classroom-overheat-cooling",
+      "name": "教室过热自动制冷",
+      "description": "首间教室（f0-r0）满员升温超过 29°C 时确定性开空调制冷到 26°C（无 LLM 依赖；其余教室可由 agent 决策响应）。",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "classroom-f0-r0",
+        "conditions": [{ "path": "temperature", "op": ">", "value": 29 }],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "把过热教室的温度降到 26°C",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "cooling",
+            "assigneeAgentId": "facility-manager",
+            "deviceId": "hvac-f0-r0",
+            "params": { "targetTemperature": 26 }
+          }
+        ]
+      }
+    },
+    {
+      "id": "after-class-hvac-off",
+      "name": "课后统一关空调",
+      "description": "18:00 课后统一关闭全部教室空调（确定性执行，节能策略落在空调上）。",
+      "enabled": true,
+      "trigger": {
+        "kind": "schedule",
+        "atSimTimeSec": 64800
+      },
+      "plan": {
+        "goal": "课后关闭全部教室空调",
+        "nodes": [
+          {
+            "$repeat": {
+              "var": "floors",
+              "as": "f",
+              "body": [
+                {
+                  "$repeat": {
+                    "var": "classroomsPerFloor",
+                    "as": "r",
+                    "body": {
+                      "id": "off-f$var.f$-r$var.r$",
+                      "capability": "turn-off",
+                      "assigneeAgentId": "facility-manager",
+                      "deviceId": "hvac-f$var.f$-r$var.r$",
+                      "params": {}
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

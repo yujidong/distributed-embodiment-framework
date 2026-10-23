@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <title>Embodied Agent Framework</title>
+    <script>
+      // 防主题闪烁：首帧前读 localStorage（key 与 src/lib/theme.ts 一致）。
+      (function () {
+        try {
+          var stored = window.localStorage.getItem('eaf-theme');
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches
+                ? 'light'
+                : 'dark';
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {
+          /* localStorage 不可用时保持默认暗色 */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

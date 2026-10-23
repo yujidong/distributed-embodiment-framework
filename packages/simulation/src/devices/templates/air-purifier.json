@@ -1,0 +1,66 @@
+{
+  "id": "air-purifier-v1",
+  "name": "Air Purifier",
+  "description": "Air purifier for removing PM2.5, VOC, and other pollutants",
+  "category": "actuator",
+  "type": "air-purifier",
+  "capabilities": [
+    {
+      "name": "set-mode",
+      "type": "write",
+      "description": "Set operating mode",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "string",
+          "required": true,
+          "description": "Operating mode: auto, turbo, silent, or night"
+        }
+      ]
+    },
+    {
+      "name": "set-fan-speed",
+      "type": "write",
+      "description": "Set fan speed",
+      "parameters": [
+        {
+          "name": "speed",
+          "type": "number",
+          "required": true,
+          "description": "Fan speed percentage (0-100)"
+        }
+      ]
+    },
+    {
+      "name": "turn-on",
+      "type": "write",
+      "description": "Turn on the air purifier",
+      "parameters": []
+    },
+    {
+      "name": "turn-off",
+      "type": "write",
+      "description": "Turn off the air purifier",
+      "parameters": []
+    }
+  ],
+  "defaultState": {
+    "status": "off",
+    "power": false,
+    "mode": "auto",
+    "fanSpeed": 50,
+    "pm25": 0,
+    "voc": 0
+  },
+  "physicalEffects": [
+    {
+      "parameter": "air_quality",
+      "effect": "pollutant",
+      "magnitude": -0.5,
+      "radius": 5,
+      "condition": "power == true"
+    }
+  ],
+  "semanticDescription": "An air purifier that filters PM2.5, VOC, and other airborne pollutants. Essential for maintaining indoor air quality in occupied spaces.",
+  "tags": ["air-quality", "health", "actuator", "purifier"]
+}

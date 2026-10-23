@@ -1,0 +1,246 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "cross-brand-home",
+    "name": {
+      "zh": "跨品牌智能家居演示",
+      "en": "Cross-brand smart home demo"
+    },
+    "description": {
+      "zh": "展示AC打破品牌壁垒的能力：小米/格力/飞利浦/海尔设备在同一客厅内由四个认知Agent协作管理。演示弧（推荐 speed=10）：t=60s 小米传感器上报客厅 32°C 高温（hero 事件），温度监测Agent与空调控制Agent协作，格力空调自动制冷，客厅温度回落到 ~24°C。另内嵌 2 条确定性业务 Flow：客厅超 30°C 自动制冷到 24°C、每天 17:00 自动拉帘遮挡西晒——触发即执行，不经过 LLM，与 Agent 协作决策并存。（v2.1 刷新：节点全部对齐引擎可执行命令面，内嵌 2 条确定性 Flow）",
+      "en": "Demonstrates AC breaking brand silos: Xiaomi / Gree / Philips / Haier devices in one living room, orchestrated by four cognitive agents. Demo arc (recommended speed=10): t=60s the Xiaomi sensor reports 32°C in the living room (hero event); the temperature-monitoring agent and the HVAC-control agent collaborate, the Gree AC auto-cools, and the living-room temperature recovers to ~24°C. Two deterministic flows are embedded: auto-cool to 24°C when the living room exceeds 30°C, and a daily 17:00 west-sun curtain shade — fired deterministically, no LLM in the loop, coexisting with agent collaboration. (v2.1 refresh: node capabilities aligned to the engine command surface; 2 embedded deterministic flows)"
+    },
+    "tagline": {
+      "zh": "小米传感器发现高温，格力空调自动开启——四个品牌的设备，一个协作网络",
+      "en": "A Xiaomi sensor spots the heat, a Gree AC switches on — four brands, one collaboration network."
+    },
+    "heroEventId": "evt-high-temperature",
+    "recommendedPlaybackRate": 10,
+    "vendorDisclaimer": {
+      "zh": "场景中出现的品牌名称（小米、格力、飞利浦、海尔）仅作 illustrative 演示用途，不代表任何商业背书、授权或合作关系。",
+      "en": "Brand names appearing in this scenario (Xiaomi, Gree, Philips, Haier) are used for illustrative demo purposes only and do not represent any commercial endorsement, authorization, or partnership."
+    }
+  },
+  "zones": [
+    {
+      "id": "living-room",
+      "name": "客厅",
+      "type": "living-room",
+      "bounds": {
+        "minX": 0,
+        "maxX": 8,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [],
+      "baseline": {
+        "temperature": 25.5,
+        "humidity": 55,
+        "co2": 500,
+        "light": 300
+      },
+      "occupantSchedule": {
+        "count": 2,
+        "startSimTimeSec": 25200,
+        "endSimTimeSec": 75600,
+        "repeatDaily": true
+      }
+    }
+  ],
+  "devices": [
+    {
+      "id": "xiaomi-temp-sensor",
+      "name": "小米温度传感器",
+      "type": "temperature-sensor",
+      "brand": "Xiaomi",
+      "capabilities": [
+        "temperature-monitoring"
+      ],
+      "zoneId": "living-room",
+      "initialState": {
+        "temperature": 25
+      }
+    },
+    {
+      "id": "gree-hvac",
+      "name": "格力空调",
+      "type": "hvac",
+      "brand": "Gree",
+      "capabilities": [
+        "temperature-control",
+        "cooling"
+      ],
+      "zoneId": "living-room",
+      "initialState": {
+        "power": false,
+        "mode": "off",
+        "targetTemperature": 24
+      }
+    },
+    {
+      "id": "philips-light",
+      "name": "飞利浦智能灯",
+      "type": "smart-light",
+      "brand": "Philips",
+      "capabilities": [
+        "lighting-control"
+      ],
+      "zoneId": "living-room",
+      "initialState": {
+        "power": true,
+        "brightness": 80
+      }
+    },
+    {
+      "id": "haier-curtain",
+      "name": "海尔智能窗帘",
+      "type": "smart-curtain",
+      "brand": "Haier",
+      "capabilities": [
+        "curtain-control",
+        "open",
+        "close"
+      ],
+      "zoneId": "living-room",
+      "initialState": {
+        "openPercentage": 50
+      }
+    }
+  ],
+  "agents": [
+    {
+      "id": "temp-monitor-agent",
+      "name": "温度监测Agent",
+      "capabilities": [
+        "temperature-monitoring"
+      ],
+      "managesZoneIds": [
+        "living-room"
+      ],
+      "boundDeviceIds": [
+        "xiaomi-temp-sensor"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "hvac-control-agent",
+      "name": "空调控制Agent",
+      "capabilities": [
+        "temperature-control"
+      ],
+      "managesZoneIds": [
+        "living-room"
+      ],
+      "boundDeviceIds": [
+        "gree-hvac"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "light-control-agent",
+      "name": "照明控制Agent",
+      "capabilities": [
+        "lighting-control"
+      ],
+      "managesZoneIds": [
+        "living-room"
+      ],
+      "boundDeviceIds": [
+        "philips-light"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "curtain-control-agent",
+      "name": "窗帘控制Agent",
+      "capabilities": [
+        "curtain-control"
+      ],
+      "managesZoneIds": [
+        "living-room"
+      ],
+      "boundDeviceIds": [
+        "haier-curtain"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-high-temperature",
+      "type": "temperature-spike",
+      "zoneId": "living-room",
+      "parameter": "temperature",
+      "value": 32,
+      "atSimTimeSec": 60
+    }
+  ],
+  "flows": [
+    {
+      "id": "living-room-overheat-cooling",
+      "name": "客厅高温自动制冷",
+      "description": "客厅温度超 30°C 时格力空调确定性制冷到 24°C。确定性业务流：触发即执行，不经过 LLM，与 Agent 的 AC 协作决策并存。",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "living-room",
+        "conditions": [
+          {
+            "path": "temperature",
+            "op": ">",
+            "value": 30
+          }
+        ],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "把客厅温度降到 24 度",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "cooling",
+            "assigneeAgentId": "hvac-control-agent",
+            "deviceId": "gree-hvac",
+            "params": {
+              "targetTemperature": 24
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "evening-west-sun-shade",
+      "name": "傍晚西晒自动拉帘",
+      "description": "每天 17:00 海尔窗帘自动收到 30%，遮挡傍晚西晒降低空调负荷。确定性业务流：定时触发，不经过 LLM。",
+      "enabled": true,
+      "trigger": {
+        "kind": "schedule",
+        "atSimTimeSec": 61200
+      },
+      "plan": {
+        "goal": "傍晚西晒前收帘遮阳",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "close",
+            "assigneeAgentId": "curtain-control-agent",
+            "deviceId": "haier-curtain",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ]
+}

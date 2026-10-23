@@ -1,0 +1,16 @@
+export {
+  SEGMENT_PREFIX,
+  ROLLUP_PREFIX,
+  segmentFileName,
+  parseSegmentNumber,
+  isRollupFileName,
+  segmentedLogOf,
+  listSegmentFiles,
+  listRollupFiles,
+  listRawFiles,
+  activeSegmentFile,
+  appendTargetPath,
+  appendSegmentedLine,
+  appendSegmentedLines,
+  type SegmentedLogPaths,
+} from './segmented-log.js';

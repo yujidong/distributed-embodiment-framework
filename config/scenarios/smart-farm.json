@@ -1,0 +1,402 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "smart-farm",
+    "name": {
+      "zh": "智慧农场（大棚-水泵房-气象站种子场景）",
+      "en": "Smart farm (greenhouse + pump room + weather station seed scenario)"
+    },
+    "description": {
+      "zh": "一座小型设施农场（平面 24×12m，坐标单位=米，x 右/y 下，原点左上）：2 座连栋大棚 + 水泵房 + 露天田 + 气象站（type=outdoor，经围护与大棚耦合，是天气事件的入口）。灌溉剧本：6:00 / 18:00 大棚土壤墒情下降（soil-moisture 降至 25/28，农艺师开泵灌溉）；午后剧本：13:00 大棚 B 高温（38°C，需通风+降温协作）；15:00 气象站测得降雨（湿度 96，经围护渗入）。气象监测员只有感知能力，执行全靠农艺师——典型的「感知-行动」分离协作结构。内嵌 2 条确定性业务 Flow：墒情下降事件自动开泵灌溉、大棚 B 超 36°C 自动开风机通风——触发即执行，不经过 LLM，与农艺师的 Agent 决策并存。验证点：墒情事件触发灌溉决策与确定性 Flow 双通道；大棚高温经邻接通道向水泵房缓慢扩散；降雨经气象站-围护通道影响大棚湿度。（v2.1 刷新：节点全部对齐引擎可执行命令面，内嵌 2 条确定性 Flow）",
+      "en": "A small facility farm (24×12m footprint, units=meters, x right / y down, origin top-left): 2 connected greenhouses + a pump room + an open field + a weather station (type=outdoor, coupled to the greenhouses through the envelope, the entry point for weather events). Irrigation script: 6:00 / 18:00 greenhouse soil moisture drops (soil-moisture to 25/28, agronomist starts the pump); midday script: 13:00 greenhouse B high temperature (38°C, needs ventilation + cooling collaboration); 15:00 weather station measures rainfall (humidity 96, diffuses in via the envelope). The weather watcher only senses — every action is the agronomist's, a textbook sense-act separation. Two deterministic flows are embedded: auto-pump irrigation on soil-moisture-drop events, and auto-ventilation when greenhouse B exceeds 36°C — fired deterministically, no LLM in the loop, coexisting with the agronomist's agent decisions. Verification points: soil-moisture events trigger BOTH the agronomist's decisions and the deterministic flow; greenhouse heat diffuses slowly to the pump room via adjacency; rainfall affects greenhouse humidity via the weather-station–envelope path. (v2.1 refresh: node capabilities aligned to the engine command surface; 2 embedded deterministic flows)"
+    },
+    "tagline": {
+      "zh": "墒情告急、大棚 38°C、午后降雨——感知与行动分离的农场，农艺师与气象员的协作日常",
+      "en": "Dry soil, a 38°C greenhouse, afternoon rain — a farm where sensing and acting live in different agents."
+    },
+    "heroEventId": "midday-heat-b",
+    "recommendedPlaybackRate": 60,
+    "storeyHeight": 4
+  },
+  "zones": [
+    {
+      "id": "greenhouse-a",
+      "name": "大棚 A（番茄）",
+      "type": "greenhouse",
+      "buildingId": "farm",
+      "floor": 0,
+      "bounds": {
+        "minX": 0,
+        "maxX": 12,
+        "minY": 0,
+        "maxY": 8
+      },
+      "adjacentZoneIds": [
+        "greenhouse-b",
+        "pump-room"
+      ],
+      "occupantSchedule": {
+        "count": 1,
+        "startSimTimeSec": 21600,
+        "endSimTimeSec": 28800,
+        "repeatDaily": true
+      },
+      "baseline": {
+        "temperature": 30,
+        "humidity": 70,
+        "co2": 800,
+        "light": 8000
+      }
+    },
+    {
+      "id": "greenhouse-b",
+      "name": "大棚 B（黄瓜）",
+      "type": "greenhouse",
+      "buildingId": "farm",
+      "floor": 0,
+      "bounds": {
+        "minX": 12,
+        "maxX": 24,
+        "minY": 0,
+        "maxY": 8
+      },
+      "adjacentZoneIds": [
+        "greenhouse-a",
+        "open-field"
+      ],
+      "occupantSchedule": {
+        "count": 1,
+        "startSimTimeSec": 46800,
+        "endSimTimeSec": 50400,
+        "repeatDaily": true
+      },
+      "baseline": {
+        "temperature": 30,
+        "humidity": 70,
+        "co2": 800,
+        "light": 8000
+      }
+    },
+    {
+      "id": "pump-room",
+      "name": "水泵房",
+      "type": "pump-room",
+      "buildingId": "farm",
+      "floor": 0,
+      "bounds": {
+        "minX": 0,
+        "maxX": 6,
+        "minY": 8,
+        "maxY": 12
+      },
+      "adjacentZoneIds": [
+        "weather-station"
+      ],
+      "baseline": {
+        "temperature": 31,
+        "humidity": 75,
+        "light": 100
+      }
+    },
+    {
+      "id": "open-field",
+      "name": "露天田",
+      "type": "open-field",
+      "buildingId": "farm",
+      "floor": 0,
+      "bounds": {
+        "minX": 12,
+        "maxX": 24,
+        "minY": 8,
+        "maxY": 12
+      },
+      "adjacentZoneIds": [
+        "weather-station"
+      ],
+      "baseline": {
+        "temperature": 33,
+        "humidity": 60,
+        "light": 20000,
+        "co2": 420
+      }
+    },
+    {
+      "id": "weather-station",
+      "name": "气象站",
+      "type": "outdoor",
+      "bounds": {
+        "minX": 6,
+        "maxX": 12,
+        "minY": 8,
+        "maxY": 12
+      },
+      "baseline": {
+        "temperature": 33,
+        "humidity": 60,
+        "light": 20000,
+        "co2": 420,
+        "pm2_5": 35
+      }
+    }
+  ],
+  "devices": [
+    {
+      "id": "soil-a",
+      "name": "土壤墒情传感器（大棚 A）",
+      "type": "soil-moisture-sensor",
+      "capabilities": [
+        "soil-moisture-monitoring"
+      ],
+      "zoneId": "greenhouse-a"
+    },
+    {
+      "id": "soil-b",
+      "name": "土壤墒情传感器（大棚 B）",
+      "type": "soil-moisture-sensor",
+      "capabilities": [
+        "soil-moisture-monitoring"
+      ],
+      "zoneId": "greenhouse-b"
+    },
+    {
+      "id": "temp-a",
+      "name": "温湿度传感器（大棚 A）",
+      "type": "temp-humidity-sensor",
+      "capabilities": [
+        "temperature-reading",
+        "humidity-monitoring"
+      ],
+      "zoneId": "greenhouse-a"
+    },
+    {
+      "id": "temp-b",
+      "name": "温湿度传感器（大棚 B）",
+      "type": "temp-humidity-sensor",
+      "capabilities": [
+        "temperature-reading",
+        "humidity-monitoring"
+      ],
+      "zoneId": "greenhouse-b"
+    },
+    {
+      "id": "pump-main",
+      "name": "灌溉主泵",
+      "type": "irrigation-pump",
+      "capabilities": [
+        "irrigation-control",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "pump-room"
+    },
+    {
+      "id": "fan-a",
+      "name": "通风风机（大棚 A）",
+      "type": "ventilation-fan",
+      "capabilities": [
+        "ventilation",
+        "temperature-control",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "greenhouse-a"
+    },
+    {
+      "id": "fan-b",
+      "name": "通风风机（大棚 B）",
+      "type": "ventilation-fan",
+      "capabilities": [
+        "ventilation",
+        "temperature-control",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "greenhouse-b"
+    },
+    {
+      "id": "weather-station-device",
+      "name": "田间小气候站",
+      "type": "weather-station",
+      "capabilities": [
+        "temperature-monitoring",
+        "humidity-monitoring",
+        "light-monitoring",
+        "rainfall-detection"
+      ],
+      "zoneId": "weather-station"
+    }
+  ],
+  "agents": [
+    {
+      "id": "agronomist",
+      "name": "农艺师",
+      "capabilities": [
+        "irrigation-control",
+        "ventilation",
+        "temperature-control"
+      ],
+      "managesZoneIds": [
+        "greenhouse-a",
+        "greenhouse-b",
+        "pump-room",
+        "open-field"
+      ],
+      "boundDeviceIds": [
+        "pump-main",
+        "fan-a",
+        "fan-b"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "weather-watcher",
+      "name": "气象监测员",
+      "capabilities": [
+        "temperature-monitoring",
+        "humidity-monitoring",
+        "light-monitoring",
+        "rainfall-detection",
+        "soil-moisture-monitoring"
+      ],
+      "managesZoneIds": [
+        "weather-station",
+        "greenhouse-a",
+        "greenhouse-b",
+        "open-field"
+      ],
+      "boundDeviceIds": [
+        "weather-station-device",
+        "soil-a",
+        "soil-b",
+        "temp-a",
+        "temp-b"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "morning-dry-a",
+      "type": "soil-moisture-drop",
+      "zoneId": "greenhouse-a",
+      "parameter": "soil-moisture",
+      "value": 25,
+      "atSimTimeSec": 21600,
+      "severity": "medium",
+      "requiredCapabilities": [
+        "irrigation-control"
+      ]
+    },
+    {
+      "id": "morning-dry-b",
+      "type": "soil-moisture-drop",
+      "zoneId": "greenhouse-b",
+      "parameter": "soil-moisture",
+      "value": 27,
+      "atSimTimeSec": 21600,
+      "severity": "medium",
+      "requiredCapabilities": [
+        "irrigation-control"
+      ]
+    },
+    {
+      "id": "midday-heat-b",
+      "type": "temperature-spike",
+      "zoneId": "greenhouse-b",
+      "parameter": "temperature",
+      "value": 38,
+      "atSimTimeSec": 46800,
+      "severity": "high",
+      "requiredCapabilities": [
+        "ventilation",
+        "temperature-control"
+      ]
+    },
+    {
+      "id": "afternoon-rain",
+      "type": "humidity-spike",
+      "zoneId": "weather-station",
+      "parameter": "humidity",
+      "value": 96,
+      "atSimTimeSec": 54000,
+      "severity": "medium",
+      "requiredCapabilities": [
+        "rainfall-detection",
+        "humidity-monitoring"
+      ]
+    },
+    {
+      "id": "evening-dry-a",
+      "type": "soil-moisture-drop",
+      "zoneId": "greenhouse-a",
+      "parameter": "soil-moisture",
+      "value": 28,
+      "atSimTimeSec": 64800,
+      "severity": "medium",
+      "requiredCapabilities": [
+        "irrigation-control"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "soil-dry-auto-irrigation",
+      "name": "墒情下降自动灌溉",
+      "description": "收到 soil-moisture-drop 事件时自动开启灌溉主泵。确定性业务流：事件触发即执行，不经过 LLM，与农艺师的灌溉决策并存（cooldown 防止两个大棚同时告旱时重复开泵）。",
+      "enabled": true,
+      "trigger": {
+        "kind": "event",
+        "eventType": "soil-moisture-drop",
+        "cooldownSimSec": 900
+      },
+      "plan": {
+        "goal": "开泵灌溉补充土壤墒情",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "turn-on",
+            "assigneeAgentId": "agronomist",
+            "deviceId": "pump-main",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "greenhouse-b-overheat-vent",
+      "name": "大棚B高温自动通风",
+      "description": "大棚 B 温度超 36°C 时自动开启通风风机降温。确定性业务流：触发即执行，不经过 LLM，与农艺师的高温协作决策并存。",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "greenhouse-b",
+        "conditions": [
+          {
+            "path": "temperature",
+            "op": ">",
+            "value": 36
+          }
+        ],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "给大棚 B 通风降温",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "turn-on",
+            "assigneeAgentId": "agronomist",
+            "deviceId": "fan-b",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ]
+}

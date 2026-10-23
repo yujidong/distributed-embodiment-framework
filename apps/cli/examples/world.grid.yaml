@@ -1,0 +1,51 @@
+# Example world document — `eaf apply -f apps/cli/examples/world.grid.yaml`
+# Creates "my-lab" (two rooms, a sensor, an HVAC, one rule-driven bot) and
+# starts a rule-only simulation (llm: none — no Ollama needed).
+version: "1.0"
+environment:
+  name: my-lab
+  description: two rooms and a bot (CLI example)
+  visibility: private
+  map:
+    type: grid
+    zones:
+      - id: room-a
+        name: Room A
+        bounds: { minX: 0, maxX: 5, minY: 0, maxY: 5 }
+        adjacentZoneIds: [room-b]
+        baseline: { temperature: 30, humidity: 60 }
+      - id: room-b
+        name: Room B
+        bounds: { minX: 5, maxX: 10, minY: 0, maxY: 5 }
+        adjacentZoneIds: [room-a]
+        baseline: { temperature: 25 }
+devices:
+  - name: Room Sensor
+    zone: room-a
+    spec:
+      type: temperature-sensor
+      brand: Example
+      capabilities: [temperature-monitoring]
+  - name: Room HVAC
+    zone: room-a
+    spec:
+      type: hvac
+      brand: Example
+      capabilities: [temperature-control, cooling, turn-on, turn-off]
+    initialState: { power: false, mode: off, targetTemperature: 26 }
+agents:
+  - name: Climate Bot
+    capabilities: [temperature-monitoring, temperature-control, cooling]
+    bind: [Room Sensor, Room HVAC]
+    zones: [room-a, room-b]
+events:
+  - id: heat-wave
+    type: temperature-spike
+    zoneId: room-a
+    parameter: temperature
+    value: 38
+    severity: high
+    atSimTimeSec: 30
+simulation:
+  llm: none
+  speed: 5

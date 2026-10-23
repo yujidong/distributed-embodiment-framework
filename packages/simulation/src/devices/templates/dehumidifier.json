@@ -1,0 +1,64 @@
+{
+  "id": "dehumidifier-v1",
+  "name": "Dehumidifier",
+  "description": "Dehumidifier for reducing indoor humidity levels",
+  "category": "actuator",
+  "type": "dehumidifier",
+  "capabilities": [
+    {
+      "name": "set-target-humidity",
+      "type": "write",
+      "description": "Set target humidity level",
+      "parameters": [
+        {
+          "name": "humidity",
+          "type": "number",
+          "required": true,
+          "description": "Target humidity percentage (20-80)"
+        }
+      ]
+    },
+    {
+      "name": "set-mode",
+      "type": "write",
+      "description": "Set operating mode",
+      "parameters": [
+        {
+          "name": "mode",
+          "type": "string",
+          "required": true,
+          "description": "Operating mode: auto, continuous, or eco"
+        }
+      ]
+    },
+    {
+      "name": "turn-on",
+      "type": "write",
+      "description": "Turn on the dehumidifier",
+      "parameters": []
+    },
+    {
+      "name": "turn-off",
+      "type": "write",
+      "description": "Turn off the dehumidifier",
+      "parameters": []
+    }
+  ],
+  "defaultState": {
+    "status": "off",
+    "power": false,
+    "targetHumidity": 45,
+    "mode": "auto"
+  },
+  "physicalEffects": [
+    {
+      "parameter": "humidity",
+      "effect": "humidity",
+      "magnitude": -0.3,
+      "radius": 5,
+      "condition": "power == true"
+    }
+  ],
+  "semanticDescription": "A dehumidifier that reduces indoor humidity to prevent mold and improve comfort. Important for bathrooms, basements, and humid climates.",
+  "tags": ["humidity", "climate", "actuator", "dehumidifier"]
+}

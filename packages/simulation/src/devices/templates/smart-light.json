@@ -1,0 +1,76 @@
+{
+  "id": "smart-light-v1",
+  "name": "Smart Light",
+  "description": "Controllable LED light fixture",
+  "category": "actuator",
+  "type": "smart-light",
+  "capabilities": [
+    {
+      "name": "set-brightness",
+      "type": "write",
+      "description": "Set brightness level",
+      "parameters": [
+        {
+          "name": "brightness",
+          "type": "number",
+          "required": true,
+          "description": "Brightness percentage (0-100)"
+        }
+      ]
+    },
+    {
+      "name": "set-color",
+      "type": "write",
+      "description": "Set light color (RGB)",
+      "parameters": [
+        {
+          "name": "r",
+          "type": "number",
+          "required": true,
+          "description": "Red component (0-255)"
+        },
+        {
+          "name": "g",
+          "type": "number",
+          "required": true,
+          "description": "Green component (0-255)"
+        },
+        {
+          "name": "b",
+          "type": "number",
+          "required": true,
+          "description": "Blue component (0-255)"
+        }
+      ]
+    },
+    {
+      "name": "turn-on",
+      "type": "write",
+      "description": "Turn on the light",
+      "parameters": []
+    },
+    {
+      "name": "turn-off",
+      "type": "write",
+      "description": "Turn off the light",
+      "parameters": []
+    }
+  ],
+  "defaultState": {
+    "status": "off",
+    "power": false,
+    "brightness": 100,
+    "color": { "r": 255, "g": 255, "b": 255 }
+  },
+  "physicalEffects": [
+    {
+      "parameter": "light",
+      "effect": "light",
+      "magnitude": 1.0,
+      "radius": 8,
+      "condition": "power == true"
+    }
+  ],
+  "semanticDescription": "A smart LED light fixture with adjustable brightness and color. Can create various lighting scenes for different activities.",
+  "tags": ["lighting", "smart-home", "actuator"]
+}

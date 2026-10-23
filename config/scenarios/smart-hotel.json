@@ -1,0 +1,1206 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "smart-hotel",
+    "name": {
+      "zh": "智慧酒店（客房-大堂-机房种子场景）",
+      "en": "Smart hotel (guest-room + lobby + plant-room seed scenario)"
+    },
+    "description": {
+      "zh": "精品酒店种子场景：地上 2 层客房 + 1 层裙楼（平面 24×10m，x 右/y 下，原点左上，各层共用平面坐标），机房在地下一层 floor=-1。1F：大堂 + 餐厅 + 走廊 + 电梯厅；2F/3F：各 3 间客房 + 走廊 + 电梯厅；电梯厅跨层显式邻接（elevator-f0↔f1↔f2），是楼层间唯一热耦合通道，地下机房经电梯井与 1F 耦合；storeyHeight=3.2m；outdoor 经围护与 1F 走廊单向耦合。客房与大堂带声明式 occupantSchedule（客房 14:00–23:00 在住 2 人、大堂 8:00–23:00 基础人流 4 人）。运营剧本：9:00 退房（203/302/303 客房清空）、12:00 午餐（餐厅 20）、14:00 入住高峰（客房 2、大堂 12）、18:30 晚餐（餐厅 24）、23:00 夜间模式（公区清场 + 大堂调光 150）。异常剧本：15:30 机房温升（38°C）、16:00 冷空气过境、21:00 2F 走廊烟雾（high）。验证点：客房空调不影响非同层房间；井道上下层缓慢耦合；机房热量经井道上渗；烟雾触发工程运维员与前厅管家协作评估；内嵌 Flow 在退房清房时确定性关空调、在机房 38°C 温升时确定性启动精密空调。（v2 刷新：内嵌 2 条确定性 Flow）",
+      "en": "Boutique hotel seed: two guest-room storeys plus a podium (24×10m footprint, x right / y down, origin top-left, shared plan per storey), plant room at basement floor=-1. 1F: lobby + restaurant + corridor + elevator lobby; 2F/3F: 3 guest rooms each + corridor + elevator lobby; elevator lobbies interconnect across storeys (elevator-f0↔f1↔f2) as the only cross-floor thermal channel, and the basement plant room couples to 1F through the shaft; storeyHeight=3.2m; the outdoors couples one-way to the 1F corridor via the envelope. Guest rooms and the lobby carry declarative occupant schedules (rooms 14:00–23:00 ×2 guests, lobby 08:00–23:00 ×4 baseline traffic). Operations script: 09:00 checkout (rooms 203/302/303 vacated), 12:00 lunch (restaurant 20), 14:00 check-in peak (rooms 2, lobby 12), 18:30 dinner (restaurant 24), 23:00 night mode (public areas cleared + lobby dimmed to 150). Anomaly script: 15:30 plant-room heat spike (38°C), 16:00 cold-air outbreak, 21:00 smoke in the 2F corridor (high). Verification points: guest-room AC does not affect other floors; the shaft couples slowly; plant-room heat rises through the shaft; smoke rallies engineering-ops and the front-desk butler; the embedded flows deterministically cut AC power on checkout vacancy and start the precision AC when the plant room hits 38°C. (v2 refresh: 2 embedded deterministic flows)"
+    },
+    "tagline": {
+      "zh": "入住高峰、机房过热、走廊烟雾——精品酒店的一天，三个管家 Agent 的协作接力",
+      "en": "Check-in rush, an overheating server room, corridor smoke — one day at a boutique hotel, relayed by three butler agents."
+    },
+    "heroEventId": "corridor-smoke",
+    "recommendedPlaybackRate": 30,
+    "storeyHeight": 3.2
+  },
+  "zones": [
+    {
+      "id": "lobby",
+      "name": "大堂",
+      "type": "lobby",
+      "buildingId": "hotel",
+      "floor": 0,
+      "adjacentZoneIds": [
+        "restaurant",
+        "corridor-f0"
+      ],
+      "occupancy": 4,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "co2": 550,
+        "light": 400
+      },
+      "occupantSchedule": {
+        "count": 4,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.70582
+        ],
+        [
+          31.321334,
+          120.705925
+        ],
+        [
+          31.32128,
+          120.705925
+        ],
+        [
+          31.32128,
+          120.70582
+        ]
+      ]
+    },
+    {
+      "id": "restaurant",
+      "name": "餐厅",
+      "type": "restaurant",
+      "buildingId": "hotel",
+      "floor": 0,
+      "adjacentZoneIds": [
+        "lobby",
+        "corridor-f0"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "co2": 500,
+        "light": 350
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.705925
+        ],
+        [
+          31.321334,
+          120.706009
+        ],
+        [
+          31.32128,
+          120.706009
+        ],
+        [
+          31.32128,
+          120.705925
+        ]
+      ]
+    },
+    {
+      "id": "elevator-f0",
+      "name": "电梯厅（1F）",
+      "type": "stairwell",
+      "buildingId": "hotel",
+      "floor": 0,
+      "adjacentZoneIds": [
+        "corridor-f0",
+        "elevator-f1",
+        "server-room"
+      ],
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "light": 150
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.706009
+        ],
+        [
+          31.321334,
+          120.706072
+        ],
+        [
+          31.32128,
+          120.706072
+        ],
+        [
+          31.32128,
+          120.706009
+        ]
+      ]
+    },
+    {
+      "id": "corridor-f0",
+      "name": "1F 走廊",
+      "type": "corridor",
+      "buildingId": "hotel",
+      "floor": 0,
+      "adjacentZoneIds": [
+        "outdoor"
+      ],
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "light": 200
+      },
+      "polygon": [
+        [
+          31.32137,
+          120.70582
+        ],
+        [
+          31.32137,
+          120.706072
+        ],
+        [
+          31.321334,
+          120.706072
+        ],
+        [
+          31.321334,
+          120.70582
+        ]
+      ]
+    },
+    {
+      "id": "room-201",
+      "name": "201 客房",
+      "type": "guest-room",
+      "buildingId": "hotel",
+      "floor": 1,
+      "adjacentZoneIds": [
+        "room-202",
+        "corridor-f1"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "co2": 500,
+        "light": 250
+      },
+      "occupantSchedule": {
+        "count": 2,
+        "startSimTimeSec": 50400,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.70582
+        ],
+        [
+          31.321334,
+          120.705883
+        ],
+        [
+          31.32128,
+          120.705883
+        ],
+        [
+          31.32128,
+          120.70582
+        ]
+      ]
+    },
+    {
+      "id": "room-202",
+      "name": "202 客房",
+      "type": "guest-room",
+      "buildingId": "hotel",
+      "floor": 1,
+      "adjacentZoneIds": [
+        "room-201",
+        "room-203",
+        "corridor-f1"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "co2": 500,
+        "light": 250
+      },
+      "occupantSchedule": {
+        "count": 2,
+        "startSimTimeSec": 50400,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.705883
+        ],
+        [
+          31.321334,
+          120.705946
+        ],
+        [
+          31.32128,
+          120.705946
+        ],
+        [
+          31.32128,
+          120.705883
+        ]
+      ]
+    },
+    {
+      "id": "room-203",
+      "name": "203 客房",
+      "type": "guest-room",
+      "buildingId": "hotel",
+      "floor": 1,
+      "adjacentZoneIds": [
+        "room-202",
+        "corridor-f1"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "co2": 500,
+        "light": 250
+      },
+      "occupantSchedule": {
+        "count": 2,
+        "startSimTimeSec": 50400,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.705946
+        ],
+        [
+          31.321334,
+          120.706009
+        ],
+        [
+          31.32128,
+          120.706009
+        ],
+        [
+          31.32128,
+          120.705946
+        ]
+      ]
+    },
+    {
+      "id": "elevator-f1",
+      "name": "电梯厅（2F）",
+      "type": "stairwell",
+      "buildingId": "hotel",
+      "floor": 1,
+      "adjacentZoneIds": [
+        "corridor-f1",
+        "elevator-f2"
+      ],
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "light": 150
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.706009
+        ],
+        [
+          31.321334,
+          120.706072
+        ],
+        [
+          31.32128,
+          120.706072
+        ],
+        [
+          31.32128,
+          120.706009
+        ]
+      ]
+    },
+    {
+      "id": "corridor-f1",
+      "name": "2F 走廊",
+      "type": "corridor",
+      "buildingId": "hotel",
+      "floor": 1,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "light": 200
+      },
+      "polygon": [
+        [
+          31.32137,
+          120.70582
+        ],
+        [
+          31.32137,
+          120.706072
+        ],
+        [
+          31.321334,
+          120.706072
+        ],
+        [
+          31.321334,
+          120.70582
+        ]
+      ]
+    },
+    {
+      "id": "room-301",
+      "name": "301 客房",
+      "type": "guest-room",
+      "buildingId": "hotel",
+      "floor": 2,
+      "adjacentZoneIds": [
+        "room-302",
+        "corridor-f2"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "co2": 500,
+        "light": 250
+      },
+      "occupantSchedule": {
+        "count": 2,
+        "startSimTimeSec": 50400,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.70582
+        ],
+        [
+          31.321334,
+          120.705883
+        ],
+        [
+          31.32128,
+          120.705883
+        ],
+        [
+          31.32128,
+          120.70582
+        ]
+      ]
+    },
+    {
+      "id": "room-302",
+      "name": "302 客房",
+      "type": "guest-room",
+      "buildingId": "hotel",
+      "floor": 2,
+      "adjacentZoneIds": [
+        "room-301",
+        "room-303",
+        "corridor-f2"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "co2": 500,
+        "light": 250
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.705883
+        ],
+        [
+          31.321334,
+          120.705946
+        ],
+        [
+          31.32128,
+          120.705946
+        ],
+        [
+          31.32128,
+          120.705883
+        ]
+      ]
+    },
+    {
+      "id": "room-303",
+      "name": "303 客房",
+      "type": "guest-room",
+      "buildingId": "hotel",
+      "floor": 2,
+      "adjacentZoneIds": [
+        "room-302",
+        "corridor-f2"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "co2": 500,
+        "light": 250
+      },
+      "occupantSchedule": {
+        "count": 2,
+        "startSimTimeSec": 50400,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.705946
+        ],
+        [
+          31.321334,
+          120.706009
+        ],
+        [
+          31.32128,
+          120.706009
+        ],
+        [
+          31.32128,
+          120.705946
+        ]
+      ]
+    },
+    {
+      "id": "elevator-f2",
+      "name": "电梯厅（3F）",
+      "type": "stairwell",
+      "buildingId": "hotel",
+      "floor": 2,
+      "adjacentZoneIds": [
+        "corridor-f2"
+      ],
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "light": 150
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.706009
+        ],
+        [
+          31.321334,
+          120.706072
+        ],
+        [
+          31.32128,
+          120.706072
+        ],
+        [
+          31.32128,
+          120.706009
+        ]
+      ]
+    },
+    {
+      "id": "corridor-f2",
+      "name": "3F 走廊",
+      "type": "corridor",
+      "buildingId": "hotel",
+      "floor": 2,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "light": 200
+      },
+      "polygon": [
+        [
+          31.32137,
+          120.70582
+        ],
+        [
+          31.32137,
+          120.706072
+        ],
+        [
+          31.321334,
+          120.706072
+        ],
+        [
+          31.321334,
+          120.70582
+        ]
+      ]
+    },
+    {
+      "id": "server-room",
+      "name": "地下机房",
+      "type": "server-room",
+      "buildingId": "hotel",
+      "floor": -1,
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "light": 100
+      },
+      "polygon": [
+        [
+          31.321334,
+          120.706009
+        ],
+        [
+          31.321334,
+          120.706072
+        ],
+        [
+          31.32128,
+          120.706072
+        ],
+        [
+          31.32128,
+          120.706009
+        ]
+      ]
+    },
+    {
+      "id": "outdoor",
+      "name": "室外",
+      "type": "outdoor",
+      "baseline": {
+        "temperature": 31.7,
+        "humidity": 66,
+        "light": 20000,
+        "co2": 420,
+        "pm2_5": 40
+      },
+      "polygon": [
+        [
+          31.32137,
+          120.706114
+        ],
+        [
+          31.32137,
+          120.706199
+        ],
+        [
+          31.32128,
+          120.706199
+        ],
+        [
+          31.32128,
+          120.706114
+        ]
+      ]
+    }
+  ],
+  "devices": [
+    {
+      "id": "hvac-lobby",
+      "name": "大堂中央空调",
+      "type": "hvac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "lobby"
+    },
+    {
+      "id": "light-lobby",
+      "name": "大堂智能照明",
+      "type": "smart-light",
+      "capabilities": [
+        "lighting-control",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "lobby"
+    },
+    {
+      "id": "temp-lobby",
+      "name": "大堂温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "lobby"
+    },
+    {
+      "id": "temp-restaurant",
+      "name": "餐厅温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "restaurant"
+    },
+    {
+      "id": "hvac-201",
+      "name": "201 客房空调",
+      "type": "hvac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "room-201"
+    },
+    {
+      "id": "hvac-202",
+      "name": "202 客房空调",
+      "type": "hvac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "room-202"
+    },
+    {
+      "id": "hvac-203",
+      "name": "203 客房空调",
+      "type": "hvac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "room-203"
+    },
+    {
+      "id": "hvac-301",
+      "name": "301 客房空调",
+      "type": "hvac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "room-301"
+    },
+    {
+      "id": "hvac-302",
+      "name": "302 客房空调",
+      "type": "hvac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "room-302"
+    },
+    {
+      "id": "hvac-303",
+      "name": "303 客房空调",
+      "type": "hvac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "room-303"
+    },
+    {
+      "id": "temp-201",
+      "name": "201 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "room-201"
+    },
+    {
+      "id": "temp-202",
+      "name": "202 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "room-202"
+    },
+    {
+      "id": "temp-203",
+      "name": "203 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "room-203"
+    },
+    {
+      "id": "temp-301",
+      "name": "301 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "room-301"
+    },
+    {
+      "id": "temp-302",
+      "name": "302 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "room-302"
+    },
+    {
+      "id": "temp-303",
+      "name": "303 温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "room-303"
+    },
+    {
+      "id": "smoke-corridor-f1",
+      "name": "2F 走廊烟雾传感器",
+      "type": "smoke-sensor",
+      "capabilities": [
+        "smoke-detection"
+      ],
+      "zoneId": "corridor-f1"
+    },
+    {
+      "id": "smoke-corridor-f2",
+      "name": "3F 走廊烟雾传感器",
+      "type": "smoke-sensor",
+      "capabilities": [
+        "smoke-detection"
+      ],
+      "zoneId": "corridor-f2"
+    },
+    {
+      "id": "temp-server-room",
+      "name": "机房温度传感器",
+      "type": "temperature-sensor",
+      "capabilities": [
+        "temperature-reading"
+      ],
+      "zoneId": "server-room"
+    },
+    {
+      "id": "precision-ac-server-room",
+      "name": "机房精密空调",
+      "type": "precision-ac",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "server-room"
+    }
+  ],
+  "agents": [
+    {
+      "id": "front-desk-butler",
+      "name": "前厅管家",
+      "capabilities": [
+        "temperature-monitoring",
+        "temperature-control",
+        "lighting-control"
+      ],
+      "managesZoneIds": [
+        "lobby",
+        "restaurant",
+        "corridor-f0",
+        "elevator-f0",
+        "outdoor"
+      ],
+      "boundDeviceIds": [
+        "hvac-lobby",
+        "light-lobby",
+        "temp-lobby",
+        "temp-restaurant"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "room-butler",
+      "name": "客房管家",
+      "capabilities": [
+        "temperature-monitoring",
+        "temperature-control",
+        "cooling",
+        "heating"
+      ],
+      "managesZoneIds": [
+        "room-201",
+        "room-202",
+        "room-203",
+        "corridor-f1",
+        "elevator-f1",
+        "room-301",
+        "room-302",
+        "room-303",
+        "corridor-f2",
+        "elevator-f2"
+      ],
+      "boundDeviceIds": [
+        "hvac-201",
+        "hvac-202",
+        "hvac-203",
+        "hvac-301",
+        "hvac-302",
+        "hvac-303",
+        "temp-201",
+        "temp-202",
+        "temp-203",
+        "temp-301",
+        "temp-302",
+        "temp-303"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "engineering-ops",
+      "name": "工程运维员",
+      "capabilities": [
+        "temperature-monitoring",
+        "smoke-detection",
+        "temperature-control",
+        "cooling",
+        "emergency-response"
+      ],
+      "managesZoneIds": [
+        "server-room",
+        "corridor-f1",
+        "corridor-f2"
+      ],
+      "boundDeviceIds": [
+        "temp-server-room",
+        "precision-ac-server-room",
+        "smoke-corridor-f1",
+        "smoke-corridor-f2"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "checkout-201",
+      "type": "occupancy",
+      "zoneId": "room-201",
+      "parameter": "occupancy",
+      "value": 1,
+      "atSimTimeSec": 32400,
+      "severity": "low"
+    },
+    {
+      "id": "checkout-202",
+      "type": "occupancy",
+      "zoneId": "room-202",
+      "parameter": "occupancy",
+      "value": 1,
+      "atSimTimeSec": 32400,
+      "severity": "low"
+    },
+    {
+      "id": "checkout-203",
+      "type": "occupancy",
+      "zoneId": "room-203",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 32400,
+      "severity": "low"
+    },
+    {
+      "id": "checkout-301",
+      "type": "occupancy",
+      "zoneId": "room-301",
+      "parameter": "occupancy",
+      "value": 1,
+      "atSimTimeSec": 32400,
+      "severity": "low"
+    },
+    {
+      "id": "checkout-302",
+      "type": "occupancy",
+      "zoneId": "room-302",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 32400,
+      "severity": "low"
+    },
+    {
+      "id": "checkout-303",
+      "type": "occupancy",
+      "zoneId": "room-303",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 32400,
+      "severity": "low"
+    },
+    {
+      "id": "lunch-rush",
+      "type": "occupancy",
+      "zoneId": "restaurant",
+      "parameter": "occupancy",
+      "value": 20,
+      "atSimTimeSec": 43200,
+      "severity": "low"
+    },
+    {
+      "id": "lunch-end",
+      "type": "occupancy",
+      "zoneId": "restaurant",
+      "parameter": "occupancy",
+      "value": 3,
+      "atSimTimeSec": 48600,
+      "severity": "low"
+    },
+    {
+      "id": "checkin-201",
+      "type": "occupancy",
+      "zoneId": "room-201",
+      "parameter": "occupancy",
+      "value": 2,
+      "atSimTimeSec": 50400,
+      "severity": "low"
+    },
+    {
+      "id": "checkin-202",
+      "type": "occupancy",
+      "zoneId": "room-202",
+      "parameter": "occupancy",
+      "value": 2,
+      "atSimTimeSec": 50400,
+      "severity": "low"
+    },
+    {
+      "id": "checkin-203",
+      "type": "occupancy",
+      "zoneId": "room-203",
+      "parameter": "occupancy",
+      "value": 2,
+      "atSimTimeSec": 50400,
+      "severity": "low"
+    },
+    {
+      "id": "checkin-301",
+      "type": "occupancy",
+      "zoneId": "room-301",
+      "parameter": "occupancy",
+      "value": 2,
+      "atSimTimeSec": 50400,
+      "severity": "low"
+    },
+    {
+      "id": "checkin-302",
+      "type": "occupancy",
+      "zoneId": "room-302",
+      "parameter": "occupancy",
+      "value": 2,
+      "atSimTimeSec": 50400,
+      "severity": "low"
+    },
+    {
+      "id": "checkin-303",
+      "type": "occupancy",
+      "zoneId": "room-303",
+      "parameter": "occupancy",
+      "value": 2,
+      "atSimTimeSec": 50400,
+      "severity": "low"
+    },
+    {
+      "id": "checkin-lobby",
+      "type": "occupancy",
+      "zoneId": "lobby",
+      "parameter": "occupancy",
+      "value": 12,
+      "atSimTimeSec": 50400,
+      "severity": "low"
+    },
+    {
+      "id": "server-room-heat",
+      "type": "temperature-spike",
+      "zoneId": "server-room",
+      "parameter": "temperature",
+      "value": 38,
+      "atSimTimeSec": 55800,
+      "severity": "high",
+      "requiredCapabilities": [
+        "temperature-control",
+        "cooling"
+      ]
+    },
+    {
+      "id": "cold-front",
+      "type": "weather-change",
+      "zoneId": "outdoor",
+      "parameter": "temperature",
+      "value": 17,
+      "atSimTimeSec": 57600,
+      "severity": "low"
+    },
+    {
+      "id": "dinner-rush",
+      "type": "occupancy",
+      "zoneId": "restaurant",
+      "parameter": "occupancy",
+      "value": 24,
+      "atSimTimeSec": 66600,
+      "severity": "low"
+    },
+    {
+      "id": "evening-lobby",
+      "type": "occupancy",
+      "zoneId": "lobby",
+      "parameter": "occupancy",
+      "value": 6,
+      "atSimTimeSec": 72000,
+      "severity": "low"
+    },
+    {
+      "id": "corridor-smoke",
+      "type": "smoke-detected",
+      "zoneId": "corridor-f1",
+      "parameter": "smoke",
+      "value": true,
+      "atSimTimeSec": 75600,
+      "severity": "high",
+      "requiredCapabilities": [
+        "smoke-detection",
+        "emergency-response",
+        "ventilation"
+      ]
+    },
+    {
+      "id": "night-lobby",
+      "type": "occupancy",
+      "zoneId": "lobby",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 82800,
+      "severity": "low"
+    },
+    {
+      "id": "night-restaurant",
+      "type": "occupancy",
+      "zoneId": "restaurant",
+      "parameter": "occupancy",
+      "value": 0,
+      "atSimTimeSec": 82800,
+      "severity": "low"
+    },
+    {
+      "id": "night-dim",
+      "type": "night-mode",
+      "zoneId": "lobby",
+      "parameter": "light",
+      "value": 150,
+      "atSimTimeSec": 82800,
+      "severity": "low",
+      "requiredCapabilities": [
+        "lighting-control"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "guest-room-checkout-eco",
+      "name": "退房客房自动关空调",
+      "description": "203 客房 occupancy 事件写入 0（9:00 退房清房剧本）时确定性关闭该房空调节能；14:00 入住事件写入 2 不触发",
+      "enabled": true,
+      "trigger": {
+        "kind": "event",
+        "eventType": "occupancy",
+        "zoneId": "room-203",
+        "conditions": [
+          {
+            "path": "occupancy",
+            "op": "==",
+            "value": 0
+          }
+        ],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "退房清房后关闭 203 客房空调节能",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "turn-off",
+            "assigneeAgentId": "room-butler",
+            "deviceId": "hvac-203",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "plant-room-precision-cooling",
+      "name": "机房高温自动制冷",
+      "description": "地下机房温度超过 32°C（15:30 机房温升剧本冲 38°C）时精密空调自动制冷到 24°C",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "server-room",
+        "conditions": [
+          {
+            "path": "temperature",
+            "op": ">",
+            "value": 32
+          }
+        ],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "把地下机房温度控制到 24 度",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "cooling",
+            "assigneeAgentId": "engineering-ops",
+            "deviceId": "precision-ac-server-room",
+            "params": {
+              "targetTemperature": 24
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "map": {
+    "type": "geo",
+    "center": {
+      "lat": 31.32128,
+      "lng": 120.70582
+    }
+  }
+}

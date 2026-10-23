@@ -1,0 +1,749 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "suzhou-apartment",
+    "name": "苏州夏日傍晚公寓",
+    "description": {
+      "zh": "三室两厅一阳台（12×9m，坐标单位=米，x右/y下），苏州 7 月傍晚基线（31.5°C / 68%RH / 550ppm CO2）。感知员无执行器，必须通过 AC 协作让气候/空气/照明/家电 Agent 行动。事件：日落西晒、厨房油烟、书房 CO2、主卧沐浴湿气、次卧升温。内嵌 2 条确定性业务 Flow：厨房烟雾超标自动开油烟机排风、每天 17:00 客厅空调预冷到 26°C——触发即执行，不经过 LLM，与 Agent 协作决策并存。（v2.1 刷新：节点全部对齐引擎可执行命令面，内嵌 2 条确定性 Flow）",
+      "en": "A 3-bedroom apartment (12×9m, units=meters, x right / y down) on a Suzhou July evening (31.5°C / 68%RH / 550ppm CO2 baseline). The sensing agent has no actuators — it must collaborate through AC to make the climate / air / lighting / appliance agents act. Events: sunset west-sun heat, kitchen smoke, study CO2, master-bath humidity, second-bedroom heat. Two deterministic flows are embedded: auto range-hood exhaust when kitchen smoke runs high, and a daily 17:00 living-room pre-cool to 26°C — fired deterministically, no LLM in the loop, coexisting with agent collaboration. (v2.1 refresh: node capabilities aligned to the engine command surface; 2 embedded deterministic flows)"
+    },
+    "tagline": {
+      "zh": "西晒、油烟、闷热、潮湿——苏州夏夜一间公寓，感知员与四个执行管家的协作日常",
+      "en": "West sun, kitchen smoke, stuffiness, steam — one Suzhou summer-evening apartment, one sensor and four acting stewards."
+    },
+    "heroEventId": "evt-kitchen-smoke",
+    "recommendedPlaybackRate": 5,
+    "vendorDisclaimer": {
+      "zh": "场景中出现的品牌名称（小米/米家、格力、飞利浦、Aqara、霍尼韦尔、Yeelight、青萍、明基）仅作 illustrative 演示用途，不代表任何商业背书、授权或合作关系。",
+      "en": "Brand names appearing in this scenario (Xiaomi/Mi Home, Gree, Philips, Aqara, Honeywell, Yeelight, Qingping, BenQ) are used for illustrative demo purposes only and do not represent any commercial endorsement, authorization, or partnership."
+    }
+  },
+  "zones": [
+    {
+      "id": "living-room",
+      "name": "客厅",
+      "type": "living-room",
+      "bounds": {
+        "minX": 0,
+        "maxX": 6,
+        "minY": 0,
+        "maxY": 5
+      },
+      "adjacentZoneIds": [
+        "kitchen",
+        "dining",
+        "master-bedroom"
+      ],
+      "occupantSchedule": {
+        "count": 3,
+        "startSimTimeSec": 64800,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      },
+      "baseline": {
+        "temperature": 31.5,
+        "humidity": 68,
+        "co2": 550,
+        "pm2_5": 35,
+        "light": 200
+      }
+    },
+    {
+      "id": "kitchen",
+      "name": "厨房",
+      "type": "kitchen",
+      "bounds": {
+        "minX": 6,
+        "maxX": 9,
+        "minY": 0,
+        "maxY": 2.5
+      },
+      "adjacentZoneIds": [
+        "living-room",
+        "dining",
+        "balcony"
+      ],
+      "baseline": {
+        "temperature": 32,
+        "humidity": 65,
+        "light": 200
+      }
+    },
+    {
+      "id": "dining",
+      "name": "餐厅",
+      "type": "dining",
+      "bounds": {
+        "minX": 6,
+        "maxX": 9,
+        "minY": 2.5,
+        "maxY": 5
+      },
+      "adjacentZoneIds": [
+        "living-room",
+        "kitchen",
+        "balcony",
+        "study"
+      ],
+      "baseline": {
+        "temperature": 31.5,
+        "humidity": 68,
+        "light": 200
+      }
+    },
+    {
+      "id": "balcony",
+      "name": "阳台",
+      "type": "balcony",
+      "bounds": {
+        "minX": 9,
+        "maxX": 12,
+        "minY": 0,
+        "maxY": 5
+      },
+      "adjacentZoneIds": [
+        "kitchen",
+        "dining",
+        "study"
+      ],
+      "baseline": {
+        "temperature": 33,
+        "humidity": 62,
+        "light": 800
+      }
+    },
+    {
+      "id": "master-bedroom",
+      "name": "主卧",
+      "type": "bedroom",
+      "bounds": {
+        "minX": 0,
+        "maxX": 4,
+        "minY": 5,
+        "maxY": 9
+      },
+      "adjacentZoneIds": [
+        "living-room",
+        "bedroom-2"
+      ],
+      "baseline": {
+        "temperature": 31,
+        "humidity": 68,
+        "light": 200
+      }
+    },
+    {
+      "id": "bedroom-2",
+      "name": "次卧",
+      "type": "bedroom",
+      "bounds": {
+        "minX": 4,
+        "maxX": 8,
+        "minY": 5,
+        "maxY": 9
+      },
+      "adjacentZoneIds": [
+        "master-bedroom",
+        "study"
+      ],
+      "baseline": {
+        "temperature": 31,
+        "humidity": 68,
+        "light": 200
+      }
+    },
+    {
+      "id": "study",
+      "name": "书房",
+      "type": "study",
+      "bounds": {
+        "minX": 8,
+        "maxX": 12,
+        "minY": 5,
+        "maxY": 9
+      },
+      "adjacentZoneIds": [
+        "dining",
+        "balcony",
+        "bedroom-2"
+      ],
+      "occupantSchedule": {
+        "count": 1,
+        "startSimTimeSec": 61200,
+        "endSimTimeSec": 79200,
+        "repeatDaily": true
+      },
+      "baseline": {
+        "temperature": 31.5,
+        "humidity": 68,
+        "co2": 600,
+        "light": 200
+      }
+    }
+  ],
+  "devices": [
+    {
+      "id": "lr-temp-humidity-sensor",
+      "name": "小米温湿度传感器2（客厅）",
+      "type": "temp-humidity-sensor",
+      "brand": "Xiaomi",
+      "capabilities": [
+        "temperature-monitoring",
+        "humidity-monitoring"
+      ],
+      "zoneId": "living-room",
+      "initialState": {
+        "temperature": 31.5,
+        "humidity": 68
+      }
+    },
+    {
+      "id": "lr-hvac",
+      "name": "格力云佳空调 KFR-35GW（客厅）",
+      "type": "hvac",
+      "brand": "Gree",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "set-temperature",
+        "set-mode",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "living-room",
+      "initialState": {
+        "power": false,
+        "mode": "off",
+        "targetTemperature": 26
+      }
+    },
+    {
+      "id": "lr-light",
+      "name": "飞利浦Hue吸顶灯（客厅）",
+      "type": "light",
+      "brand": "Philips",
+      "capabilities": [
+        "lighting-control",
+        "brightness-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "living-room",
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "lr-motion-sensor",
+      "name": "小米人体传感器2（客厅）",
+      "type": "motion-sensor",
+      "brand": "Xiaomi",
+      "capabilities": [
+        "motion-detection"
+      ],
+      "zoneId": "living-room",
+      "initialState": {
+        "motion": false
+      }
+    },
+    {
+      "id": "lr-air-purifier",
+      "name": "米家空气净化器4Pro（客厅）",
+      "type": "air-purifier",
+      "brand": "Xiaomi",
+      "capabilities": [
+        "air-purification",
+        "pm25-control",
+        "set-mode",
+        "set-fan-speed",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "living-room",
+      "initialState": {
+        "power": false,
+        "fanSpeed": 80
+      }
+    },
+    {
+      "id": "lr-curtain",
+      "name": "Aqara智能窗帘电机（客厅）",
+      "type": "curtain",
+      "brand": "Aqara",
+      "capabilities": [
+        "curtain-control",
+        "shade-control",
+        "set-curtain",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "living-room",
+      "initialState": {
+        "openPercentage": 80,
+        "targetOpenPercentage": 80
+      }
+    },
+    {
+      "id": "k-smoke-sensor",
+      "name": "小米烟雾报警器（厨房）",
+      "type": "smoke-sensor",
+      "brand": "Xiaomi",
+      "capabilities": [
+        "smoke-detection"
+      ],
+      "zoneId": "kitchen",
+      "initialState": {
+        "smoke": 0
+      }
+    },
+    {
+      "id": "k-gas-sensor",
+      "name": "霍尼韦尔天然气报警器（厨房）",
+      "type": "gas-sensor",
+      "brand": "Honeywell",
+      "capabilities": [
+        "gas-detection"
+      ],
+      "zoneId": "kitchen",
+      "initialState": {
+        "gas_leak": 0
+      }
+    },
+    {
+      "id": "k-rangehood-plug",
+      "name": "米家智能插座2（接油烟机，厨房）",
+      "type": "smart-plug",
+      "brand": "Xiaomi",
+      "capabilities": [
+        "power-control",
+        "rangehood-control",
+        "ventilation",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "kitchen",
+      "initialState": {
+        "power": false
+      }
+    },
+    {
+      "id": "mb-temp-humidity-sensor",
+      "name": "小米温湿度传感器2（主卧）",
+      "type": "temp-humidity-sensor",
+      "brand": "Xiaomi",
+      "capabilities": [
+        "temperature-monitoring",
+        "humidity-monitoring"
+      ],
+      "zoneId": "master-bedroom",
+      "initialState": {
+        "temperature": 31,
+        "humidity": 68
+      }
+    },
+    {
+      "id": "mb-hvac",
+      "name": "格力空调 KFR-26GW（主卧）",
+      "type": "hvac",
+      "brand": "Gree",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "set-temperature",
+        "set-mode",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "master-bedroom",
+      "initialState": {
+        "power": false,
+        "mode": "off",
+        "targetTemperature": 26
+      }
+    },
+    {
+      "id": "mb-humidifier",
+      "name": "米家加湿器2（主卧）",
+      "type": "humidifier",
+      "brand": "Xiaomi",
+      "capabilities": [
+        "humidity-control",
+        "set-mode",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "master-bedroom",
+      "initialState": {
+        "power": false,
+        "targetHumidity": 60
+      }
+    },
+    {
+      "id": "mb-light",
+      "name": "Yeelight智能灯（主卧）",
+      "type": "light",
+      "brand": "Yeelight",
+      "capabilities": [
+        "lighting-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "master-bedroom",
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "b2-temperature-sensor",
+      "name": "小米温湿度传感器2（次卧）",
+      "type": "temp-humidity-sensor",
+      "brand": "Xiaomi",
+      "capabilities": [
+        "temperature-monitoring"
+      ],
+      "zoneId": "bedroom-2",
+      "initialState": {
+        "temperature": 31
+      }
+    },
+    {
+      "id": "b2-light",
+      "name": "Yeelight智能灯（次卧）",
+      "type": "light",
+      "brand": "Yeelight",
+      "capabilities": [
+        "lighting-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "bedroom-2",
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "st-co2-sensor",
+      "name": "青萍CO2检测仪（书房）",
+      "type": "co2-sensor",
+      "brand": "Qingping",
+      "capabilities": [
+        "co2-monitoring",
+        "air-quality-monitoring"
+      ],
+      "zoneId": "study",
+      "initialState": {
+        "co2": 600
+      }
+    },
+    {
+      "id": "st-screen-light",
+      "name": "明基ScreenBar屏幕挂灯（书房）",
+      "type": "light",
+      "brand": "BenQ",
+      "capabilities": [
+        "lighting-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "study",
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "st-smart-plug",
+      "name": "米家智能插座3（接新风机，书房）",
+      "type": "smart-plug",
+      "brand": "Xiaomi",
+      "capabilities": [
+        "power-control",
+        "ventilation",
+        "turn-on",
+        "turn-off"
+      ],
+      "zoneId": "study",
+      "initialState": {
+        "power": false
+      }
+    },
+    {
+      "id": "bal-light-sensor",
+      "name": "青萍光照传感器（阳台）",
+      "type": "light-sensor",
+      "brand": "Qingping",
+      "capabilities": [
+        "light-monitoring",
+        "illuminance-monitoring"
+      ],
+      "zoneId": "balcony",
+      "initialState": {
+        "light": 800
+      }
+    }
+  ],
+  "agents": [
+    {
+      "id": "monitor-agent",
+      "name": "感知员",
+      "capabilities": [
+        "temperature-monitoring",
+        "humidity-monitoring",
+        "motion-detection",
+        "smoke-detection",
+        "gas-detection",
+        "co2-monitoring",
+        "air-quality-monitoring",
+        "light-monitoring"
+      ],
+      "managesZoneIds": [
+        "living-room",
+        "kitchen",
+        "dining",
+        "balcony",
+        "master-bedroom",
+        "bedroom-2",
+        "study"
+      ],
+      "boundDeviceIds": [
+        "lr-temp-humidity-sensor",
+        "lr-motion-sensor",
+        "k-smoke-sensor",
+        "k-gas-sensor",
+        "mb-temp-humidity-sensor",
+        "b2-temperature-sensor",
+        "st-co2-sensor",
+        "bal-light-sensor"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "climate-agent",
+      "name": "气候管家",
+      "capabilities": [
+        "temperature-control",
+        "cooling",
+        "heating",
+        "humidity-control"
+      ],
+      "managesZoneIds": [
+        "living-room",
+        "master-bedroom"
+      ],
+      "boundDeviceIds": [
+        "lr-hvac",
+        "mb-hvac",
+        "mb-humidifier"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "air-agent",
+      "name": "空气安全员",
+      "capabilities": [
+        "air-purification",
+        "pm25-control"
+      ],
+      "managesZoneIds": [
+        "living-room"
+      ],
+      "boundDeviceIds": [
+        "lr-air-purifier"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "lighting-agent",
+      "name": "照明师",
+      "capabilities": [
+        "lighting-control",
+        "brightness-control"
+      ],
+      "managesZoneIds": [
+        "living-room",
+        "master-bedroom",
+        "bedroom-2",
+        "study"
+      ],
+      "boundDeviceIds": [
+        "lr-light",
+        "mb-light",
+        "b2-light",
+        "st-screen-light"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "appliance-agent",
+      "name": "家电管家",
+      "capabilities": [
+        "power-control",
+        "rangehood-control",
+        "curtain-control",
+        "ventilation"
+      ],
+      "managesZoneIds": [
+        "kitchen",
+        "study",
+        "living-room"
+      ],
+      "boundDeviceIds": [
+        "k-rangehood-plug",
+        "st-smart-plug",
+        "lr-curtain"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-sunset-balcony",
+      "type": "light-change",
+      "zoneId": "balcony",
+      "parameter": "light",
+      "value": 60,
+      "atSimTimeSec": 5,
+      "severity": "medium",
+      "requiredCapabilities": [
+        "lighting-control"
+      ]
+    },
+    {
+      "id": "evt-west-sun-heat",
+      "type": "temperature-spike",
+      "zoneId": "living-room",
+      "parameter": "temperature",
+      "value": 33.5,
+      "atSimTimeSec": 15,
+      "severity": "high",
+      "requiredCapabilities": [
+        "cooling",
+        "temperature-control"
+      ]
+    },
+    {
+      "id": "evt-kitchen-smoke",
+      "type": "smoke-detected",
+      "zoneId": "kitchen",
+      "parameter": "smoke",
+      "value": 0.75,
+      "atSimTimeSec": 30,
+      "severity": "critical",
+      "requiredCapabilities": [
+        "air-purification",
+        "ventilation"
+      ]
+    },
+    {
+      "id": "evt-study-co2",
+      "type": "co2-high",
+      "zoneId": "study",
+      "parameter": "co2",
+      "value": 1350,
+      "atSimTimeSec": 45,
+      "severity": "high",
+      "requiredCapabilities": [
+        "ventilation",
+        "air-purification"
+      ]
+    },
+    {
+      "id": "evt-shower-humidity",
+      "type": "humidity-spike",
+      "zoneId": "master-bedroom",
+      "parameter": "humidity",
+      "value": 78,
+      "atSimTimeSec": 60,
+      "severity": "high",
+      "requiredCapabilities": [
+        "humidity-control"
+      ]
+    },
+    {
+      "id": "evt-bedroom2-heat",
+      "type": "temperature-spike",
+      "zoneId": "bedroom-2",
+      "parameter": "temperature",
+      "value": 31.2,
+      "atSimTimeSec": 75,
+      "severity": "medium",
+      "requiredCapabilities": [
+        "cooling",
+        "temperature-control"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "kitchen-smoke-exhaust",
+      "name": "厨房油烟自动排风",
+      "description": "厨房烟雾浓度超 0.45 时自动打开油烟机排风。确定性业务流：触发即执行，不经过 LLM，与空气安全员/家电管家的 AC 协作决策并存。",
+      "enabled": true,
+      "trigger": {
+        "kind": "event",
+        "eventType": "smoke-detected",
+        "zoneId": "kitchen",
+        "cooldownSimSec": 300
+      },
+      "plan": {
+        "goal": "打开油烟机排出厨房烟雾",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "turn-on",
+            "assigneeAgentId": "appliance-agent",
+            "deviceId": "k-rangehood-plug",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "evening-precool",
+      "name": "傍晚回家前预冷",
+      "description": "每天 17:00 客厅格力空调预冷到 26°C，家人 18:00 回家前先压住西晒余热。确定性业务流：定时触发，不经过 LLM。",
+      "enabled": true,
+      "trigger": {
+        "kind": "schedule",
+        "atSimTimeSec": 61200
+      },
+      "plan": {
+        "goal": "傍晚回家前把客厅预冷到 26 度",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "cooling",
+            "assigneeAgentId": "climate-agent",
+            "deviceId": "lr-hvac",
+            "params": {
+              "targetTemperature": 26
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

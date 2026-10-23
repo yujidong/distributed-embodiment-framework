@@ -1,0 +1,50 @@
+# Embodied Agent Framework — one-command deployment (P3c)
+#
+#   docker compose up --build     → http://localhost:8100
+#
+# One service runs API + WebSocket + web console. SQLite, trajectories and
+# user scenarios persist in the `eaf-data` volume. Configuration is
+# env-driven: copy .env.example to .env and edit (optional).
+
+services:
+  eaf:
+    build: .
+    ports:
+      - "8100:8100"
+    env_file:
+      # Optional overrides (JWT_SECRET, HASS_*, ADMIN_EMAILS, …).
+      # Absent file is fine — defaults apply.
+      - path: .env
+        required: false
+    environment:
+      # Default: reach a vLLM (or any OpenAI-compatible) server on the HOST
+      # from inside the container. On Linux, host.docker.internal only
+      # resolves thanks to the extra_hosts entry below (Docker Desktop maps
+      # it natively). Set LLM_MODEL too (must match --served-model-name) —
+      # see docs/deployment.md §5. (The historical Ollama default was
+      # removed in R44-B.)
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://host.docker.internal:8000/v1}
+      LLM_MODEL: ${LLM_MODEL:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - eaf-data:/data
+    healthcheck:
+      # R15-A3: dedicated public liveness probe (no auth, includes a SQLite
+      # check) instead of borrowing an API route.
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8100/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+  # -------------------------------------------------------------------------
+  # The LLM backend is vLLM (R44-B: Ollama removed) — run it on the host or
+  # a separate GPU box and point LLM_BASE_URL at it, e.g.
+  #   vllm serve Qwen/Qwen3-8B --served-model-name qwen3-8b --port 8000
+  # See docs/deployment.md §5 for the full recipe.
+  # -------------------------------------------------------------------------
+
+volumes:
+  eaf-data:

@@ -1,0 +1,77 @@
+# plan-r84 F4-3 周级道骨架 —— 规模档 + soak + 不变量常驻。
+#
+# 定位：把 R44 档系列（dense/extreme 容量测量）与长时 soak 从「人肉偶尔跑」
+# 常驻化。当前为骨架：每周跑一次 capacity-bench 的世界档（phase world 自带
+# 一次性 server，不需要 GPU）+ 一个短负载冒烟（loadtest 三档阶梯）。真正的
+# 小时级 soak 与 dense/extreme 档留给自托管 runner —— 见文件尾注。
+#
+# 与 ci.yml / nightly.yml 的分层语义见 docs/ci.md。
+
+name: Weekly soak
+
+on:
+  schedule:
+    - cron: '0 20 * * 6' # 每周六 UTC 20:00 = 北京周日 04:00
+  workflow_dispatch:
+
+concurrency:
+  group: weekly-soak
+  cancel-in-progress: false
+
+jobs:
+  # capacity-bench 的 server 档自己起/杀一次性 server（独立端口与数据目录，
+  # 内含 living-world duty cycle + 事件饱和阶梯 + 休眠/恢复测量），hosted
+  # runner 即可跑。llm/concurrency 档需要 vLLM —— 见尾注。
+  capacity-world:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: capacity-bench server 档（duty cycle + 事件饱和阶梯 + 休眠/恢复）
+        run: node scripts/capacity-bench.mjs --phase server --out "$RUNNER_TEMP/capacity-server.json"
+
+  # 短负载冒烟：loadtest 需要一个已运行的 API 实例，这里起一个一次性实例。
+  # 阶梯刻意短小（1→10→15 并发仿真 × 各 60s）—— hosted runner 只证明
+  # 「线束活着、指标在采」，长时 soak 在自托管 runner 上放大 phases。
+  load-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Boot disposable API server
+        run: |
+          EAF_DB_PATH="$RUNNER_TEMP/soak.db" \
+          SCENARIO_USER_DIR="$RUNNER_TEMP/scenarios" \
+          EAF_TRAJECTORY_DIR="$RUNNER_TEMP/trajectories" \
+          ADMIN_EMAILS=soak@dev.test \
+          PORT=8104 HOST=127.0.0.1 \
+          node apps/server/dist/index.js &
+          for i in $(seq 1 60); do
+            curl -sf http://127.0.0.1:8104/api/health >/dev/null && break
+            sleep 1
+          done
+      - name: loadtest 阶梯冒烟（1:60,10:60,15:60 @ speed 5）
+        run: |
+          node scripts/loadtest.mjs --api http://127.0.0.1:8104 \
+            --phases 1:60,10:60,15:60 --speed 5 \
+            --admin-email soak@dev.test \
+            --traj-dir "$RUNNER_TEMP/trajectories" \
+            --out "$RUNNER_TEMP/load-smoke.json"
+
+# 尾注（完整周级道的样子，self-hosted 后启用）：
+#   - capacity-bench --phase all（含 llm/concurrency 档，需要 vars.LLM_BASE_URL）
+#   - loadtest phases 放大到 R44 dense/extreme 档（数十并发 × 小时级），
+#     F1-3 invariant checker 常开（设备私有性 / 合约双方同意 / 墙锚）；
+#   - soak 期间的 invariant 违反即门禁红。

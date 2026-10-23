@@ -1,0 +1,29 @@
+# Build context for the all-in-one image (P3c).
+# Dists and deps are rebuilt INSIDE the image (stage 1), so local artifacts
+# only bloat the context — exclude them.
+
+.git
+.gitignore
+node_modules
+**/node_modules
+**/dist
+**/*.tsbuildinfo
+.turbo
+coverage
+logs
+*.log
+
+# Local state / runtime data — the container keeps its own in /data
+data
+experiment-results
+packages/core/tests/experiment-results
+
+# Secrets stay out of the image; compose reads .env from the host itself
+.env
+.env.*
+!.env.example
+
+# Dev-only docs of local runs
+Dockerfile
+docker-compose.yml
+.dockerignore

@@ -1,0 +1,273 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "shopping-mall",
+    "name": {
+      "zh": "参数化购物中心（楼层数 × 每层店铺数可调）",
+      "en": "Parameterized shopping mall (floors × shops per floor)"
+    },
+    "description": {
+      "zh": "可调规模的购物中心：楼层数、每层店铺数、单店高峰人流都能在创建前调整。每层 = N 间店铺 + 1 个中庭 + 1 部扶梯井；店铺执行 10:00–22:00 营业作息；内嵌 2 条自动化（中庭过热自动制冷、22:00 打烊全店关灯）。",
+      "en": "A shopping mall with adjustable scale: floors, shops per floor, and peak crowd per shop can all be tuned before creation. Each floor is N shops + 1 atrium + 1 escalator shaft; shops run a 10:00–22:00 opening-hours schedule; two automations are embedded (atrium overheat cooling, 22:00 closing lights-off)."
+    },
+    "tagline": {
+      "zh": "人流涌动、中庭调温、打烊关灯——一座可缩放的商场",
+      "en": "Crowds, atrium climate, closing-time lights — a scalable mall."
+    },
+    "storeyHeight": 4.5,
+    "vars": [
+      {
+        "name": "floors",
+        "label": { "zh": "楼层数", "en": "Floors" },
+        "type": "int",
+        "min": 1,
+        "max": 6,
+        "default": 3
+      },
+      {
+        "name": "shopsPerFloor",
+        "label": { "zh": "每层店铺数", "en": "Shops per floor" },
+        "type": "int",
+        "min": 2,
+        "max": 12,
+        "default": 6
+      },
+      {
+        "name": "peakCrowd",
+        "label": { "zh": "单店高峰人流（人）", "en": "Peak crowd per shop" },
+        "type": "int",
+        "min": 1,
+        "max": 200,
+        "default": 30
+      }
+    ]
+  },
+  "zones": [
+    {
+      "$repeat": {
+        "var": "floors",
+        "as": "f",
+        "body": [
+          {
+            "$repeat": {
+              "var": "shopsPerFloor",
+              "as": "r",
+              "body": {
+                "id": "shop-f$var.f$-r$var.r$",
+                "name": "$var.f+1$F 店铺 $var.r+1$",
+                "type": "retail",
+                "buildingId": "mall",
+                "floor": "$var.f$",
+                "bounds": { "minX": "$var.r*10$", "maxX": "$var.r*10+10$", "minY": 0, "maxY": 8 },
+                "adjacentZoneIds": ["atrium-f$var.f$"],
+                "occupancy": 0,
+                "baseline": { "temperature": 25, "humidity": 50, "co2": 550, "light": 500 },
+                "occupantSchedule": {
+                  "count": "$var.peakCrowd$",
+                  "startSimTimeSec": 36000,
+                  "endSimTimeSec": 79200,
+                  "repeatDaily": true
+                }
+              }
+            }
+          },
+          {
+            "id": "atrium-f$var.f$",
+            "name": "$var.f+1$F 中庭",
+            "type": "lobby",
+            "buildingId": "mall",
+            "floor": "$var.f$",
+            "bounds": { "minX": 0, "maxX": "$var.shopsPerFloor*10$", "minY": 8, "maxY": 16 },
+            "baseline": { "temperature": 25, "humidity": 50, "co2": 500, "light": 800 }
+          },
+          {
+            "id": "escalator-f$var.f$",
+            "name": "$var.f+1$F 扶梯井",
+            "type": "stairwell",
+            "buildingId": "mall",
+            "floor": "$var.f$",
+            "bounds": { "minX": "$var.shopsPerFloor*10$", "maxX": "$var.shopsPerFloor*10+6$", "minY": 8, "maxY": 16 },
+            "adjacentZoneIds": ["atrium-f$var.f$", "escalator-f$var.f-1$", "escalator-f$var.f+1$"],
+            "baseline": { "temperature": 25, "humidity": 50, "co2": 480, "light": 600 }
+          }
+        ]
+      }
+    }
+  ],
+  "devices": [
+    {
+      "$repeat": {
+        "var": "floors",
+        "as": "f",
+        "body": [
+          {
+            "$repeat": {
+              "var": "shopsPerFloor",
+              "as": "r",
+              "body": {
+                "id": "hvac-f$var.f$-r$var.r$",
+                "name": "$var.f+1$F 店铺 $var.r+1$ 空调",
+                "type": "hvac",
+                "capabilities": ["temperature-control", "cooling", "heating", "turn-on", "turn-off"],
+                "zoneId": "shop-f$var.f$-r$var.r$"
+              }
+            }
+          },
+          {
+            "$repeat": {
+              "var": "shopsPerFloor",
+              "as": "r",
+              "body": {
+                "id": "light-f$var.f$-r$var.r$",
+                "name": "$var.f+1$F 店铺 $var.r+1$ 照明",
+                "type": "smart-light",
+                "capabilities": ["get-state", "set-state", "set-brightness"],
+                "zoneId": "shop-f$var.f$-r$var.r$"
+              }
+            }
+          },
+          {
+            "id": "atrium-hvac-f$var.f$",
+            "name": "$var.f+1$F 中庭空调机组",
+            "type": "hvac",
+            "capabilities": ["temperature-control", "cooling", "heating", "turn-on", "turn-off"],
+            "zoneId": "atrium-f$var.f$"
+          },
+          {
+            "id": "atrium-counter-f$var.f$",
+            "name": "$var.f+1$F 中庭人流计数器",
+            "type": "people-counter",
+            "capabilities": ["read-occupancy", "detect-movement"],
+            "zoneId": "atrium-f$var.f$"
+          }
+        ]
+      }
+    }
+  ],
+  "agents": [
+    {
+      "id": "mall-operations",
+      "name": "商场运营经理",
+      "capabilities": ["temperature-monitoring", "temperature-control", "lighting-control", "crowd-monitoring"],
+      "managesZoneIds": [
+        {
+          "$repeat": {
+            "var": "floors",
+            "as": "f",
+            "body": [
+              {
+                "$repeat": {
+                  "var": "shopsPerFloor",
+                  "as": "r",
+                  "body": "shop-f$var.f$-r$var.r$"
+                }
+              },
+              "atrium-f$var.f$",
+              "escalator-f$var.f$"
+            ]
+          }
+        }
+      ],
+      "boundDeviceIds": [
+        {
+          "$repeat": {
+            "var": "floors",
+            "as": "f",
+            "body": [
+              {
+                "$repeat": {
+                  "var": "shopsPerFloor",
+                  "as": "r",
+                  "body": "hvac-f$var.f$-r$var.r$"
+                }
+              },
+              {
+                "$repeat": {
+                  "var": "shopsPerFloor",
+                  "as": "r",
+                  "body": "light-f$var.f$-r$var.r$"
+                }
+              },
+              "atrium-hvac-f$var.f$",
+              "atrium-counter-f$var.f$"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "weekend-rush",
+      "type": "occupancy",
+      "zoneId": "atrium-f0",
+      "parameter": "occupancy",
+      "value": 120,
+      "atSimTimeSec": 50400,
+      "severity": "medium",
+      "description": "周末午后中庭人流高峰（演示事件）"
+    }
+  ],
+  "flows": [
+    {
+      "id": "atrium-overheat-cooling",
+      "name": "中庭过热自动制冷",
+      "description": "1F 中庭温度超过 28°C 时确定性开中庭空调制冷到 25°C（无 LLM 依赖；店铺温控由 agent 决策响应）。",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "atrium-f0",
+        "conditions": [{ "path": "temperature", "op": ">", "value": 28 }],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "把中庭温度降到 25°C",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "cooling",
+            "assigneeAgentId": "mall-operations",
+            "deviceId": "atrium-hvac-f0",
+            "params": { "targetTemperature": 25 }
+          }
+        ]
+      }
+    },
+    {
+      "id": "closing-lights-off",
+      "name": "打烊全店关灯",
+      "description": "22:00 打烊时确定性关闭全部店铺照明。",
+      "enabled": true,
+      "trigger": {
+        "kind": "schedule",
+        "atSimTimeSec": 79200
+      },
+      "plan": {
+        "goal": "关闭全部店铺照明",
+        "nodes": [
+          {
+            "$repeat": {
+              "var": "floors",
+              "as": "f",
+              "body": [
+                {
+                  "$repeat": {
+                    "var": "shopsPerFloor",
+                    "as": "r",
+                    "body": {
+                      "id": "off-f$var.f$-r$var.r$",
+                      "capability": "set-state",
+                      "assigneeAgentId": "mall-operations",
+                      "deviceId": "light-f$var.f$-r$var.r$",
+                      "params": { "power": false }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

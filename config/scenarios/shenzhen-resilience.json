@@ -1,0 +1,2053 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "shenzhen-resilience",
+    "name": {
+      "zh": "深圳城市级具身韧性系统（多灾种链式响应）",
+      "en": "Shenzhen city-scale embodied resilience system (multi-hazard cascade response)"
+    },
+    "templateVersion": 2,
+    "description": {
+      "zh": "城市级具身韧性（Cognitive Resilience）示范场景：以深圳真实地理（宝安工业带、南山科技园、福田CBD、罗湖老城、盐田港、龙岗住宅区）为舞台，模拟一次超强台风登陆引发的链式灾难——台风预警→化工厂雷击起火→地铁倒灌→毒气羽流扩散→医院UPS故障→大规模伤员——12 个跨部门/跨行业利益方 Agent 必须自主协作才能闭环。政府/公共机构：市气象局、市应急局、深圳供电局、市水务局、市生态环境局、市交警支队、市卫健委；市场/医疗机构：宝安中心医院、市血液中心、美团无人机（深圳）、滴滴自动驾驶（深圳）。每个利益方私有自己的设备，通过发布服务而非共享设备进行协作——AC 协议 'devices are private, services are public' 在城市级真实灾难场景中的字面映射。本版在事件驱动之外内嵌确定性 Flow：台风预警全城预排空（罗湖/福田雨水管网阀门联动+福田枢纽应急广播）与罗湖低洼水位自动强排（水位超 0.25m 自动启泵开阀），各区 zone 配 baseline（含内涝水位）与 occupantSchedule，长周期灾种链推荐 30 倍速回放。（v2.1 刷新：节点全部对齐引擎可执行命令面，内嵌 2 条确定性 Flow）",
+      "en": "A city-scale Cognitive Resilience demo: staged on real Shenzhen geography (Bao'an industrial belt, Nanshan tech park, Futian CBD, Luohu old town, Yantian port, Longgang residential), simulates a super-typhoon landfall cascading into a chain of disasters — typhoon warning → chemical plant lightning-strike fire → subway seawater ingress → toxic plume dispersion → hospital UPS failure → mass casualties — that 12 cross-department / cross-industry stakeholder agents must close autonomously. Each stakeholder privatizes its own devices and collaborates by publishing services rather than sharing devices (the AC protocol 'devices are private, services are public'). This revision additionally embeds deterministic flows — city-wide pre-drainage on typhoon warning (Luohu + Futian storm-network valves + Futian hub emergency broadcast) and Luohu low-lying auto-pump when water level exceeds 0.25 m. Zones carry baselines (incl. flood water level) and occupantSchedule; 30x playback recommended for the long hazard chain. (v2.1 refresh: node capabilities aligned to the engine command surface; 2 embedded deterministic flows)"
+    },
+    "tagline": {
+      "zh": "12 家机构，1 套协议，90 秒闭环",
+      "en": "Twelve agencies. One protocol. Ninety seconds."
+    },
+    "heroEventId": "evt-typhoon-warning",
+    "recommendedPlaybackRate": 30,
+    "vendorDisclaimer": {
+      "zh": "场景中所有厂商名称（华为/美团/滴滴/海康/联影/迈瑞/Vaisala/Cummins 等）仅为具象化仿真使用，不构成任何商业代言或合作关系。",
+      "en": "All vendor names appearing in this scenario (Huawei / Meituan / DiDi / Hikvision / United Imaging / Mindray / Vaisala / Cummins, etc.) are used solely to concretize the simulation and do not constitute any commercial endorsement or partnership."
+    }
+  },
+  "map": {
+    "type": "geo",
+    "center": {
+      "lat": 22.59,
+      "lng": 114.08
+    },
+    "zoom": 10
+  },
+  "zones": [
+    {
+      "id": "bao-an-industrial",
+      "name": "宝安工业带（化工园+机场）",
+      "type": "industrial-park",
+      "polygon": [
+        [
+          22.62,
+          113.78
+        ],
+        [
+          22.62,
+          113.92
+        ],
+        [
+          22.72,
+          113.92
+        ],
+        [
+          22.72,
+          113.78
+        ]
+      ],
+      "adjacentZoneIds": [
+        "nan-shan-tech",
+        "yan-tian-port"
+      ],
+      "baseline": {
+        "temperature": 31,
+        "humidity": 78,
+        "pm2_5": 52,
+        "wind_speed": 18,
+        "wind_direction": 90,
+        "light": 280,
+        "water_level": 0.05
+      },
+      "occupantSchedule": {
+        "count": 800,
+        "startSimTimeSec": 25200,
+        "endSimTimeSec": 79200,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "nan-shan-tech",
+      "name": "南山科技园（高层CBD）",
+      "type": "cbd",
+      "polygon": [
+        [
+          22.5,
+          113.88
+        ],
+        [
+          22.5,
+          114
+        ],
+        [
+          22.58,
+          114
+        ],
+        [
+          22.58,
+          113.88
+        ]
+      ],
+      "adjacentZoneIds": [
+        "bao-an-industrial"
+      ],
+      "baseline": {
+        "temperature": 30,
+        "humidity": 75,
+        "pm2_5": 38,
+        "wind_speed": 16,
+        "wind_direction": 95,
+        "light": 320
+      },
+      "occupantSchedule": {
+        "count": 1000,
+        "startSimTimeSec": 30600,
+        "endSimTimeSec": 72000,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "fu-tian-cbd",
+      "name": "福田CBD（市政+金融）",
+      "type": "cbd",
+      "polygon": [
+        [
+          22.52,
+          114.02
+        ],
+        [
+          22.52,
+          114.12
+        ],
+        [
+          22.58,
+          114.12
+        ],
+        [
+          22.58,
+          114.02
+        ]
+      ],
+      "adjacentZoneIds": [
+        "luo-hu-old"
+      ],
+      "baseline": {
+        "temperature": 30,
+        "humidity": 76,
+        "pm2_5": 42,
+        "wind_speed": 15,
+        "wind_direction": 95,
+        "light": 300,
+        "water_level": 0.03
+      },
+      "occupantSchedule": {
+        "count": 1100,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 68400,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "luo-hu-old",
+      "name": "罗湖老城（低洼老社区）",
+      "type": "historic-district",
+      "polygon": [
+        [
+          22.54,
+          114.1
+        ],
+        [
+          22.54,
+          114.18
+        ],
+        [
+          22.6,
+          114.18
+        ],
+        [
+          22.6,
+          114.1
+        ]
+      ],
+      "adjacentZoneIds": [
+        "fu-tian-cbd"
+      ],
+      "baseline": {
+        "temperature": 31,
+        "humidity": 80,
+        "pm2_5": 46,
+        "wind_speed": 14,
+        "wind_direction": 95,
+        "light": 260,
+        "water_level": 0.08
+      },
+      "occupantSchedule": {
+        "count": 500,
+        "startSimTimeSec": 21600,
+        "endSimTimeSec": 79200,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "yan-tian-port",
+      "name": "盐田港（物流港口）",
+      "type": "port",
+      "polygon": [
+        [
+          22.55,
+          114.2
+        ],
+        [
+          22.55,
+          114.3
+        ],
+        [
+          22.61,
+          114.3
+        ],
+        [
+          22.61,
+          114.2
+        ]
+      ],
+      "adjacentZoneIds": [
+        "bao-an-industrial"
+      ],
+      "baseline": {
+        "temperature": 30,
+        "humidity": 82,
+        "pm2_5": 50,
+        "wind_speed": 22,
+        "wind_direction": 100,
+        "light": 280
+      },
+      "occupantSchedule": {
+        "count": 400,
+        "startSimTimeSec": 0,
+        "endSimTimeSec": 86400,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "long-gang-residential",
+      "name": "龙岗住宅区",
+      "type": "residential",
+      "polygon": [
+        [
+          22.68,
+          114.18
+        ],
+        [
+          22.68,
+          114.32
+        ],
+        [
+          22.78,
+          114.32
+        ],
+        [
+          22.78,
+          114.18
+        ]
+      ],
+      "baseline": {
+        "temperature": 30,
+        "humidity": 76,
+        "pm2_5": 36,
+        "wind_speed": 12,
+        "wind_direction": 90,
+        "light": 240
+      },
+      "occupantSchedule": {
+        "count": 900,
+        "startSimTimeSec": 64800,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      }
+    }
+  ],
+  "devices": [
+    {
+      "id": "ws-bao-an-01",
+      "name": "Vaisala WXT536 自动气象站（宝安化工园顶）",
+      "type": "weather-station",
+      "brand": "Vaisala",
+      "capabilities": [
+        "weather-monitoring",
+        "wind-monitoring",
+        "rain-monitoring",
+        "typhoon-tracking"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.665,
+        "lng": 113.84
+      },
+      "initialState": {
+        "wind_speed": 18
+      }
+    },
+    {
+      "id": "ws-nan-shan-01",
+      "name": "Vaisala WXT536 自动气象站（南山科技园）",
+      "type": "weather-station",
+      "brand": "Vaisala",
+      "capabilities": [
+        "weather-monitoring",
+        "wind-monitoring",
+        "rain-monitoring",
+        "typhoon-tracking"
+      ],
+      "zoneId": "nan-shan-tech",
+      "position": {
+        "lat": 22.535,
+        "lng": 113.935
+      },
+      "initialState": {
+        "wind_speed": 16
+      }
+    },
+    {
+      "id": "ws-fu-tian-01",
+      "name": "Vaisala WXT536 自动气象站（福田市民中心）",
+      "type": "weather-station",
+      "brand": "Vaisala",
+      "capabilities": [
+        "weather-monitoring",
+        "wind-monitoring",
+        "rain-monitoring",
+        "typhoon-tracking"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.547,
+        "lng": 114.062
+      },
+      "initialState": {
+        "wind_speed": 15
+      }
+    },
+    {
+      "id": "ws-yan-tian-01",
+      "name": "Vaisala WXT536 自动气象站（盐田港海侧）",
+      "type": "weather-station",
+      "brand": "Vaisala",
+      "capabilities": [
+        "weather-monitoring",
+        "wind-monitoring",
+        "rain-monitoring",
+        "typhoon-tracking"
+      ],
+      "zoneId": "yan-tian-port",
+      "position": {
+        "lat": 22.575,
+        "lng": 114.27
+      },
+      "initialState": {
+        "wind_speed": 22
+      }
+    },
+    {
+      "id": "ws-long-gang-01",
+      "name": "Vaisala WXT536 自动气象站（龙岗大运新城）",
+      "type": "weather-station",
+      "brand": "Vaisala",
+      "capabilities": [
+        "weather-monitoring",
+        "wind-monitoring",
+        "rain-monitoring",
+        "typhoon-tracking"
+      ],
+      "zoneId": "long-gang-residential",
+      "position": {
+        "lat": 22.725,
+        "lng": 114.245
+      },
+      "initialState": {
+        "wind_speed": 12
+      }
+    },
+    {
+      "id": "aq-bao-an-02",
+      "name": "聚光科技 FPI AQMS-1000 国控点（宝安化工园）",
+      "type": "air-quality-sensor",
+      "brand": "FPI",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring",
+        "toxic-gas-monitoring",
+        "chemical-plume-tracking"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.66,
+        "lng": 113.85
+      },
+      "initialState": {
+        "pm2_5": 52
+      }
+    },
+    {
+      "id": "aq-nan-shan-02",
+      "name": "先河 XHAQGS-3000 网格化微站（南山科技园）",
+      "type": "air-quality-sensor",
+      "brand": "Sailhero",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring",
+        "toxic-gas-monitoring",
+        "chemical-plume-tracking"
+      ],
+      "zoneId": "nan-shan-tech",
+      "position": {
+        "lat": 22.54,
+        "lng": 113.945
+      },
+      "initialState": {
+        "pm2_5": 38
+      }
+    },
+    {
+      "id": "aq-fu-tian-02",
+      "name": "先河 XHAQGS-3000 网格化微站（福田 CBD）",
+      "type": "air-quality-sensor",
+      "brand": "Sailhero",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring",
+        "chemical-plume-tracking"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.545,
+        "lng": 114.07
+      },
+      "initialState": {
+        "pm2_5": 42
+      }
+    },
+    {
+      "id": "aq-yan-tian-02",
+      "name": "先河 XHAQGS-3000 网格化微站（盐田港）",
+      "type": "air-quality-sensor",
+      "brand": "Sailhero",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring",
+        "chemical-plume-tracking"
+      ],
+      "zoneId": "yan-tian-port",
+      "position": {
+        "lat": 22.57,
+        "lng": 114.255
+      },
+      "initialState": {
+        "pm2_5": 50
+      }
+    },
+    {
+      "id": "aq-long-gang-02",
+      "name": "先河 XHAQGS-3000 网格化微站（龙岗住宅区）",
+      "type": "air-quality-sensor",
+      "brand": "Sailhero",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring"
+      ],
+      "zoneId": "long-gang-residential",
+      "position": {
+        "lat": 22.73,
+        "lng": 114.25
+      },
+      "initialState": {
+        "pm2_5": 36
+      }
+    },
+    {
+      "id": "smoke-chem-01",
+      "name": "中海燃气 NB-IoT 烟感（宝安化工园储罐区 A）",
+      "type": "smoke-sensor",
+      "brand": "Zhonghai",
+      "capabilities": [
+        "smoke-detection",
+        "fire-detection"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.67,
+        "lng": 113.86
+      },
+      "initialState": {
+        "smoke": false
+      }
+    },
+    {
+      "id": "gas-chem-02",
+      "name": "Honeywell BW Clip4 四合一气体检测仪（化工园装卸码头）",
+      "type": "air-quality-sensor",
+      "brand": "Honeywell",
+      "capabilities": [
+        "toxic-gas-monitoring",
+        "chemical-leak-detection"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.675,
+        "lng": 113.87
+      },
+      "initialState": {
+        "toxic_gas": 0
+      }
+    },
+    {
+      "id": "fd-bao-an-03",
+      "name": "NB-IoT 内涝水位计（宝安机场路下穿隧道）",
+      "type": "flood-detector",
+      "brand": "Generic",
+      "capabilities": [
+        "water-level-monitoring",
+        "flood-warning"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.66,
+        "lng": 113.83
+      },
+      "initialState": {
+        "water_level": 0.05
+      }
+    },
+    {
+      "id": "fd-luo-hu-03",
+      "name": "NB-IoT 内涝水位计（罗湖东门老街低洼段）",
+      "type": "flood-detector",
+      "brand": "Generic",
+      "capabilities": [
+        "water-level-monitoring",
+        "flood-warning"
+      ],
+      "zoneId": "luo-hu-old",
+      "position": {
+        "lat": 22.552,
+        "lng": 114.122
+      },
+      "initialState": {
+        "water_level": 0.08
+      }
+    },
+    {
+      "id": "fd-luo-hu-04",
+      "name": "NB-IoT 内涝水位计（罗湖火车站站前）",
+      "type": "flood-detector",
+      "brand": "Generic",
+      "capabilities": [
+        "water-level-monitoring",
+        "flood-warning"
+      ],
+      "zoneId": "luo-hu-old",
+      "position": {
+        "lat": 22.56,
+        "lng": 114.115
+      },
+      "initialState": {
+        "water_level": 0.06
+      }
+    },
+    {
+      "id": "fd-fu-tian-03",
+      "name": "NB-IoT 内涝水位计（福田地铁 2 号线福田站出入口）",
+      "type": "flood-detector",
+      "brand": "Generic",
+      "capabilities": [
+        "water-level-monitoring",
+        "flood-warning"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.54,
+        "lng": 114.08
+      },
+      "initialState": {
+        "water_level": 0.03
+      }
+    },
+    {
+      "id": "sv-luo-hu-07",
+      "name": "艾默生 BCH 智能排水阀门（罗湖老街雨水管网）",
+      "type": "smart-valve",
+      "brand": "Emerson",
+      "capabilities": [
+        "water-level-monitoring",
+        "pump-operation",
+        "valve-control",
+        "open",
+        "turn-on"
+      ],
+      "zoneId": "luo-hu-old",
+      "position": {
+        "lat": 22.555,
+        "lng": 114.118
+      },
+      "initialState": {
+        "valve_open": 0.3
+      }
+    },
+    {
+      "id": "sv-fu-tian-04",
+      "name": "艾默生 BCH 智能排水阀门（福田 CBD 雨水管网）",
+      "type": "smart-valve",
+      "brand": "Emerson",
+      "capabilities": [
+        "water-level-monitoring",
+        "pump-operation",
+        "valve-control",
+        "open",
+        "turn-on"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.548,
+        "lng": 114.075
+      },
+      "initialState": {
+        "valve_open": 0.2
+      }
+    },
+    {
+      "id": "mh-luo-hu-08",
+      "name": "NB-IoT 智能井盖（罗湖老街 8 号窨井）",
+      "type": "smart-manhole-cover",
+      "brand": "Generic",
+      "capabilities": [
+        "tilt-alarm",
+        "water-level-monitoring"
+      ],
+      "zoneId": "luo-hu-old",
+      "position": {
+        "lat": 22.558,
+        "lng": 114.125
+      },
+      "initialState": {
+        "tilt": 0
+      }
+    },
+    {
+      "id": "tl-fu-tian-04",
+      "name": "海信 HSC-300 交通信号机（福田-深南大道-益田路口）",
+      "type": "traffic-light-controller",
+      "brand": "Hisense",
+      "capabilities": [
+        "traffic-signal-control",
+        "route-management",
+        "emergency-priority-green"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.543,
+        "lng": 114.072
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "tl-nan-shan-05",
+      "name": "海信 HSC-300 交通信号机（南山-科技园-深南-沙河西路口）",
+      "type": "traffic-light-controller",
+      "brand": "Hisense",
+      "capabilities": [
+        "traffic-signal-control",
+        "route-management",
+        "emergency-priority-green"
+      ],
+      "zoneId": "nan-shan-tech",
+      "position": {
+        "lat": 22.537,
+        "lng": 113.943
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "tl-yan-tian-06",
+      "name": "海信 HSC-300 交通信号机（盐田港-盐坝高速入口）",
+      "type": "traffic-light-controller",
+      "brand": "Hisense",
+      "capabilities": [
+        "traffic-signal-control",
+        "route-management",
+        "emergency-priority-green"
+      ],
+      "zoneId": "yan-tian-port",
+      "position": {
+        "lat": 22.566,
+        "lng": 114.23
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "vms-bao-an-06",
+      "name": "LED 可变情报板（G4 京港澳-宝安出入口）",
+      "type": "variable-message-sign",
+      "brand": "Uniview",
+      "capabilities": [
+        "traffic-info-display",
+        "emergency-broadcast"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.65,
+        "lng": 113.81
+      },
+      "initialState": {
+        "power": true,
+        "message": "normal"
+      }
+    },
+    {
+      "id": "vms-fu-tian-07",
+      "name": "LED 可变情报板（滨河大道-福田枢纽）",
+      "type": "variable-message-sign",
+      "brand": "Uniview",
+      "capabilities": [
+        "traffic-info-display",
+        "emergency-broadcast"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.535,
+        "lng": 114.078
+      },
+      "initialState": {
+        "power": true,
+        "message": "normal"
+      }
+    },
+    {
+      "id": "lpr-yan-tian-05",
+      "name": "海康威视 iDS-2CD7T 卡口抓拍机（盐田港出海大道）",
+      "type": "license-plate-reader",
+      "brand": "Hikvision",
+      "capabilities": [
+        "license-plate-recognition",
+        "vehicle-tracking"
+      ],
+      "zoneId": "yan-tian-port",
+      "position": {
+        "lat": 22.57,
+        "lng": 114.24
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "lpr-nan-shan-08",
+      "name": "海康威视 iDS-2CD7T 卡口抓拍机（南山-沙河西-科技园北）",
+      "type": "license-plate-reader",
+      "brand": "Hikvision",
+      "capabilities": [
+        "license-plate-recognition",
+        "vehicle-tracking"
+      ],
+      "zoneId": "nan-shan-tech",
+      "position": {
+        "lat": 22.545,
+        "lng": 113.95
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "cam-bao-an-04",
+      "name": "海康威视 DS-2DC7254 智能球机（宝安化工园周界）",
+      "type": "surveillance-camera",
+      "brand": "Hikvision",
+      "capabilities": [
+        "video-surveillance",
+        "thermal-imaging",
+        "smoke-visual-detection"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.668,
+        "lng": 113.855
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "cam-fu-tian-09",
+      "name": "海康威视 DS-2DC7254 智能球机（福田地铁站前广场）",
+      "type": "surveillance-camera",
+      "brand": "Hikvision",
+      "capabilities": [
+        "video-surveillance",
+        "crowd-monitoring"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.543,
+        "lng": 114.082
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "eb-fu-tian-05",
+      "name": "应急呼叫终端（福田市民中心广场）",
+      "type": "emergency-call-box",
+      "brand": "Generic",
+      "capabilities": [
+        "emergency-alert",
+        "citizen-report-receiving"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.548,
+        "lng": 114.068
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "pa-bao-an-07",
+      "name": "大功率应急广播音柱（宝安化工园 1 号门）",
+      "type": "digital-billboard",
+      "brand": "Generic",
+      "capabilities": [
+        "emergency-broadcast",
+        "public-announce",
+        "evacuation-directive"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.66,
+        "lng": 113.845
+      },
+      "initialState": {
+        "power": false
+      }
+    },
+    {
+      "id": "pa-fu-tian-10",
+      "name": "大功率应急广播音柱（福田高铁站北广场）",
+      "type": "digital-billboard",
+      "brand": "Generic",
+      "capabilities": [
+        "emergency-broadcast",
+        "public-announce",
+        "evacuation-directive",
+        "set-message"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.538,
+        "lng": 114.083
+      },
+      "initialState": {
+        "power": false
+      }
+    },
+    {
+      "id": "eg-bao-an-04",
+      "name": "国网 DSS641 三相智能电表 + 负控终端（宝安化工园 110kV 变电站）",
+      "type": "electric-grid-monitor",
+      "brand": "State Grid",
+      "capabilities": [
+        "energy-monitoring",
+        "load-shedding",
+        "demand-response",
+        "fault-detection"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.672,
+        "lng": 113.865
+      },
+      "initialState": {
+        "power": 8400
+      }
+    },
+    {
+      "id": "eg-nan-shan-06",
+      "name": "国网 DSS641 三相智能电表（南山 220kV 变电站）",
+      "type": "electric-grid-monitor",
+      "brand": "State Grid",
+      "capabilities": [
+        "energy-monitoring",
+        "load-shedding",
+        "demand-response",
+        "fault-detection"
+      ],
+      "zoneId": "nan-shan-tech",
+      "position": {
+        "lat": 22.54,
+        "lng": 113.93
+      },
+      "initialState": {
+        "power": 12500
+      }
+    },
+    {
+      "id": "eg-fu-tian-08",
+      "name": "国网 DSS641 三相智能电表（福田中心变电站）",
+      "type": "electric-grid-monitor",
+      "brand": "State Grid",
+      "capabilities": [
+        "energy-monitoring",
+        "load-shedding",
+        "demand-response",
+        "fault-detection"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.55,
+        "lng": 114.06
+      },
+      "initialState": {
+        "power": 9800
+      }
+    },
+    {
+      "id": "ev-nan-shan-08",
+      "name": "特来电 TCDZ-180 直流超充（南山科技园地下车库，滴滴 AV 充电桩）",
+      "type": "electrical-vehicle-charging-station",
+      "brand": "TELD",
+      "capabilities": [
+        "charging-service",
+        "load-scheduling",
+        "load-shedding"
+      ],
+      "zoneId": "nan-shan-tech",
+      "position": {
+        "lat": 22.54,
+        "lng": 113.955
+      },
+      "initialState": {
+        "power": 0
+      }
+    },
+    {
+      "id": "ev-fu-tian-09",
+      "name": "星星充电直流快充（福田高铁站枢纽）",
+      "type": "electrical-vehicle-charging-station",
+      "brand": "StarCharge",
+      "capabilities": [
+        "charging-service",
+        "load-scheduling",
+        "load-shedding"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.538,
+        "lng": 114.075
+      },
+      "initialState": {
+        "power": 0
+      }
+    },
+    {
+      "id": "dd-nan-shan-07",
+      "name": "美团大疆 Dock3 无人机自动机场（南山科技园 3 号楼顶）",
+      "type": "drone-docking-station",
+      "brand": "DJI-Meituan",
+      "capabilities": [
+        "instant-delivery",
+        "aerial-reconnaissance",
+        "emergency-supply-airlift",
+        "drone-dispatch"
+      ],
+      "zoneId": "nan-shan-tech",
+      "position": {
+        "lat": 22.543,
+        "lng": 113.948
+      },
+      "initialState": {
+        "drones_ready": 4
+      }
+    },
+    {
+      "id": "dd-yan-tian-06",
+      "name": "美团大疆 Dock3 无人机自动机场（盐田港物流园）",
+      "type": "drone-docking-station",
+      "brand": "DJI-Meituan",
+      "capabilities": [
+        "instant-delivery",
+        "aerial-reconnaissance",
+        "emergency-supply-airlift",
+        "drone-dispatch"
+      ],
+      "zoneId": "yan-tian-port",
+      "position": {
+        "lat": 22.568,
+        "lng": 114.245
+      },
+      "initialState": {
+        "drones_ready": 6
+      }
+    },
+    {
+      "id": "hyd-bao-an-01",
+      "name": "深圳消防智能消火栓（宝安化工园 2 号门）",
+      "type": "smart-hydrant",
+      "brand": "Generic",
+      "capabilities": [
+        "fire-water-supply",
+        "hydrant-pressure-monitoring"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.662,
+        "lng": 113.85
+      },
+      "initialState": {
+        "pressure": 0.35
+      }
+    },
+    {
+      "id": "ct-hosp-bao-an-01",
+      "name": "联影 uCT 528 64 排 CT（宝安中心医院急诊影像）",
+      "type": "medical-imaging",
+      "brand": "United Imaging",
+      "capabilities": [
+        "ct-scan",
+        "imaging-service"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.658,
+        "lng": 113.88
+      },
+      "initialState": {
+        "power": 0
+      }
+    },
+    {
+      "id": "ed-mon-hosp-bao-an-02",
+      "name": "迈瑞 BeneVision N12 多参数监护仪（宝安中心医院抢救室 1 床）",
+      "type": "patient-monitor",
+      "brand": "Mindray",
+      "capabilities": [
+        "vital-signs-monitoring",
+        "ecg-streaming",
+        "patient-state-reporting"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.658,
+        "lng": 113.881
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "gen-hosp-bao-an-01",
+      "name": "康明斯 C550D5 柴油发电机组（宝安中心医院 B3 机房）",
+      "type": "backup-generator",
+      "brand": "Cummins",
+      "capabilities": [
+        "backup-power",
+        "generator-activate",
+        "generator-load-transfer"
+      ],
+      "zoneId": "bao-an-industrial",
+      "position": {
+        "lat": 22.658,
+        "lng": 113.879
+      },
+      "initialState": {
+        "power": 0,
+        "online": false
+      }
+    },
+    {
+      "id": "amb-01",
+      "name": "120 急救车 #01（车载 5G 监护+除颤）",
+      "type": "ambulance",
+      "brand": "Mindray-5G",
+      "capabilities": [
+        "ambulance-dispatch",
+        "pre-hospital-emergency-care",
+        "field-ecg-stream",
+        "patient-transport"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.548,
+        "lng": 114.068
+      },
+      "initialState": {
+        "status": "idle"
+      }
+    },
+    {
+      "id": "amb-02",
+      "name": "120 急救车 #02（车载 5G 监护+除颤）",
+      "type": "ambulance",
+      "brand": "Mindray-5G",
+      "capabilities": [
+        "ambulance-dispatch",
+        "pre-hospital-emergency-care",
+        "field-ecg-stream",
+        "patient-transport"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.548,
+        "lng": 114.069
+      },
+      "initialState": {
+        "status": "idle"
+      }
+    },
+    {
+      "id": "msu-01",
+      "name": "5G 移动卒中单元 #01（车上 256 排 CT + 静脉溶栓药柜）",
+      "type": "mobile-stroke-unit",
+      "brand": "SAHZU-Mobile",
+      "capabilities": [
+        "stroke-thrombolysis",
+        "field-ct-scan",
+        "ambulance-dispatch",
+        "mobile-stroke-unit"
+      ],
+      "zoneId": "yan-tian-port",
+      "position": {
+        "lat": 22.573,
+        "lng": 114.255
+      },
+      "initialState": {
+        "status": "idle"
+      }
+    },
+    {
+      "id": "bb-long-gang-01",
+      "name": "深圳血液中心冷链驻点柜（龙岗分库 O-/A+/B+ 库存）",
+      "type": "cold-chain-cabinet",
+      "brand": "Haier-Medical",
+      "capabilities": [
+        "blood-inventory-monitoring",
+        "cold-chain-monitoring",
+        "blood-unit-dispatch"
+      ],
+      "zoneId": "long-gang-residential",
+      "position": {
+        "lat": 22.72,
+        "lng": 114.23
+      },
+      "initialState": {
+        "power": 80,
+        "temperature": 4
+      }
+    },
+    {
+      "id": "bb-fu-tian-02",
+      "name": "深圳血液中心冷链驻点柜（福田主库 + 送血车 GPS）",
+      "type": "cold-chain-cabinet",
+      "brand": "Haier-Medical",
+      "capabilities": [
+        "blood-inventory-monitoring",
+        "cold-chain-monitoring",
+        "blood-unit-dispatch"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.542,
+        "lng": 114.066
+      },
+      "initialState": {
+        "power": 120,
+        "temperature": 4
+      }
+    },
+    {
+      "id": "hc-fu-tian-01",
+      "name": "深圳市卫健委应急指挥中心（市民中心 B 区，虚拟锚点）",
+      "type": "command-center",
+      "brand": "Generic",
+      "capabilities": [
+        "medical-resource-coordination",
+        "mass-casualty-response",
+        "surge-capacity-management",
+        "inter-hospital-transfer"
+      ],
+      "zoneId": "fu-tian-cbd",
+      "position": {
+        "lat": 22.543,
+        "lng": 114.058
+      },
+      "initialState": {
+        "power": true
+      }
+    }
+  ],
+  "agents": [
+    {
+      "id": "meteo-bureau",
+      "name": "深圳市气象局（台风路径预报）",
+      "capabilities": [
+        "weather-monitoring",
+        "weather-forecasting",
+        "typhoon-tracking",
+        "wind-monitoring",
+        "rain-monitoring",
+        "emergency-alert"
+      ],
+      "managesZoneIds": [
+        "bao-an-industrial",
+        "nan-shan-tech",
+        "fu-tian-cbd",
+        "yan-tian-port",
+        "long-gang-residential"
+      ],
+      "boundDeviceIds": [
+        "ws-bao-an-01",
+        "ws-nan-shan-01",
+        "ws-fu-tian-01",
+        "ws-yan-tian-01",
+        "ws-long-gang-01"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "emergency-bureau",
+      "name": "深圳市应急管理局（城市级指挥中枢）",
+      "capabilities": [
+        "emergency-alert",
+        "emergency-broadcast",
+        "public-announce",
+        "evacuation-directive",
+        "dispatch-coordination",
+        "disaster-response",
+        "mass-casualty-coordination",
+        "probability-aware-pre-positioning",
+        "dynamic-shelter-activation"
+      ],
+      "managesZoneIds": [
+        "bao-an-industrial",
+        "fu-tian-cbd",
+        "luo-hu-old",
+        "yan-tian-port"
+      ],
+      "boundDeviceIds": [
+        "eb-fu-tian-05",
+        "pa-bao-an-07",
+        "pa-fu-tian-10"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "env-protection-bureau",
+      "name": "深圳市生态环境局（污染/毒气监测）",
+      "capabilities": [
+        "air-quality-monitoring",
+        "toxic-gas-monitoring",
+        "chemical-plume-tracking",
+        "smoke-detection",
+        "fire-detection",
+        "pollution-response"
+      ],
+      "managesZoneIds": [
+        "bao-an-industrial",
+        "nan-shan-tech",
+        "fu-tian-cbd",
+        "yan-tian-port",
+        "long-gang-residential"
+      ],
+      "boundDeviceIds": [
+        "aq-bao-an-02",
+        "aq-nan-shan-02",
+        "aq-fu-tian-02",
+        "aq-yan-tian-02",
+        "aq-long-gang-02",
+        "smoke-chem-01",
+        "gas-chem-02",
+        "cam-bao-an-04"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "water-authority",
+      "name": "深圳市水务局（内涝与排水）",
+      "capabilities": [
+        "water-level-monitoring",
+        "flood-warning",
+        "flood-control",
+        "pump-operation",
+        "valve-control",
+        "dispatch"
+      ],
+      "managesZoneIds": [
+        "bao-an-industrial",
+        "fu-tian-cbd",
+        "luo-hu-old"
+      ],
+      "boundDeviceIds": [
+        "fd-bao-an-03",
+        "fd-luo-hu-03",
+        "fd-luo-hu-04",
+        "fd-fu-tian-03",
+        "sv-luo-hu-07",
+        "sv-fu-tian-04",
+        "mh-luo-hu-08"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "power-grid",
+      "name": "深圳供电局（南方电网深圳分公司）",
+      "capabilities": [
+        "energy-monitoring",
+        "load-balancing",
+        "load-shedding",
+        "demand-response",
+        "backup-power",
+        "generator-activate",
+        "fault-detection"
+      ],
+      "managesZoneIds": [
+        "bao-an-industrial",
+        "nan-shan-tech",
+        "fu-tian-cbd"
+      ],
+      "boundDeviceIds": [
+        "eg-bao-an-04",
+        "eg-nan-shan-06",
+        "eg-fu-tian-08",
+        "gen-hosp-bao-an-01"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "traffic-police",
+      "name": "深圳市交警支队（智能交通指挥）",
+      "capabilities": [
+        "traffic-signal-control",
+        "route-management",
+        "emergency-priority-green",
+        "traffic-monitoring",
+        "license-plate-recognition",
+        "vehicle-tracking",
+        "video-surveillance"
+      ],
+      "managesZoneIds": [
+        "bao-an-industrial",
+        "nan-shan-tech",
+        "fu-tian-cbd",
+        "yan-tian-port",
+        "luo-hu-old"
+      ],
+      "boundDeviceIds": [
+        "tl-fu-tian-04",
+        "tl-nan-shan-05",
+        "tl-yan-tian-06",
+        "vms-bao-an-06",
+        "vms-fu-tian-07",
+        "lpr-yan-tian-05",
+        "lpr-nan-shan-08",
+        "cam-fu-tian-09"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "health-commission",
+      "name": "深圳市卫生健康委员会（医疗资源调度）",
+      "capabilities": [
+        "medical-resource-coordination",
+        "mass-casualty-response",
+        "surge-capacity-management",
+        "inter-hospital-transfer",
+        "probability-aware-pre-positioning"
+      ],
+      "managesZoneIds": [],
+      "boundDeviceIds": [
+        "hc-fu-tian-01"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "ems-120",
+      "name": "深圳市急救中心（120 院前急救）",
+      "capabilities": [
+        "ambulance-dispatch",
+        "pre-hospital-emergency-care",
+        "field-ecg-stream",
+        "patient-transport",
+        "stroke-thrombolysis",
+        "field-ct-scan",
+        "mass-casualty-triage"
+      ],
+      "managesZoneIds": [
+        "bao-an-industrial",
+        "fu-tian-cbd",
+        "yan-tian-port",
+        "luo-hu-old"
+      ],
+      "boundDeviceIds": [
+        "amb-01",
+        "amb-02",
+        "msu-01"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "bao-an-hospital",
+      "name": "宝安中心医院（区域创伤中心）",
+      "capabilities": [
+        "ed-trauma-accept",
+        "ct-scan",
+        "imaging-service",
+        "surgery-capability",
+        "blood-transfusion",
+        "backup-power",
+        "generator-activate"
+      ],
+      "managesZoneIds": [],
+      "boundDeviceIds": [
+        "ct-hosp-bao-an-01",
+        "ed-mon-hosp-bao-an-02"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "blood-center",
+      "name": "深圳市血液中心（血液库存与配送）",
+      "capabilities": [
+        "blood-inventory-monitoring",
+        "cold-chain-monitoring",
+        "blood-unit-dispatch",
+        "blood-unit-reserve"
+      ],
+      "managesZoneIds": [
+        "fu-tian-cbd",
+        "long-gang-residential"
+      ],
+      "boundDeviceIds": [
+        "bb-long-gang-01",
+        "bb-fu-tian-02"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "meituan-drones",
+      "name": "美团无人机（深圳配送网络）",
+      "capabilities": [
+        "instant-delivery",
+        "aerial-reconnaissance",
+        "emergency-supply-airlift",
+        "drone-dispatch"
+      ],
+      "managesZoneIds": [
+        "nan-shan-tech",
+        "yan-tian-port"
+      ],
+      "boundDeviceIds": [
+        "dd-nan-shan-07",
+        "dd-yan-tian-06"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "didi-autonomous",
+      "name": "滴滴自动驾驶（深圳 Robotaxi 运营）",
+      "capabilities": [
+        "fleet-dispatch",
+        "passenger-evacuation",
+        "emergency-transport",
+        "charging-management",
+        "load-scheduling"
+      ],
+      "managesZoneIds": [
+        "nan-shan-tech",
+        "fu-tian-cbd"
+      ],
+      "boundDeviceIds": [
+        "ev-nan-shan-08",
+        "ev-fu-tian-09"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-typhoon-warning",
+      "type": "typhoon-incoming",
+      "zoneId": "yan-tian-port",
+      "parameter": "wind_speed",
+      "value": 42,
+      "atSimTimeSec": 30,
+      "severity": "high",
+      "requiredCapabilities": [
+        "weather-forecasting",
+        "emergency-alert",
+        "traffic-signal-control",
+        "fleet-dispatch",
+        "evacuation-directive",
+        "probability-aware-pre-positioning",
+        "dynamic-shelter-activation"
+      ],
+      "details": {
+        "narrative": "超强台风 Mountain-Lion 路径概率分裂：60% 在盐田登陆、40% 在 4h 内转折至珠江口。气象局每 6 分钟更新路径ensemble；每次更新都可能改变预启动医院组合、AV 提前撤离区域、物资调拨优先级。固定预案无法覆盖路径ensemble 的组合爆炸。",
+        "kpi": "typhoon-path-ensemble-uncertainty",
+        "path-probabilities": {
+          "yan-tian-landfall": 0.6,
+          "pearl-river-redirect": 0.4
+        }
+      },
+      "focusZoneId": "yan-tian-port",
+      "humanNarrative": {
+        "zh": "台风还有 4 小时登陆。它可能拐向珠江口，也可能正面撞上盐田——没人知道，但所有人都得现在做决定。",
+        "en": "Landfall in 4 hours. The typhoon may veer toward the Pearl River estuary or slam straight into Yantian — no one knows, yet everyone must decide now."
+      },
+      "cinematography": {
+        "narrationCue": "台风路径ensemble 分裂，预启动决策每 6 分钟刷新",
+        "highlightAgentIds": [
+          "meteo-bureau",
+          "emergency-bureau",
+          "health-commission",
+          "didi-autonomous"
+        ],
+        "cameraFocusKind": "zone"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": true,
+        "score": "3/3",
+        "verdict": "AC-necessary",
+        "reasoning": "路径ensemble 每 6 分钟更新一次，预启动的医院/疏散区域/物资组合实时变化；12 个 stakeholder 跨政府+市场，无中央仲裁；2^N 路径 × 12 主体 × 实时状态 = 组合爆炸。任何固定预案都无法处理。"
+      }
+    },
+    {
+      "id": "evt-chem-plant-fire",
+      "type": "chemical-fire",
+      "zoneId": "bao-an-industrial",
+      "parameter": "smoke",
+      "value": true,
+      "atSimTimeSec": 75,
+      "severity": "critical",
+      "requiredCapabilities": [
+        "smoke-detection",
+        "toxic-gas-monitoring",
+        "emergency-alert",
+        "traffic-signal-control",
+        "ambulance-dispatch",
+        "ct-scan",
+        "aerial-reconnaissance"
+      ],
+      "details": {
+        "narrative": "宝安化工园储罐区 A 遭雷击起火，伴随苯系物泄漏；应急、消防、医院、120、交警、美团无人机（空中侦察）需并行响应。",
+        "topology": "fan-out-1-to-6"
+      },
+      "focusZoneId": "bao-an-industrial",
+      "humanNarrative": {
+        "zh": "储罐区 A 在雷击里烧起来了，苯的气味正顺着风往外飘。第一批消防员还不知道风向下一秒会不会变。",
+        "en": "Tank farm A is burning after a lightning strike, benzene riding the wind. The first responders don't yet know whether the wind will turn."
+      },
+      "cinematography": {
+        "narrationCue": "宝安化工园雷击起火，六方并行响应",
+        "highlightAgentIds": [
+          "emergency-bureau",
+          "env-protection-bureau",
+          "ems-120",
+          "bao-an-hospital",
+          "traffic-police",
+          "meituan-drones"
+        ],
+        "cameraFocusKind": "zone"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": false,
+        "score": "2/3",
+        "verdict": "AC-valuable",
+        "reasoning": "ICS 预案定义角色（消防/120/医院），但此刻哪家医院有 CT 档期、哪家无人机公司飞机刚返航，是动态状态。AC 加速 5+ 主体并行握手，把传统 30 秒的人肉电话链缩短到 3 秒。"
+      }
+    },
+    {
+      "id": "evt-subway-flooding",
+      "type": "subway-flood",
+      "zoneId": "fu-tian-cbd",
+      "parameter": "water_level",
+      "value": 0.8,
+      "atSimTimeSec": 140,
+      "severity": "critical",
+      "requiredCapabilities": [
+        "water-level-monitoring",
+        "flood-control",
+        "pump-operation",
+        "emergency-broadcast",
+        "passenger-evacuation",
+        "ambulance-dispatch",
+        "route-management"
+      ],
+      "details": {
+        "narrative": "福田地铁站 2 号线出入口倒灌，水位 0.8m，约 200 名乘客被困站厅层；需水务排涝、交警封路、滴滴 AV 疏散、120 现场待命。",
+        "topology": "fan-out-1-to-4",
+        "trapped-count": 200
+      },
+      "focusZoneId": "fu-tian-cbd",
+      "humanNarrative": {
+        "zh": "水已经没过脚踝，还在往站厅里灌。200 个人困在下面，手机信号时断时续。",
+        "en": "Water is past ankle-deep and still pouring into the concourse. Two hundred people are trapped below, phone signals flickering."
+      },
+      "cinematography": {
+        "narrationCue": "福田地铁站倒灌，200 人被困站厅层",
+        "highlightAgentIds": [
+          "water-authority",
+          "traffic-police",
+          "didi-autonomous",
+          "ems-120"
+        ],
+        "cameraFocusKind": "zone"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": false,
+        "score": "2/3",
+        "verdict": "AC-valuable",
+        "reasoning": "地铁倒灌预案明确（水务+交警+疏散），但 200 人疏散需要当下可用运力，AV/出租车/巴士的实际可用性是动态的；AC 解决'谁此刻能接多少人'的动态分配。"
+      }
+    },
+    {
+      "id": "evt-blood-cold-chain",
+      "type": "blood-cold-chain-transfer",
+      "zoneId": "long-gang-residential",
+      "parameter": "blood_units_dispatched",
+      "value": 40,
+      "atSimTimeSec": 180,
+      "severity": "high",
+      "requiredCapabilities": [
+        "blood-inventory-monitoring",
+        "cold-chain-monitoring",
+        "blood-unit-dispatch",
+        "emergency-supply-airlift",
+        "emergency-priority-green"
+      ],
+      "details": {
+        "narrative": "台风登陆前窗口期，血液中心预判大规模创伤用血激增，从龙岗分库紧急调拨 40 单位 O-/A+ 红细胞，冷链转运至福田主库与宝安中心医院前置血库；美团无人机承担跨受灾区段的空中冷链段，交警为地面送血车开绿波。",
+        "topology": "pre-positioning-cold-chain",
+        "units-dispatched": 40
+      },
+      "focusZoneId": "long-gang-residential",
+      "humanNarrative": {
+        "zh": "血库预判：创伤用血将在 2 小时内翻倍。龙岗分库的 O- 和 A+ 必须赶在道路封闭前出库——无人机冷链箱已经预冷到 4°C。",
+        "en": "The blood bank forecasts trauma demand will double within 2 hours. Longgang's O- and A+ units must ship before roads close — the drone cold-chain box is pre-chilled to 4°C."
+      },
+      "cinematography": {
+        "narrationCue": "血液中心预判性调拨，龙岗分库冷链出库",
+        "highlightAgentIds": [
+          "blood-center",
+          "meituan-drones",
+          "traffic-police",
+          "bao-an-hospital"
+        ],
+        "cameraFocusKind": "zone"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": false,
+        "score": "2/3",
+        "verdict": "AC-valuable",
+        "reasoning": "器官/血液转运绿色通道有六部委预案，但'哪架无人机有空、哪条走廊未被淹、哪家医院血库还有库位'都是此刻状态。AC 把取血-转运-接收三段服务发现压缩到秒级，而不是人肉电话链。"
+      }
+    },
+    {
+      "id": "evt-plume-drift",
+      "type": "toxic-plume",
+      "zoneId": "nan-shan-tech",
+      "parameter": "toxic_gas",
+      "value": 1,
+      "atSimTimeSec": 200,
+      "severity": "critical",
+      "requiredCapabilities": [
+        "chemical-plume-tracking",
+        "air-quality-monitoring",
+        "emergency-broadcast",
+        "evacuation-directive",
+        "medical-resource-coordination",
+        "traffic-signal-control"
+      ],
+      "details": {
+        "narrative": "化工厂苯系物羽流随 95° 风向扩散至南山科技园，浓度超 IDLH 3 倍；生态环境局监测+应急广播疏散+卫健协调医院准备+交警管制。",
+        "topology": "multi-initiator",
+        "plume-idlh-multiple": 3
+      },
+      "focusZoneId": "nan-shan-tech",
+      "humanNarrative": {
+        "zh": "南山科技园的写字楼里，有人闻到了一股甜味。苯系物浓度已是 IDLH 的 3 倍，下班人流正要涌出地铁口。",
+        "en": "In Nanshan's office towers, someone smells something sweet. Benzene is at 3× IDLH, and the evening rush is about to pour out of the metro exits."
+      },
+      "cinematography": {
+        "narrationCue": "苯系物羽流漂向南山，参与方随风向动态重组",
+        "highlightAgentIds": [
+          "env-protection-bureau",
+          "emergency-bureau",
+          "health-commission",
+          "traffic-police"
+        ],
+        "cameraFocusKind": "zone"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": true,
+        "score": "3/3",
+        "verdict": "AC-necessary",
+        "reasoning": "羽流路径随风向实时变化，下一刻受影响的小区/医院/道路都不一样；参与方集合动态发现，状态空间组合爆炸（风×人口×医院×道路）。没有任何预定义工作流能覆盖。这是 AC 协议最强论点。"
+      }
+    },
+    {
+      "id": "evt-hospital-ups-fail",
+      "type": "ups-failure",
+      "zoneId": "bao-an-industrial",
+      "parameter": "power",
+      "value": 0,
+      "atSimTimeSec": 255,
+      "severity": "high",
+      "requiredCapabilities": [
+        "backup-power",
+        "generator-activate",
+        "fault-detection",
+        "medical-resource-coordination",
+        "ct-scan",
+        "inter-hospital-transfer"
+      ],
+      "details": {
+        "narrative": "宝安中心医院术中突发 UPS 故障，市电未恢复；供电局调柴发+卫健协调临近医院准备接诊+医院保 CT 用电优先。",
+        "topology": "negotiation-3-way"
+      },
+      "focusZoneId": "bao-an-industrial",
+      "humanNarrative": {
+        "zh": "手术做到一半，灯灭了 1.8 秒又亮起——UPS 没有接上。监护仪靠电池在撑，柴油发电机还在 B3 机房里沉默。",
+        "en": "Mid-surgery, the lights died for 1.8 seconds and came back — the UPS never engaged. Monitors run on battery; the diesel generator sits silent in the B3 plant room."
+      },
+      "cinematography": {
+        "narrationCue": "术中 UPS 故障，电网/医院/卫健三方协商",
+        "highlightAgentIds": [
+          "power-grid",
+          "bao-an-hospital",
+          "health-commission"
+        ],
+        "cameraFocusKind": "zone"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": true,
+        "score": "3/3",
+        "verdict": "AC-necessary",
+        "reasoning": "三方利益对立：医院保命要电、电网要全周切负荷决策、卫健要保 CT/ICU 优先级。无中央仲裁，必须协商。切负荷 × 患者危重度 × 手术状态组合爆炸。AC 核心场景。"
+      }
+    },
+    {
+      "id": "evt-mass-casualty",
+      "type": "mass-casualty",
+      "zoneId": "bao-an-industrial",
+      "parameter": "casualty_count",
+      "value": 52,
+      "atSimTimeSec": 330,
+      "severity": "critical",
+      "requiredCapabilities": [
+        "ambulance-dispatch",
+        "mass-casualty-triage",
+        "ed-trauma-accept",
+        "ct-scan",
+        "blood-unit-dispatch",
+        "emergency-supply-airlift",
+        "inter-hospital-transfer",
+        "instant-delivery"
+      ],
+      "details": {
+        "narrative": "化工厂火灾+羽流扩散累计 52 伤员（12 重危）；120 分流、宝安医院创伤中心开启、血液中心紧急送血、美团无人机空投急救物资、卫健协调跨院转诊。",
+        "topology": "fan-out-1-to-5",
+        "critical-count": 12
+      },
+      "focusZoneId": "bao-an-industrial",
+      "humanNarrative": {
+        "zh": "52 个伤员，12 个重危。担架在急诊门口排起了队，血库 O 型血只够撑到午夜。",
+        "en": "52 casualties, 12 critical. Stretchers queue at the ED entrance; type-O blood will last only until midnight."
+      },
+      "cinematography": {
+        "narrationCue": "52 伤员分流，创伤中心全负荷运转",
+        "highlightAgentIds": [
+          "ems-120",
+          "bao-an-hospital",
+          "blood-center",
+          "meituan-drones",
+          "health-commission"
+        ],
+        "cameraFocusKind": "zone"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": false,
+        "score": "2/3",
+        "verdict": "AC-valuable",
+        "reasoning": "分流逻辑（预案）清楚但执行时各医院容量、血库库存、无人机航程都是动态；AC 协调'此刻谁能接哪个伤员'的实时分配，不是工作流能预先编码的。"
+      }
+    },
+    {
+      "id": "evt-typhoon-passed",
+      "type": "wind-recovery",
+      "zoneId": "yan-tian-port",
+      "parameter": "wind_speed",
+      "value": 18,
+      "atSimTimeSec": 420,
+      "severity": "low",
+      "requiredCapabilities": [
+        "weather-monitoring",
+        "typhoon-tracking",
+        "emergency-broadcast"
+      ],
+      "details": {
+        "narrative": "台风 Mountain-Lion 最终在惠州登陆，深圳躲过最坏路径；盐田港风速从 42 回落至 18，应急局将响应级别下调，各利益方进入恢复阶段。",
+        "topology": "recovery"
+      },
+      "focusZoneId": "yan-tian-port",
+      "humanNarrative": {
+        "zh": "风圈过去了。风速计从 42 回落到 18——台风在惠州登陆，深圳躲过了最坏的那条路径。",
+        "en": "The wind field has passed. Anemometers fall from 42 to 18 — the typhoon made landfall in Huizhou, and Shenzhen dodged the worst track."
+      },
+      "cinematography": {
+        "narrationCue": "台风路径北抬，风速回落，响应降级",
+        "highlightAgentIds": [
+          "meteo-bureau",
+          "emergency-bureau"
+        ],
+        "cameraFocusKind": "zone"
+      }
+    },
+    {
+      "id": "evt-subway-flood-recession",
+      "type": "flood-recession",
+      "zoneId": "fu-tian-cbd",
+      "parameter": "water_level",
+      "value": 0.1,
+      "atSimTimeSec": 460,
+      "severity": "low",
+      "requiredCapabilities": [
+        "water-level-monitoring",
+        "pump-operation",
+        "flood-control"
+      ],
+      "details": {
+        "narrative": "福田站排水阀门全开+移动泵车增援，站厅水位从 0.8m 退至 0.1m；被困乘客全部出站，交警分段解除封路。",
+        "topology": "recovery"
+      },
+      "focusZoneId": "fu-tian-cbd",
+      "humanNarrative": {
+        "zh": "泵站满负荷转了几十分钟，站厅的水退到脚踝以下。第一批乘客扶着墙走出了地铁口。",
+        "en": "After dozens of minutes at full pumping capacity, concourse water drops below ankle level. The first passengers walk out of the metro exit, holding the wall."
+      },
+      "cinematography": {
+        "narrationCue": "福田站水位退至警戒线以下",
+        "highlightAgentIds": [
+          "water-authority",
+          "traffic-police"
+        ],
+        "cameraFocusKind": "zone"
+      }
+    },
+    {
+      "id": "evt-chem-fire-extinguished",
+      "type": "fire-extinguished",
+      "zoneId": "bao-an-industrial",
+      "parameter": "smoke",
+      "value": false,
+      "atSimTimeSec": 520,
+      "severity": "low",
+      "requiredCapabilities": [
+        "smoke-detection",
+        "fire-water-supply",
+        "toxic-gas-monitoring"
+      ],
+      "details": {
+        "narrative": "储罐区 A 明火扑灭，烟感读数回落；危化品处置队进场洗消，生态环境局持续监测残余苯系物浓度。",
+        "topology": "recovery"
+      },
+      "focusZoneId": "bao-an-industrial",
+      "humanNarrative": {
+        "zh": "明火扑灭了。储罐区还在冒烟，但烟感读数终于回落——危化品处置队进场接管。",
+        "en": "The open fire is out. The tank farm still smolders, but smoke readings are finally falling — the hazmat team moves in to take over."
+      },
+      "cinematography": {
+        "narrationCue": "储罐区明火扑灭，危化处置进场接管",
+        "highlightAgentIds": [
+          "emergency-bureau",
+          "env-protection-bureau"
+        ],
+        "cameraFocusKind": "zone"
+      }
+    },
+    {
+      "id": "evt-casualties-cleared",
+      "type": "casualties-cleared",
+      "zoneId": "bao-an-industrial",
+      "parameter": "casualty_count",
+      "value": 0,
+      "atSimTimeSec": 580,
+      "severity": "low",
+      "requiredCapabilities": [
+        "mass-casualty-triage",
+        "ed-trauma-accept",
+        "inter-hospital-transfer",
+        "blood-inventory-monitoring"
+      ],
+      "details": {
+        "narrative": "52 名伤员全部分流安置完毕（12 重危均获床位/手术间），跨院转诊闭环；血库库存回到警戒线以上，城市级响应正式收尾。",
+        "topology": "recovery"
+      },
+      "focusZoneId": "bao-an-industrial",
+      "humanNarrative": {
+        "zh": "最后一名重危伤员转进 ICU 通道时，天快亮了。52 人全部有了床位，血库库存回到警戒线以上。",
+        "en": "By the time the last critical patient is wheeled into the ICU corridor, dawn is near. All 52 have beds; blood stocks are back above the warning line."
+      },
+      "cinematography": {
+        "narrationCue": "全部伤员安置完毕，城市进入恢复阶段",
+        "highlightAgentIds": [
+          "health-commission",
+          "ems-120",
+          "bao-an-hospital",
+          "blood-center"
+        ],
+        "cameraFocusKind": "zone"
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "sz-typhoon-pre-drain",
+      "name": "台风预警全城预排空联动",
+      "description": "台风预警（typhoon-incoming 事件）一经发布即确定性预排空：罗湖老街与福田 CBD 雨水管网智能阀门提前开启，福田高铁站北广场应急广播同步预警——跨罗湖/福田两区的市政排水联动，为登陆前的 4 小时窗口抢出管网容量",
+      "enabled": true,
+      "trigger": {
+        "kind": "event",
+        "eventType": "typhoon-incoming",
+        "cooldownSimSec": 900
+      },
+      "plan": {
+        "goal": "台风预警确定性预排空：低洼片区雨水阀门开启 + 枢纽应急广播预警",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "open",
+            "assigneeAgentId": "water-authority",
+            "deviceId": "sv-luo-hu-07",
+            "params": {}
+          },
+          {
+            "id": "n2",
+            "capability": "open",
+            "assigneeAgentId": "water-authority",
+            "deviceId": "sv-fu-tian-04",
+            "params": {}
+          },
+          {
+            "id": "n3",
+            "capability": "set-message",
+            "assigneeAgentId": "emergency-bureau",
+            "deviceId": "pa-fu-tian-10",
+            "params": {
+              "message": "台风预警：雨水管网全线预排空作业启动，低洼区域请勿停留"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "sz-luohu-flood-pump",
+      "name": "罗湖低洼水位自动强排",
+      "description": "罗湖老街低洼段内涝水位超过 0.25m 时自动启动雨水管网强排：水泵全负荷运转并保持阀门最大开度（同一台艾默生智能阀门的两条确定性命令，带 300s 滞回防抖）",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "luo-hu-old",
+        "conditions": [
+          {
+            "path": "water_level",
+            "op": ">",
+            "value": 0.25
+          }
+        ],
+        "cooldownSimSec": 600,
+        "hysteresisSimC": 300
+      },
+      "plan": {
+        "goal": "低洼水位确定性强排：启动水泵 + 阀门全开",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "turn-on",
+            "assigneeAgentId": "water-authority",
+            "deviceId": "sv-luo-hu-07",
+            "params": {}
+          },
+          {
+            "id": "n2",
+            "capability": "open",
+            "assigneeAgentId": "water-authority",
+            "deviceId": "sv-luo-hu-07",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ]
+}

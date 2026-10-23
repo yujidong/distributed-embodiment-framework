@@ -1,0 +1,1354 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "personal-health",
+    "name": {
+      "zh": "个人 AI 健康管家 + 社区医疗网络（千人千面协作）",
+      "en": "Personal AI health concierge + community care network (one protocol, thousands of lives)"
+    },
+    "templateVersion": 2,
+    "description": {
+      "zh": "以人为本的未来社区健康场景：3 位市民（张大爷-65岁房颤高危独居老人、李女士-42岁高压力互联网中层、王同学-20岁食物过敏大学生）各自有一个终身陪伴的个人 AI 健康管家 Agent，跨 9 个 stakeholder 自主编排预防/急救/随访工作流：社区卫生服务中心、三甲医院急诊、心内科、智能药房（含无人机配送）、商业保险、社区物业、120 急救。每位市民的穿戴/家用 IoT 是个人 Agent 的私有设备；医院/药房/社区中心/EMS 各自私有化自己的设备；跨行业协作必须经 AC 协议完成（publish→discover→negotiate→execute）。本版在事件驱动之外内嵌确定性 Flow：张大爷心率异常自动守护（触发床头呼救+预授权 120 远程开门）与房颤检出跨主体联动（社区 12 导心电复测+药房无人机送抗凝药+腕表持续 ECG 上传），办公/商业/社区中心 zone 配 occupantSchedule 表达上下班人流。（v2.1 刷新：节点全部对齐引擎可执行命令面，内嵌 2 条确定性 Flow）",
+      "en": "A person-centric future-community health scenario: three citizens (Mr. Zhang, 65, high-risk AFib living alone; Ms. Li, 42, high-stress internet mid-manager; Student Wang, 20, food-allergy undergraduate) each have a lifelong personal AI health-concierge agent that autonomously orchestrates prevention / emergency / follow-up workflows across 9 stakeholders (community-health center, tertiary-hospital ED, cardiology, smart pharmacy with drone delivery, commercial insurance, community property, EMS-120). Each citizen's wearable / in-home IoT is the personal agent's private device; hospitals / pharmacies / community centers / EMS each privatize their own devices; every cross-entity collaboration is a publish → discover → negotiate → execute AC handshake. This revision additionally embeds deterministic flows — Mr. Zhang's tachycardia auto-guard (bedside emergency call + pre-authorized remote door unlock for EMS) and AFib-detected cross-entity linkage (community 12-lead ECG re-check + pharmacy drone anticoagulant delivery + continuous watch ECG streaming). Office / mall / community-center zones carry occupantSchedule for daily population flow. (v2.1 refresh: node capabilities aligned to the engine command surface; 2 embedded deterministic flows)"
+    },
+    "tagline": {
+      "zh": "你的 AI 健康管家，串起 9 个医疗主体",
+      "en": "Your AI health concierge, orchestrating nine stakeholders"
+    },
+    "heroEventId": "evt-zhang-stroke",
+    "recommendedPlaybackRate": 2,
+    "vendorDisclaimer": {
+      "zh": "场景中所有厂商名称（华为/Apple/Oura/BD Pyxis/ZOLL/Philips/Siemens/Mindray/Dräger 等）仅为具象化仿真使用，不构成任何商业代言或合作关系。",
+      "en": "All vendor names appearing in this scenario (Huawei / Apple / Oura / BD Pyxis / ZOLL / Philips / Siemens / Mindray / Dräger, etc.) are used solely to concretize the simulation and do not constitute any commercial endorsement or partnership."
+    }
+  },
+  "zones": [
+    {
+      "id": "home-zhang",
+      "name": "张大爷家（独居老人公寓）",
+      "type": "residential",
+      "bounds": {
+        "minX": 0,
+        "maxX": 8,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "community-park",
+        "community-center"
+      ],
+      "occupancy": 1,
+      "baseline": {
+        "temperature": 25,
+        "humidity": 55,
+        "co2": 580,
+        "light": 200,
+        "heart_rate": 76
+      }
+    },
+    {
+      "id": "home-li",
+      "name": "李女士家",
+      "type": "residential",
+      "bounds": {
+        "minX": 8,
+        "maxX": 16,
+        "minY": 0,
+        "maxY": 6
+      },
+      "adjacentZoneIds": [
+        "community-park",
+        "office"
+      ],
+      "occupancy": 1,
+      "baseline": {
+        "temperature": 24,
+        "humidity": 52,
+        "co2": 520,
+        "light": 220
+      }
+    },
+    {
+      "id": "home-wang",
+      "name": "王同学宿舍（大学路 23 号）",
+      "type": "dormitory",
+      "bounds": {
+        "minX": 0,
+        "maxX": 8,
+        "minY": 18,
+        "maxY": 24
+      },
+      "adjacentZoneIds": [
+        "mall"
+      ],
+      "occupancy": 1,
+      "baseline": {
+        "temperature": 26,
+        "humidity": 58,
+        "co2": 700,
+        "light": 240
+      }
+    },
+    {
+      "id": "community-center",
+      "name": "社区卫生服务中心",
+      "type": "clinic",
+      "bounds": {
+        "minX": 0,
+        "maxX": 8,
+        "minY": 6,
+        "maxY": 12
+      },
+      "adjacentZoneIds": [
+        "home-zhang",
+        "community-park"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 24,
+        "humidity": 55,
+        "co2": 600,
+        "light": 380
+      },
+      "occupantSchedule": {
+        "count": 4,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 64800,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "community-park",
+      "name": "社区公园（含公共 AED + 户外空气站）",
+      "type": "outdoor",
+      "bounds": {
+        "minX": 8,
+        "maxX": 18,
+        "minY": 6,
+        "maxY": 12
+      },
+      "adjacentZoneIds": [
+        "home-zhang",
+        "home-li",
+        "community-center",
+        "mall"
+      ],
+      "occupancy": 12,
+      "baseline": {
+        "temperature": 28,
+        "humidity": 62,
+        "pm2_5": 32,
+        "light": 12000
+      }
+    },
+    {
+      "id": "mall",
+      "name": "社区商业中心（餐饮区）",
+      "type": "commercial",
+      "bounds": {
+        "minX": 8,
+        "maxX": 18,
+        "minY": 12,
+        "maxY": 18
+      },
+      "adjacentZoneIds": [
+        "community-park",
+        "home-wang",
+        "smart-pharmacy"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 24,
+        "humidity": 55,
+        "co2": 720,
+        "light": 400,
+        "spo2": 98
+      },
+      "occupantSchedule": {
+        "count": 80,
+        "startSimTimeSec": 36000,
+        "endSimTimeSec": 79200,
+        "repeatDaily": true
+      }
+    },
+    {
+      "id": "smart-pharmacy",
+      "name": "未来药房（无人化 + 配送无人机）",
+      "type": "pharmacy",
+      "bounds": {
+        "minX": 18,
+        "maxX": 24,
+        "minY": 12,
+        "maxY": 18
+      },
+      "adjacentZoneIds": [
+        "mall",
+        "hospital-ed"
+      ],
+      "occupancy": 2,
+      "baseline": {
+        "temperature": 22,
+        "humidity": 48,
+        "light": 350
+      }
+    },
+    {
+      "id": "hospital-ed",
+      "name": "三甲医院（急诊+心内科+ICU+影像）",
+      "type": "hospital",
+      "bounds": {
+        "minX": 18,
+        "maxX": 28,
+        "minY": 0,
+        "maxY": 12
+      },
+      "adjacentZoneIds": [
+        "smart-pharmacy",
+        "office"
+      ],
+      "occupancy": 18,
+      "baseline": {
+        "temperature": 24,
+        "humidity": 54,
+        "co2": 580,
+        "light": 380
+      }
+    },
+    {
+      "id": "office",
+      "name": "李女士办公楼（科技园 22 层）",
+      "type": "office",
+      "bounds": {
+        "minX": 16,
+        "maxX": 24,
+        "minY": -6,
+        "maxY": 0
+      },
+      "adjacentZoneIds": [
+        "home-li",
+        "hospital-ed"
+      ],
+      "occupancy": 0,
+      "baseline": {
+        "temperature": 23,
+        "humidity": 50,
+        "co2": 740,
+        "light": 420
+      },
+      "occupantSchedule": {
+        "count": 60,
+        "startSimTimeSec": 32400,
+        "endSimTimeSec": 68400,
+        "repeatDaily": true
+      }
+    }
+  ],
+  "devices": [
+    {
+      "id": "zw-watch",
+      "name": "华为 Watch D2（腕式血压+心电，张大爷）",
+      "type": "wearable",
+      "brand": "Huawei",
+      "capabilities": [
+        "heart-rate-monitoring",
+        "ecg-streaming",
+        "blood-pressure-monitoring",
+        "afib-detection"
+      ],
+      "zoneId": "home-zhang",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "zw-pillbox",
+      "name": "北邮'和时智护'智能药盒（张大爷 7 日分格+重力传感）",
+      "type": "smart-pillbox",
+      "brand": "BUPT-Heshi",
+      "capabilities": [
+        "medication-adherence-monitoring",
+        "dose-verification",
+        "missed-dose-alert"
+      ],
+      "zoneId": "home-zhang",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "zw-fall-sensor",
+      "name": "毫米波跌倒检测雷达（张大爷卫浴间）",
+      "type": "motion-sensor",
+      "brand": "Memic",
+      "capabilities": [
+        "fall-detection",
+        "immobility-detection"
+      ],
+      "zoneId": "home-zhang",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "zw-bed",
+      "name": "SleepNumber 智能床垫（张大爷主卧，睡眠呼吸+心率）",
+      "type": "smart-bed",
+      "brand": "SleepNumber",
+      "capabilities": [
+        "sleep-monitoring",
+        "heart-rate-monitoring",
+        "apnea-detection"
+      ],
+      "zoneId": "home-zhang",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "zw-emrg-button",
+      "name": "床头一键呼救按钮（张大爷主卧）",
+      "type": "emergency-button",
+      "brand": "Generic",
+      "capabilities": [
+        "emergency-call",
+        "manual-alert-trigger",
+        "set-message"
+      ],
+      "zoneId": "home-zhang",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "zw-door-lock",
+      "name": "智能门锁（张大爷家门，可远程授权 EMS 进入）",
+      "type": "smart-lock",
+      "brand": "Aqara",
+      "capabilities": [
+        "access-control",
+        "remote-access-grant",
+        "grant-temporary-access"
+      ],
+      "zoneId": "home-zhang",
+      "initialState": {
+        "power": true,
+        "locked": true
+      }
+    },
+    {
+      "id": "lw-watch",
+      "name": "Apple Watch Ultra 3（李女士，ECG+心律+SpO2）",
+      "type": "wearable",
+      "brand": "Apple",
+      "capabilities": [
+        "heart-rate-monitoring",
+        "ecg-streaming",
+        "arrhythmia-detection",
+        "stress-index-monitoring"
+      ],
+      "zoneId": "home-li",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "lw-ring",
+      "name": "Oura Ring Gen4（李女士，HRV+睡眠+体温）",
+      "type": "wearable",
+      "brand": "Oura",
+      "capabilities": [
+        "hrv-monitoring",
+        "sleep-monitoring",
+        "stress-index-monitoring"
+      ],
+      "zoneId": "home-li",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "lw-office-monitor",
+      "name": "工位毫米波雷达（李女士工位，久坐/心率）",
+      "type": "motion-sensor",
+      "brand": "Memic",
+      "capabilities": [
+        "heart-rate-monitoring",
+        "occupancy-detection"
+      ],
+      "zoneId": "office",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "ww-watch",
+      "name": "华为 Watch Fit 3（王同学，心率+SpO2）",
+      "type": "wearable",
+      "brand": "Huawei",
+      "capabilities": [
+        "heart-rate-monitoring",
+        "spo2-monitoring",
+        "anaphylaxis-prediction"
+      ],
+      "zoneId": "home-wang",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "ww-epipen",
+      "name": "蓝牙肾上腺素自动注射器（王同学过敏急救包）",
+      "type": "autoinjector",
+      "brand": "Kaleo-AUVI-Q",
+      "capabilities": [
+        "epinephrine-administration",
+        "use-event-reporting"
+      ],
+      "zoneId": "home-wang",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "park-aed-01",
+      "name": "ZOLL AED Plus 公共除颤仪（社区公园东门）",
+      "type": "emergency-button",
+      "brand": "ZOLL",
+      "capabilities": [
+        "defibrillation-service",
+        "cpr-feedback",
+        "aed-status-reporting"
+      ],
+      "zoneId": "community-park",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "mall-aed-02",
+      "name": "Philips HeartStart AED（商业中心餐饮区 2 楼）",
+      "type": "emergency-button",
+      "brand": "Philips",
+      "capabilities": [
+        "defibrillation-service",
+        "aed-status-reporting"
+      ],
+      "zoneId": "mall",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "park-air-01",
+      "name": "网格化空气质量微站（社区公园）",
+      "type": "air-quality-sensor",
+      "brand": "Sailhero",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring",
+        "pollen-monitoring"
+      ],
+      "zoneId": "community-park",
+      "initialState": {
+        "pm2_5": 32
+      }
+    },
+    {
+      "id": "cc-bed-01",
+      "name": "社区观察床 1（社区卫生中心）",
+      "type": "patient-bed",
+      "brand": "Mindray-bose",
+      "capabilities": [
+        "patient-state-reporting",
+        "vital-signs-monitoring"
+      ],
+      "zoneId": "community-center",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "cc-ecg-01",
+      "name": "迈瑞 BeneHeart R12 12 导心电机（社区中心）",
+      "type": "patient-monitor",
+      "brand": "Mindray",
+      "capabilities": [
+        "12-lead-ecg",
+        "ecg-streaming",
+        "remote-ecg-interpretation",
+        "activate"
+      ],
+      "zoneId": "community-center",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "cc-drone-pad",
+      "name": "美团无人机起降坪（社区中心楼顶）",
+      "type": "drone-docking-station",
+      "brand": "DJI-Meituan",
+      "capabilities": [
+        "drone-dispatch",
+        "instant-delivery",
+        "lab-sample-airlift"
+      ],
+      "zoneId": "community-center",
+      "initialState": {
+        "drones_ready": 2
+      }
+    },
+    {
+      "id": "hosp-ct-01",
+      "name": "联影 uCT 780 256 排 CT（三甲医院急诊影像）",
+      "type": "medical-imaging",
+      "brand": "United Imaging",
+      "capabilities": [
+        "ct-scan",
+        "imaging-service",
+        "stroke-imaging"
+      ],
+      "zoneId": "hospital-ed",
+      "initialState": {
+        "power": 0
+      }
+    },
+    {
+      "id": "hosp-ed-monitor",
+      "name": "飞利浦 IntelliVue MX800 床旁监护（急诊抢救室）",
+      "type": "patient-monitor",
+      "brand": "Philips",
+      "capabilities": [
+        "vital-signs-monitoring",
+        "ecg-streaming",
+        "patient-state-reporting"
+      ],
+      "zoneId": "hospital-ed",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "hosp-ultrasound-01",
+      "name": "GE Logiq E20 便携超声（急诊）",
+      "type": "medical-imaging",
+      "brand": "GE Healthcare",
+      "capabilities": [
+        "ultrasound-service",
+        "cardiac-pocus",
+        "fast-exam"
+      ],
+      "zoneId": "hospital-ed",
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "hosp-cath-lab",
+      "name": "西门子 Artis zee 心导管室（DSA + ABP）",
+      "type": "medical-imaging",
+      "brand": "Siemens Healthineers",
+      "capabilities": [
+        "cath-lab-activation",
+        "pci-procedure",
+        "coronary-intervention"
+      ],
+      "zoneId": "hospital-ed",
+      "initialState": {
+        "power": 0
+      }
+    },
+    {
+      "id": "hosp-tPA-vault",
+      "name": "BD Pyxis Med 静脉用药柜（含 tPA/ rt-PA 毒麻层）",
+      "type": "smart-lock",
+      "brand": "BD Pyxis",
+      "capabilities": [
+        "controlled-substance-dispense",
+        "tpa-dispense",
+        "drug-inventory-monitoring"
+      ],
+      "zoneId": "hospital-ed",
+      "initialState": {
+        "locked": true
+      }
+    },
+    {
+      "id": "hosp-icu-vent-01",
+      "name": "Dräger Evita V800 呼吸机（ICU 床位 3）",
+      "type": "ventilator",
+      "brand": "Draeger",
+      "capabilities": [
+        "ventilator-allocation",
+        "respiratory-monitoring"
+      ],
+      "zoneId": "hospital-ed",
+      "initialState": {
+        "power": 0
+      }
+    },
+    {
+      "id": "pharm-cabinet",
+      "name": "BD Pyxis Med 24h 无人药柜（前店）",
+      "type": "smart-lock",
+      "brand": "BD Pyxis",
+      "capabilities": [
+        "otc-dispense",
+        "prescription-dispense",
+        "drug-inventory-monitoring"
+      ],
+      "zoneId": "smart-pharmacy",
+      "initialState": {
+        "locked": false
+      }
+    },
+    {
+      "id": "pharm-coldchain",
+      "name": "海尔生物医疗 HYC-340 医用冰箱（生物制剂+胰岛素）",
+      "type": "cold-chain-cabinet",
+      "brand": "Haier-Medical",
+      "capabilities": [
+        "cold-chain-monitoring",
+        "biologic-inventory"
+      ],
+      "zoneId": "smart-pharmacy",
+      "initialState": {
+        "temperature": 4
+      }
+    },
+    {
+      "id": "pharm-drone",
+      "name": "美团大疆 Dock3 无人机机场（药房配送 fleet）",
+      "type": "drone-docking-station",
+      "brand": "DJI-Meituan",
+      "capabilities": [
+        "instant-delivery",
+        "emergency-supply-airlift",
+        "drone-dispatch",
+        "activate"
+      ],
+      "zoneId": "smart-pharmacy",
+      "initialState": {
+        "drones_ready": 3
+      }
+    },
+    {
+      "id": "ems-amb-01",
+      "name": "120 急救车 #01（5G 监护+除颤+急救药柜）",
+      "type": "ambulance",
+      "brand": "Mindray-5G",
+      "capabilities": [
+        "ambulance-dispatch",
+        "pre-hospital-emergency-care",
+        "field-ecg-stream",
+        "patient-transport"
+      ],
+      "zoneId": "hospital-ed",
+      "initialState": {
+        "status": "idle"
+      }
+    },
+    {
+      "id": "ems-amb-02",
+      "name": "120 急救车 #02（5G 监护+除颤+急救药柜）",
+      "type": "ambulance",
+      "brand": "Mindray-5G",
+      "capabilities": [
+        "ambulance-dispatch",
+        "pre-hospital-emergency-care",
+        "field-ecg-stream",
+        "patient-transport"
+      ],
+      "zoneId": "hospital-ed",
+      "initialState": {
+        "status": "idle"
+      }
+    }
+  ],
+  "agents": [
+    {
+      "id": "zhang-agent",
+      "name": "张大爷的个人 AI 健康管家（终身陪伴）",
+      "capabilities": [
+        "afib-detection",
+        "heart-rate-monitoring",
+        "blood-pressure-monitoring",
+        "ecg-streaming",
+        "fall-detection",
+        "medication-adherence-monitoring",
+        "sleep-monitoring",
+        "personal-health-data-aggregation",
+        "citizen-consent-management"
+      ],
+      "managesZoneIds": [
+        "home-zhang"
+      ],
+      "boundDeviceIds": [
+        "zw-watch",
+        "zw-pillbox",
+        "zw-fall-sensor",
+        "zw-bed",
+        "zw-emrg-button",
+        "zw-door-lock"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "li-agent",
+      "name": "李女士的个人 AI 健康管家",
+      "capabilities": [
+        "arrhythmia-detection",
+        "stress-index-monitoring",
+        "hrv-monitoring",
+        "heart-rate-monitoring",
+        "ecg-streaming",
+        "sleep-monitoring",
+        "personal-health-data-aggregation",
+        "citizen-consent-management",
+        "lifestyle-coaching"
+      ],
+      "managesZoneIds": [
+        "home-li",
+        "office"
+      ],
+      "boundDeviceIds": [
+        "lw-watch",
+        "lw-ring",
+        "lw-office-monitor"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "wang-agent",
+      "name": "王同学的个人 AI 健康管家",
+      "capabilities": [
+        "anaphylaxis-prediction",
+        "spo2-monitoring",
+        "heart-rate-monitoring",
+        "epinephrine-administration",
+        "personal-health-data-aggregation",
+        "citizen-consent-management",
+        "allergen-exposure-detection"
+      ],
+      "managesZoneIds": [
+        "home-wang"
+      ],
+      "boundDeviceIds": [
+        "ww-watch",
+        "ww-epipen"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "community-agent",
+      "name": "社区卫生服务中心 Agent",
+      "capabilities": [
+        "12-lead-ecg",
+        "remote-ecg-interpretation",
+        "patient-state-reporting",
+        "vital-signs-monitoring",
+        "primary-care-triage",
+        "chronic-disease-management",
+        "vaccination-service",
+        "follow-up-scheduling",
+        "polypharmacy-reconciliation",
+        "novel-strain-detection",
+        "vaccine-composition-cross-check",
+        "high-risk-cohort-prioritization",
+        "defibrillation-service",
+        "aed-status-reporting"
+      ],
+      "cannotDeliverClasses": [
+        "controlled-substance-dispense",
+        "tpa-dispense",
+        "cath-lab-activation",
+        "pci-procedure",
+        "surgery-capability",
+        "coronary-intervention"
+      ],
+      "managesZoneIds": [
+        "community-center",
+        "community-park"
+      ],
+      "boundDeviceIds": [
+        "cc-bed-01",
+        "cc-ecg-01",
+        "cc-drone-pad",
+        "park-aed-01",
+        "park-air-01"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "hospital-ed-agent",
+      "name": "三甲医院急诊 Agent",
+      "capabilities": [
+        "ed-trauma-accept",
+        "ct-scan",
+        "stroke-imaging",
+        "ultrasound-service",
+        "cardiac-pocus",
+        "cath-lab-activation",
+        "pci-procedure",
+        "controlled-substance-dispense",
+        "tpa-dispense",
+        "ventilator-allocation",
+        "drug-interaction-check",
+        "same-day-cath-lab-slot",
+        "er-bed-allocation",
+        "cardiac-mri",
+        "defibrillation-service",
+        "aed-status-reporting",
+        "novel-strain-detection",
+        "vaccine-composition-cross-check",
+        "antiviral-allocation"
+      ],
+      "managesZoneIds": [
+        "hospital-ed"
+      ],
+      "boundDeviceIds": [
+        "hosp-ct-01",
+        "hosp-ed-monitor",
+        "hosp-ultrasound-01",
+        "hosp-cath-lab",
+        "hosp-tPA-vault",
+        "hosp-icu-vent-01",
+        "mall-aed-02"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "cardiology-agent",
+      "name": "心内科 Agent（远程会诊+导管室）",
+      "capabilities": [
+        "cardiology-consultation",
+        "cath-lab-activation",
+        "pci-procedure",
+        "coronary-intervention",
+        "anticoagulation-management",
+        "arrhythmia-management",
+        "stroke-consultation",
+        "polypharmacy-reconciliation",
+        "same-day-cath-lab-slot",
+        "cardiac-mri",
+        "drug-interaction-check"
+      ],
+      "managesZoneIds": [
+        "hospital-ed"
+      ],
+      "boundDeviceIds": [],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "pharmacy-agent",
+      "name": "未来药房 Agent（含无人机配送）",
+      "capabilities": [
+        "otc-dispense",
+        "prescription-dispense",
+        "controlled-substance-dispense",
+        "cold-chain-monitoring",
+        "instant-delivery",
+        "emergency-supply-airlift",
+        "drug-inventory-monitoring",
+        "pharmacist-consultation",
+        "drug-interaction-check",
+        "polypharmacy-reconciliation",
+        "antiviral-allocation"
+      ],
+      "cannotDeliverClasses": [
+        "tpa-dispense",
+        "cath-lab-activation",
+        "pci-procedure",
+        "surgery-capability",
+        "coronary-intervention"
+      ],
+      "managesZoneIds": [
+        "smart-pharmacy",
+        "mall"
+      ],
+      "boundDeviceIds": [
+        "pharm-cabinet",
+        "pharm-coldchain",
+        "pharm-drone"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "insurance-agent",
+      "name": "健康险 / 医保 Agent",
+      "capabilities": [
+        "coverage-verification",
+        "pre-authorization",
+        "claim-processing",
+        "actuarial-risk-assessment",
+        "population-health-analytics",
+        "high-risk-cohort-prioritization"
+      ],
+      "managesZoneIds": [],
+      "boundDeviceIds": [],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "ems-agent",
+      "name": "市急救中心（120 院前急救 Agent）",
+      "capabilities": [
+        "ambulance-dispatch",
+        "pre-hospital-emergency-care",
+        "field-ecg-stream",
+        "patient-transport",
+        "mass-casualty-triage",
+        "aed-dispatch"
+      ],
+      "managesZoneIds": [
+        "hospital-ed",
+        "community-park",
+        "mall"
+      ],
+      "boundDeviceIds": [
+        "ems-amb-01",
+        "ems-amb-02"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "property-agent",
+      "name": "社区物业 Agent（楼宇应急 + 门禁）",
+      "capabilities": [
+        "access-control",
+        "remote-access-grant",
+        "facility-management",
+        "evacuation-directive",
+        "cctv-monitoring"
+      ],
+      "managesZoneIds": [
+        "home-li",
+        "home-wang",
+        "mall"
+      ],
+      "boundDeviceIds": [],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-zhang-afib",
+      "type": "afib-detected",
+      "zoneId": "home-zhang",
+      "parameter": "afib-burden-pct",
+      "value": 18,
+      "atSimTimeSec": 30,
+      "severity": "high",
+      "requiredCapabilities": [
+        "afib-detection",
+        "ecg-streaming",
+        "drug-interaction-check",
+        "cardiology-consultation",
+        "prescription-dispense",
+        "coverage-verification"
+      ],
+      "details": {
+        "narrative": "张大爷 24h ECG 振荡出 18% 房颤负荷（CHA2DS2-VASc 4）需启动 DOAC 抗凝；但他已在用 4 种药，其中胺碘酮和 NSAIDs 与 DOAC 有严重相互作用。药房必须在患者离家前实时核验处方（30 分钟窗口），保险必须实时预授权（避免事后拒付），心内必须远程确认剂量。每次组合不同（合并用药个体化）。",
+        "topology": "real-time-verification",
+        "chads-vasc": 4,
+        "drug-interaction-pairs": 2
+      },
+      "focusZoneId": "home-zhang",
+      "humanNarrative": {
+        "zh": "张大爷已在用 4 种药，其中 2 种与新型抗凝药冲突。30 分钟内必须把所有事调清楚。",
+        "en": "Mr. Zhang is already on 4 medications; 2 of them interact with the new anticoagulant. Everything must be reconciled within 30 minutes."
+      },
+      "consentRequirements": {
+        "dataFields": [
+          "ecg",
+          "medication-list",
+          "cha2ds2-vasc"
+        ],
+        "recipients": [
+          "cardiology-agent",
+          "pharmacy-agent",
+          "insurance-agent"
+        ],
+        "consentClass": "sensitive"
+      },
+      "cinematography": {
+        "narrationCue": "房颤 + 多药冲突，3 主体 30 分钟实时核验",
+        "highlightAgentIds": [
+          "zhang-agent",
+          "cardiology-agent",
+          "pharmacy-agent",
+          "insurance-agent"
+        ],
+        "cameraFocusKind": "agent-pair"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": true,
+        "score": "3/3",
+        "verdict": "AC-necessary",
+        "reasoning": "每位患者的合并用药+保险条款+心内剂量偏好都是独立组合；药房、保险、心内三方目标冲突（药房怕相互作用、保险怕拒付、心内怕剂量偏大）；30 分钟硬窗口排除人工电话协调。无中央仲裁。"
+      }
+    },
+    {
+      "id": "evt-zhang-stroke",
+      "type": "fall-and-stroke",
+      "zoneId": "home-zhang",
+      "parameter": "fall",
+      "value": true,
+      "atSimTimeSec": 120,
+      "severity": "critical",
+      "requiredCapabilities": [
+        "fall-detection",
+        "ambulance-dispatch",
+        "field-ecg-stream",
+        "ct-scan",
+        "stroke-imaging",
+        "tpa-dispense",
+        "cath-lab-activation",
+        "stroke-consultation",
+        "access-control",
+        "remote-access-grant"
+      ],
+      "details": {
+        "narrative": "张大爷卫浴间毫米波雷达检到跌倒+10 分钟静止，个人 Agent 判定疑似急性卒中 → 物业远程开门让 120 进入；5G 救护车路上预启 CT；医院 tPA 毒麻柜待命；DNT 目标 < 45 分钟。",
+        "topology": "fan-out-1-to-4",
+        "kpi": "DNT-target-45min"
+      },
+      "focusZoneId": "home-zhang",
+      "humanNarrative": {
+        "zh": "张大爷 71 岁，独居，10 分钟未动。门锁还锁着。",
+        "en": "Mr. Zhang, 71, lives alone. No movement for 10 minutes. The door is still locked from the inside."
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": true,
+        "score": "3/3",
+        "verdict": "AC-necessary",
+        "reasoning": "独居+门锁着+此刻哪家医院 CT 有空档+tPA 毒麻柜在班+救护车刚好在片区，每次组合不同。DNT < 45 分钟人类调度员来不及电话协调。跨 4 主体无中央仲裁。AC 核心用例。"
+      }
+    },
+    {
+      "id": "evt-li-arrhythmia",
+      "type": "stress-arrhythmia",
+      "zoneId": "office",
+      "parameter": "pvc-count-24h",
+      "value": 8400,
+      "atSimTimeSec": 210,
+      "severity": "high",
+      "requiredCapabilities": [
+        "arrhythmia-detection",
+        "stress-index-monitoring",
+        "12-lead-ecg",
+        "same-day-cath-lab-slot",
+        "er-bed-allocation",
+        "cardiac-mri",
+        "cardiology-consultation"
+      ],
+      "details": {
+        "narrative": "李女士 24h PVC 数 8400，3 小时内翻倍（HRV 仍 18ms）→ 不能再当压力症状，必须 4 小时窗口内排除器质性心脏病：当日心导管室档期、ER 床位、心脏 MRI、心内会诊。各科室独立排程、无中央仲裁。",
+        "topology": "urgent-rule-out",
+        "pvc-trend-3h": "doubling",
+        "rule-out-window-hours": 4
+      },
+      "focusZoneId": "office",
+      "humanNarrative": {
+        "zh": "李女士 42 岁，3h 内室早翻倍。4 小时窗口必须排除器质性。",
+        "en": "Ms. Li, 42: PVC count doubled in 3 hours. A 4-hour window to rule out structural heart disease."
+      },
+      "consentRequirements": {
+        "dataFields": [
+          "ecg",
+          "holter",
+          "cardiac-mri"
+        ],
+        "recipients": [
+          "cardiology-agent",
+          "hospital-ed-agent",
+          "community-agent"
+        ],
+        "consentClass": "sensitive"
+      },
+      "cinematography": {
+        "narrationCue": "室早翻倍 → 4 小时排除器质性心脏病",
+        "highlightAgentIds": [
+          "li-agent",
+          "cardiology-agent",
+          "hospital-ed-agent"
+        ],
+        "cameraFocusKind": "agent-pair"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": true,
+        "score": "3/3",
+        "verdict": "AC-necessary",
+        "reasoning": "4h 硬时间窗排除器质性，需要心导管室+ER+MRI+心内同日档期，每个科室独立排程不能强制；患者状态动态变化（PVC 还在涨），组合空间爆炸。无中央调度。"
+      }
+    },
+    {
+      "id": "evt-wang-anaphylaxis",
+      "type": "anaphylaxis-shock",
+      "zoneId": "mall",
+      "parameter": "spo2",
+      "value": 82,
+      "atSimTimeSec": 300,
+      "severity": "critical",
+      "requiredCapabilities": [
+        "anaphylaxis-prediction",
+        "spo2-monitoring",
+        "epinephrine-administration",
+        "defibrillation-service",
+        "ambulance-dispatch",
+        "pre-hospital-emergency-care",
+        "otc-dispense",
+        "aed-status-reporting"
+      ],
+      "details": {
+        "narrative": "王同学在 mall 餐饮区误食含花生成分菜品 → Watch SpO2 跌至 82% + 心率 132，个人 Agent 自主启用蓝牙 epinephrine 注射、并并行调度：mall AED 备用、120 急救车、药房无人机补货肾上腺素。",
+        "topology": "fan-out-1-to-4",
+        "spo2": 82
+      },
+      "focusZoneId": "mall",
+      "humanNarrative": {
+        "zh": "王同学 20 岁，对花生重度过敏，mall 用餐 15 分钟后气促。",
+        "en": "Student Wang, 20, severely allergic to peanuts. Shortness of breath 15 minutes after eating at the mall."
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": true,
+        "score": "3/3",
+        "verdict": "AC-necessary",
+        "reasoning": "分钟级时间窗，mall 几楼+AED 在哪+最近 120+药房无人机能否 5 分钟到，每次组合都不同。跨 4 主体无中央仲裁。AC 核心用例。"
+      }
+    },
+    {
+      "id": "evt-flu-outbreak",
+      "type": "community-flu-cluster",
+      "zoneId": "community-center",
+      "parameter": "flu_cases",
+      "value": 14,
+      "atSimTimeSec": 390,
+      "severity": "high",
+      "requiredCapabilities": [
+        "novel-strain-detection",
+        "vaccine-composition-cross-check",
+        "high-risk-cohort-prioritization",
+        "antiviral-allocation",
+        "primary-care-triage",
+        "actuarial-risk-assessment"
+      ],
+      "details": {
+        "narrative": "社区 48h 内 14 例流感样病例 + 3 例重症；毒株测序显示 HA 段与当季疫苗株匹配度仅 62%（阈值 80%）→ 疑似疫苗错配。需要跨疫苗厂商实时核验组分、对高危老人优先调拨现存疫苗、动态分配奥司他韦库存，保险公司同步精算高风险队列。每条决策依赖厂商 + 医院 + 保险 + 社区实时数据。",
+        "topology": "cross-vendor-real-time",
+        "baseline-cases": 3,
+        "outbreak-cases": 14,
+        "vaccine-match-pct": 62,
+        "critical-count": 3
+      },
+      "focusZoneId": "community-center",
+      "humanNarrative": {
+        "zh": "毒株测序显示今年疫苗可能不匹配，14 例 3 例重症。",
+        "en": "Strain sequencing suggests this year's vaccine may be a mismatch — 3 of 14 cases are severe."
+      },
+      "consentRequirements": {
+        "dataFields": [
+          "strain-sequence",
+          "vaccination-history",
+          "age-cohort"
+        ],
+        "recipients": [
+          "hospital-ed-agent",
+          "pharmacy-agent",
+          "insurance-agent"
+        ],
+        "consentClass": "sensitive"
+      },
+      "cinematography": {
+        "narrationCue": "毒株错配预警：跨厂商实时核验 + 高危队列优先",
+        "highlightAgentIds": [
+          "community-agent",
+          "hospital-ed-agent",
+          "pharmacy-agent",
+          "insurance-agent"
+        ],
+        "cameraFocusKind": "agent-pair"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": true,
+        "score": "3/3",
+        "verdict": "AC-necessary",
+        "reasoning": "毒株匹配度数据厂商私有，需跨厂商实时核验；高危队列动态变化（每日新感染）；抗病毒 + 疫苗 + 精算三方利益独立。CDC 预案不覆盖'疫苗错配 + 多厂商协同'场景。"
+      }
+    },
+    {
+      "id": "evt-zhang-recovery",
+      "type": "post-discharge-followup",
+      "zoneId": "community-center",
+      "parameter": "care-transition",
+      "value": "zhang-post-stroke",
+      "atSimTimeSec": 480,
+      "severity": "medium",
+      "requiredCapabilities": [
+        "polypharmacy-reconciliation",
+        "drug-interaction-check",
+        "chronic-disease-management",
+        "medication-adherence-monitoring",
+        "follow-up-scheduling",
+        "coverage-verification"
+      ],
+      "details": {
+        "narrative": "张大爷卒中出院当天开出 8 种药（抗凝+降压+调脂+降糖+安眠+胃药+利尿+甲状腺），其中 3 对存在潜在相互作用；90 天高警觉期内每周需药剂师 + GP + 心内协同复核（避免不良事件再入院）。每次随访合并用药可能动态变化（依从性 + 新诊断），保险按依从性阶梯报销。",
+        "topology": "longitudinal-reconciliation",
+        "care-phase": "post-acute",
+        "med-count": 8,
+        "interaction-pairs": 3,
+        "watch-window-days": 90
+      },
+      "focusZoneId": "community-center",
+      "humanNarrative": {
+        "zh": "张大爷卒中后开 8 种药，3 对相互作用，90 天高警觉期。",
+        "en": "Mr. Zhang, post-stroke, is now on 8 medications with 3 interacting pairs — 90-day high-alert window."
+      },
+      "consentRequirements": {
+        "dataFields": [
+          "medication-list",
+          "adherence-log",
+          "lab-results"
+        ],
+        "recipients": [
+          "pharmacy-agent",
+          "hospital-ed-agent",
+          "insurance-agent"
+        ],
+        "consentClass": "routine"
+      },
+      "cinematography": {
+        "narrationCue": "8 种药 3 对相互作用，90 天动态复核",
+        "highlightAgentIds": [
+          "zhang-agent",
+          "community-agent",
+          "pharmacy-agent",
+          "cardiology-agent",
+          "insurance-agent"
+        ],
+        "cameraFocusKind": "agent-pair"
+      },
+      "acRationale": {
+        "partnerSetUnpredictable": true,
+        "noCentralAuthority": true,
+        "combinatorialStateSpace": true,
+        "score": "3/3",
+        "verdict": "AC-necessary",
+        "reasoning": "90 天动态随访，每周合并用药组合都在变；药剂师/GP/心内/保险四方目标不完全一致（报销 vs 依从 vs 安全）；FHIR CarePlan 只描述任务清单，不解决实时多方协同决策。"
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "ph-zhang-tachy-guard",
+      "name": "张大爷心率异常自动守护",
+      "description": "张大爷家腕表心率持续超过 130 bpm 时确定性触发守护链：床头一键呼救自动呼叫 + 智能门锁预授权 120 急救 45 分钟远程进入——不经过 LLM 决策的独居老人第一响应兜底",
+      "enabled": true,
+      "trigger": {
+        "kind": "condition",
+        "zoneId": "home-zhang",
+        "conditions": [
+          {
+            "path": "heart_rate",
+            "op": ">",
+            "value": 130
+          }
+        ],
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "心率异常确定性守护：自动呼救 + 预授权急救入户",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "set-message",
+            "assigneeAgentId": "zhang-agent",
+            "deviceId": "zw-emrg-button",
+            "params": {
+              "message": "张大爷心率异常，请立即上门查看"
+            }
+          },
+          {
+            "id": "n2",
+            "capability": "grant-temporary-access",
+            "assigneeAgentId": "zhang-agent",
+            "deviceId": "zw-door-lock",
+            "params": {
+              "durationMin": 45
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "ph-afib-cross-entity",
+      "name": "房颤检出跨主体送药联动",
+      "description": "房颤检出（afib-detected 事件）后确定性执行跨主体准备链：社区中心 12 导心电机复测确认、未来药房无人机待命送抗凝药、张大爷腕表持续 ECG 上传供心内远程判读——社区/药房/家庭三 zone 联动，为 30 分钟用药窗口抢时间",
+      "enabled": true,
+      "trigger": {
+        "kind": "event",
+        "eventType": "afib-detected",
+        "cooldownSimSec": 900
+      },
+      "plan": {
+        "goal": "房颤检出确定性联动：社区心电复测 + 药房无人机待命 + 腕表持续 ECG",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "activate",
+            "assigneeAgentId": "community-agent",
+            "deviceId": "cc-ecg-01",
+            "params": {}
+          },
+          {
+            "id": "n2",
+            "capability": "activate",
+            "assigneeAgentId": "pharmacy-agent",
+            "deviceId": "pharm-drone",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1432 @@
+{
+  "version": "1.0",
+  "meta": {
+    "id": "suzhou-city",
+    "name": {
+      "zh": "苏州智慧城市（金鸡湖-姑苏示范）",
+      "en": "Suzhou smart city (Jinji Lake – Gusu demonstration)"
+    },
+    "templateVersion": 2,
+    "description": {
+      "zh": "城市级地理地图（geo）示范环境：真实苏州地理的 9 个城区多边形（金鸡湖CBD、独墅湖高教区、苏州工业园区、姑苏老城、高新区工业园、苏州站交通枢纽、相城居民区、吴中城南、太湖新城），33 台市政级设备（聚光AQMS-1000国标站、先河网格化微站、海康/大华雷视车检器、海信信号机、威胜三相电表、顺舟单灯控制器、智慧灯杆、雷达水位计、海康球机、特来电直流充电桩、NB-IoT井盖传感器、应急广播音柱、国网负控终端），12 个跨部门利益方 Agent（7 政府/公共机构 + 5 市场主体，每个市场主体发布跨主体服务）。任何城市事件都必须跨政府↔市场协作（AC）才能闭环；本版在事件驱动之外内嵌确定性 Flow：用电高峰自动需求响应（负控终端+CBD 景观照明+充电桩限充三线联动）与突发车流自动绿波（车站枢纽与金鸡湖 CBD 信号机跨区联动），人流 zone 配 occupantSchedule，城市长周期事件推荐 30 倍速回放。（v2.2 刷新：全部 agent 配置 LLM，节点全部对齐引擎可执行命令面，内嵌 2 条确定性 Flow）",
+      "en": "City-scale geographic-map (geo) demo environment: 9 real-Suzhou district polygons (Jinji Lake CBD, Dushu Lake Higher-Ed District, Suzhou Industrial Park, Gusu Old Town, New District Industrial Park, Suzhou Station Transit Hub, Xiangcheng Residential District, Wuzhong South-City, Taihu New City), 33 municipal-grade devices, and 12 cross-department stakeholder agents (7 government / public bodies + 5 market entities, each publishing cross-entity services). Any urban event must cross the government↔market collaboration (AC) to close the loop; this revision additionally embeds deterministic flows — peak-load demand response (load-control terminal + CBD facade lighting + charging-pile curtailment) and traffic-surge green wave (station + CBD signal controllers across districts). High-footfall zones carry occupantSchedule; 30x playback recommended for the city-scale event cycle. (v2.2 refresh: all agents LLM-configured; node capabilities aligned to the engine command surface); 2 embedded deterministic flows)"
+    },
+    "tagline": {
+      "zh": "苏州城市压力测试：晚高峰、PM2.5、用电高峰、暴雨内涝连环登场，全靠政企 Agent 跨主体协作闭环",
+      "en": "A stress-test day in Suzhou: rush hour, PM2.5, peak load and flash floods — closed only by government–market agent collaboration."
+    },
+    "heroEventId": "evt-accident",
+    "recommendedPlaybackRate": 30,
+    "vendorDisclaimer": {
+      "zh": "场景中出现的厂商与品牌名称（聚光、先河、海康威视、大华、海信、威胜、顺舟、特来电、国网、滴滴、美团、哈啰、万达等）仅作 illustrative 演示用途，不代表任何商业背书、授权或合作关系。",
+      "en": "Vendor and brand names appearing in this scenario (Juguang, Xianhe, Hikvision, Dahua, Hisense, Wasion, Sunrou, TELD, State Grid, DiDi, Meituan, Helo, Wanda, etc.) are used for illustrative demo purposes only and do not represent any commercial endorsement, authorization, or partnership."
+    }
+  },
+  "map": {
+    "type": "geo",
+    "center": {
+      "lat": 31.268,
+      "lng": 120.6615
+    },
+    "zoom": 11
+  },
+  "zones": [
+    {
+      "id": "gusu-old-town",
+      "name": "姑苏老城",
+      "type": "historic-district",
+      "polygon": [
+        [
+          31.288,
+          120.598
+        ],
+        [
+          31.288,
+          120.646
+        ],
+        [
+          31.326,
+          120.646
+        ],
+        [
+          31.326,
+          120.598
+        ]
+      ],
+      "baseline": {
+        "temperature": 31.6,
+        "humidity": 67,
+        "pm2_5": 46,
+        "light": 400
+      },
+      "occupantSchedule": {
+        "count": 600,
+        "startSimTimeSec": 32400,
+        "endSimTimeSec": 79200,
+        "repeatDaily": true
+      },
+      "adjacentZoneIds": [
+        "suzhou-station",
+        "xiangcheng-residential"
+      ]
+    },
+    {
+      "id": "suzhou-station",
+      "name": "苏州站交通枢纽",
+      "type": "transport-hub",
+      "polygon": [
+        [
+          31.326,
+          120.598
+        ],
+        [
+          31.326,
+          120.632
+        ],
+        [
+          31.346,
+          120.632
+        ],
+        [
+          31.346,
+          120.598
+        ]
+      ],
+      "baseline": {
+        "temperature": 31.6,
+        "humidity": 67,
+        "pm2_5": 43,
+        "light": 300
+      },
+      "occupantSchedule": {
+        "count": 1200,
+        "startSimTimeSec": 18000,
+        "endSimTimeSec": 84600,
+        "repeatDaily": true
+      },
+      "adjacentZoneIds": [
+        "gusu-old-town",
+        "xiangcheng-residential"
+      ]
+    },
+    {
+      "id": "xiangcheng-residential",
+      "name": "相城区居民区",
+      "type": "residential",
+      "polygon": [
+        [
+          31.346,
+          120.59
+        ],
+        [
+          31.346,
+          120.655
+        ],
+        [
+          31.398,
+          120.655
+        ],
+        [
+          31.398,
+          120.59
+        ]
+      ],
+      "baseline": {
+        "temperature": 31.6,
+        "humidity": 67,
+        "pm2_5": 35,
+        "light": 200
+      },
+      "occupantSchedule": {
+        "count": 400,
+        "startSimTimeSec": 63000,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      },
+      "adjacentZoneIds": [
+        "gusu-old-town",
+        "suzhou-station"
+      ]
+    },
+    {
+      "id": "jinji-lake-cbd",
+      "name": "金鸡湖CBD",
+      "type": "cbd",
+      "polygon": [
+        [
+          31.29,
+          120.646
+        ],
+        [
+          31.29,
+          120.722
+        ],
+        [
+          31.326,
+          120.722
+        ],
+        [
+          31.326,
+          120.646
+        ]
+      ],
+      "baseline": {
+        "temperature": 31.6,
+        "humidity": 67,
+        "pm2_5": 46,
+        "light": 350
+      },
+      "occupantSchedule": {
+        "count": 850,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 79200,
+        "repeatDaily": true
+      },
+      "adjacentZoneIds": [
+        "dushu-lake-edu",
+        "sip-industrial"
+      ]
+    },
+    {
+      "id": "sip-industrial",
+      "name": "苏州工业园区",
+      "type": "industrial-park",
+      "polygon": [
+        [
+          31.29,
+          120.722
+        ],
+        [
+          31.29,
+          120.785
+        ],
+        [
+          31.335,
+          120.785
+        ],
+        [
+          31.335,
+          120.722
+        ]
+      ],
+      "baseline": {
+        "temperature": 31.6,
+        "humidity": 67,
+        "pm2_5": 49,
+        "co2": 620
+      },
+      "occupantSchedule": {
+        "count": 1500,
+        "startSimTimeSec": 28800,
+        "endSimTimeSec": 72000,
+        "repeatDaily": true
+      },
+      "adjacentZoneIds": [
+        "dushu-lake-edu",
+        "jinji-lake-cbd"
+      ]
+    },
+    {
+      "id": "dushu-lake-edu",
+      "name": "独墅湖高教区",
+      "type": "education-district",
+      "polygon": [
+        [
+          31.248,
+          120.676
+        ],
+        [
+          31.248,
+          120.752
+        ],
+        [
+          31.29,
+          120.752
+        ],
+        [
+          31.29,
+          120.676
+        ]
+      ],
+      "baseline": {
+        "temperature": 31.6,
+        "humidity": 67,
+        "pm2_5": 40,
+        "co2": 480,
+        "light": 250
+      },
+      "occupantSchedule": {
+        "count": 2600,
+        "startSimTimeSec": 25200,
+        "endSimTimeSec": 82800,
+        "repeatDaily": true
+      },
+      "adjacentZoneIds": [
+        "jinji-lake-cbd",
+        "sip-industrial",
+        "wuzhong-south"
+      ]
+    },
+    {
+      "id": "wuzhong-south",
+      "name": "吴中城南",
+      "type": "mixed-urban",
+      "polygon": [
+        [
+          31.248,
+          120.598
+        ],
+        [
+          31.248,
+          120.676
+        ],
+        [
+          31.288,
+          120.676
+        ],
+        [
+          31.288,
+          120.598
+        ]
+      ],
+      "baseline": {
+        "temperature": 31.6,
+        "humidity": 67,
+        "pm2_5": 36,
+        "light": 220
+      },
+      "adjacentZoneIds": [
+        "dushu-lake-edu",
+        "snd-industrial",
+        "taihu-new-town"
+      ]
+    },
+    {
+      "id": "snd-industrial",
+      "name": "高新区工业园",
+      "type": "industrial-park",
+      "polygon": [
+        [
+          31.29,
+          120.538
+        ],
+        [
+          31.29,
+          120.598
+        ],
+        [
+          31.33,
+          120.598
+        ],
+        [
+          31.33,
+          120.538
+        ]
+      ],
+      "baseline": {
+        "temperature": 31.6,
+        "humidity": 67,
+        "pm2_5": 62,
+        "co2": 650
+      },
+      "adjacentZoneIds": [
+        "taihu-new-town",
+        "wuzhong-south"
+      ]
+    },
+    {
+      "id": "taihu-new-town",
+      "name": "太湖新城",
+      "type": "new-town",
+      "polygon": [
+        [
+          31.138,
+          120.585
+        ],
+        [
+          31.138,
+          120.645
+        ],
+        [
+          31.172,
+          120.645
+        ],
+        [
+          31.172,
+          120.585
+        ]
+      ],
+      "baseline": {
+        "temperature": 31.6,
+        "humidity": 67,
+        "pm2_5": 28,
+        "light": 180
+      },
+      "adjacentZoneIds": [
+        "snd-industrial",
+        "wuzhong-south"
+      ]
+    }
+  ],
+  "devices": [
+    {
+      "id": "aq-gusu-01",
+      "name": "聚光科技FPI AQMS-1000环境空气自动监测站（姑苏国控点）",
+      "type": "air-quality-sensor",
+      "brand": "FPI",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring"
+      ],
+      "zoneId": "gusu-old-town",
+      "position": {
+        "lat": 31.307,
+        "lng": 120.622
+      },
+      "initialState": {
+        "pm2_5": 38
+      }
+    },
+    {
+      "id": "aq-snd-02",
+      "name": "先河XHAQMS-3000网格化空气微站（高新区）",
+      "type": "air-quality-sensor",
+      "brand": "Sailhero",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring"
+      ],
+      "zoneId": "snd-industrial",
+      "position": {
+        "lat": 31.31,
+        "lng": 120.568
+      },
+      "initialState": {
+        "pm2_5": 52
+      }
+    },
+    {
+      "id": "aq-taihu-03",
+      "name": "先河XHAQMS-3000网格化空气微站（太湖新城）",
+      "type": "air-quality-sensor",
+      "brand": "Sailhero",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring"
+      ],
+      "zoneId": "taihu-new-town",
+      "position": {
+        "lat": 31.155,
+        "lng": 120.615
+      },
+      "initialState": {
+        "pm2_5": 28
+      }
+    },
+    {
+      "id": "aq-sip-04",
+      "name": "先河XHAQMS-3000网格化空气微站（园区）",
+      "type": "air-quality-sensor",
+      "brand": "Sailhero",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring"
+      ],
+      "zoneId": "sip-industrial",
+      "position": {
+        "lat": 31.3,
+        "lng": 120.745
+      },
+      "initialState": {
+        "pm2_5": 48
+      }
+    },
+    {
+      "id": "td-station-01",
+      "name": "海康威视iDS-TCE500雷视一体车检器（车站立交）",
+      "type": "motion-sensor",
+      "brand": "Hikvision",
+      "capabilities": [
+        "motion-detection"
+      ],
+      "zoneId": "suzhou-station",
+      "position": {
+        "lat": 31.33,
+        "lng": 120.608
+      },
+      "initialState": {
+        "motion": false
+      }
+    },
+    {
+      "id": "td-jinji-02",
+      "name": "海康威视iDS-TCE500雷视一体车检器（星湖街）",
+      "type": "motion-sensor",
+      "brand": "Hikvision",
+      "capabilities": [
+        "motion-detection"
+      ],
+      "zoneId": "jinji-lake-cbd",
+      "position": {
+        "lat": 31.308,
+        "lng": 120.7
+      },
+      "initialState": {
+        "motion": false
+      }
+    },
+    {
+      "id": "td-sip-03",
+      "name": "大华DH-ITC雷达视频车检器（园区主干道）",
+      "type": "motion-sensor",
+      "brand": "Dahua",
+      "capabilities": [
+        "motion-detection"
+      ],
+      "zoneId": "sip-industrial",
+      "position": {
+        "lat": 31.32,
+        "lng": 120.74
+      },
+      "initialState": {
+        "motion": false
+      }
+    },
+    {
+      "id": "td-gusu-04",
+      "name": "大华DH-ITC雷达视频车检器（干将路）",
+      "type": "motion-sensor",
+      "brand": "Dahua",
+      "capabilities": [
+        "motion-detection"
+      ],
+      "zoneId": "gusu-old-town",
+      "position": {
+        "lat": 31.3,
+        "lng": 120.615
+      },
+      "initialState": {
+        "motion": false
+      }
+    },
+    {
+      "id": "sc-station-01",
+      "name": "海信HSC-100交通信号机（车站北广场路口）",
+      "type": "smart-plug",
+      "brand": "Hisense",
+      "capabilities": [
+        "power-control",
+        "turn-on",
+        "turn-off",
+        "signal-control"
+      ],
+      "zoneId": "suzhou-station",
+      "position": {
+        "lat": 31.335,
+        "lng": 120.612
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "sc-jinji-02",
+      "name": "海信HSC-100交通信号机（星湖街-现代大道）",
+      "type": "smart-plug",
+      "brand": "Hisense",
+      "capabilities": [
+        "power-control",
+        "turn-on",
+        "turn-off",
+        "signal-control"
+      ],
+      "zoneId": "jinji-lake-cbd",
+      "position": {
+        "lat": 31.31,
+        "lng": 120.702
+      },
+      "initialState": {
+        "power": true
+      }
+    },
+    {
+      "id": "em-xiangcheng-01",
+      "name": "威胜DTSD342三相智能电表（相城住宅组团）",
+      "type": "energy-meter",
+      "brand": "Wasion",
+      "capabilities": [
+        "energy-monitoring",
+        "power-monitoring"
+      ],
+      "zoneId": "xiangcheng-residential",
+      "position": {
+        "lat": 31.372,
+        "lng": 120.622
+      },
+      "initialState": {
+        "power": 1250
+      }
+    },
+    {
+      "id": "em-sip-02",
+      "name": "威胜DTSD342三相智能电表（园区厂房）",
+      "type": "energy-meter",
+      "brand": "Wasion",
+      "capabilities": [
+        "energy-monitoring",
+        "power-monitoring"
+      ],
+      "zoneId": "sip-industrial",
+      "position": {
+        "lat": 31.312,
+        "lng": 120.753
+      },
+      "initialState": {
+        "power": 3400
+      }
+    },
+    {
+      "id": "em-gusu-03",
+      "name": "威胜DTSD342三相智能电表（姑苏商业）",
+      "type": "energy-meter",
+      "brand": "Wasion",
+      "capabilities": [
+        "energy-monitoring",
+        "power-monitoring"
+      ],
+      "zoneId": "gusu-old-town",
+      "position": {
+        "lat": 31.313,
+        "lng": 120.63
+      },
+      "initialState": {
+        "power": 860
+      }
+    },
+    {
+      "id": "em-jinji-04",
+      "name": "威胜DTSD342三相智能电表（万达广场）",
+      "type": "energy-meter",
+      "brand": "Wasion",
+      "capabilities": [
+        "energy-monitoring",
+        "power-monitoring"
+      ],
+      "zoneId": "jinji-lake-cbd",
+      "position": {
+        "lat": 31.3,
+        "lng": 120.68
+      },
+      "initialState": {
+        "power": 2100
+      }
+    },
+    {
+      "id": "sl-gusu-01",
+      "name": "顺舟SZ10-NB单灯控制器（平江路）",
+      "type": "light",
+      "brand": "Shunzhou",
+      "capabilities": [
+        "lighting-control",
+        "brightness-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "gusu-old-town",
+      "position": {
+        "lat": 31.316,
+        "lng": 120.632
+      },
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "sl-jinji-02",
+      "name": "顺舟SZ10-NB单灯控制器（金鸡湖大道）",
+      "type": "light",
+      "brand": "Shunzhou",
+      "capabilities": [
+        "lighting-control",
+        "brightness-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "jinji-lake-cbd",
+      "position": {
+        "lat": 31.302,
+        "lng": 120.686
+      },
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "sl-station-03",
+      "name": "顺舟SZ10-NB单灯控制器（火车站北广场）",
+      "type": "light",
+      "brand": "Shunzhou",
+      "capabilities": [
+        "lighting-control",
+        "brightness-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "suzhou-station",
+      "position": {
+        "lat": 31.336,
+        "lng": 120.615
+      },
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "sl-dushu-04",
+      "name": "顺舟SZ10-NB单灯控制器（独墅湖林荫道）",
+      "type": "light",
+      "brand": "Shunzhou",
+      "capabilities": [
+        "lighting-control",
+        "brightness-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "dushu-lake-edu",
+      "position": {
+        "lat": 31.269,
+        "lng": 120.714
+      },
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "sl-xiangcheng-05",
+      "name": "顺舟SZ10-NB单灯控制器（相城大道）",
+      "type": "light",
+      "brand": "Shunzhou",
+      "capabilities": [
+        "lighting-control",
+        "brightness-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "xiangcheng-residential",
+      "position": {
+        "lat": 31.36,
+        "lng": 120.63
+      },
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "sp-jinji-01",
+      "name": "智慧灯杆（金鸡湖东岸一体杆）",
+      "type": "light",
+      "brand": "Generic",
+      "capabilities": [
+        "lighting-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "jinji-lake-cbd",
+      "position": {
+        "lat": 31.298,
+        "lng": 120.678
+      },
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "sp-sip-02",
+      "name": "智慧灯杆（园区星湖街段一体杆）",
+      "type": "light",
+      "brand": "Generic",
+      "capabilities": [
+        "lighting-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "zoneId": "sip-industrial",
+      "position": {
+        "lat": 31.318,
+        "lng": 120.738
+      },
+      "initialState": {
+        "power": false,
+        "brightness": 100
+      }
+    },
+    {
+      "id": "wl-taihu-01",
+      "name": "雷达水位计（太湖滨湖河道）",
+      "type": "temp-humidity-sensor",
+      "brand": "Generic",
+      "capabilities": [
+        "water-level-monitoring",
+        "temperature-monitoring"
+      ],
+      "zoneId": "taihu-new-town",
+      "position": {
+        "lat": 31.15,
+        "lng": 120.61
+      },
+      "initialState": {
+        "temperature": 31
+      }
+    },
+    {
+      "id": "wl-wuzhong-02",
+      "name": "雷达水位计（吴中低洼片区窨井）",
+      "type": "temp-humidity-sensor",
+      "brand": "Generic",
+      "capabilities": [
+        "water-level-monitoring",
+        "temperature-monitoring"
+      ],
+      "zoneId": "wuzhong-south",
+      "position": {
+        "lat": 31.262,
+        "lng": 120.63
+      },
+      "initialState": {
+        "temperature": 32.5
+      }
+    },
+    {
+      "id": "cam-gusu-01",
+      "name": "海康威视DS-2DC智能球机（观前街口）",
+      "type": "motion-sensor",
+      "brand": "Hikvision",
+      "capabilities": [
+        "motion-detection"
+      ],
+      "zoneId": "gusu-old-town",
+      "position": {
+        "lat": 31.311,
+        "lng": 120.626
+      },
+      "initialState": {
+        "motion": false
+      }
+    },
+    {
+      "id": "cam-xiangcheng-02",
+      "name": "海康威视DS-2DC智能球机（相城社区口）",
+      "type": "motion-sensor",
+      "brand": "Hikvision",
+      "capabilities": [
+        "motion-detection"
+      ],
+      "zoneId": "xiangcheng-residential",
+      "position": {
+        "lat": 31.365,
+        "lng": 120.64
+      },
+      "initialState": {
+        "motion": false
+      }
+    },
+    {
+      "id": "cam-station-03",
+      "name": "海康威视DS-2DC智能球机（站前广场）",
+      "type": "motion-sensor",
+      "brand": "Hikvision",
+      "capabilities": [
+        "motion-detection"
+      ],
+      "zoneId": "suzhou-station",
+      "position": {
+        "lat": 31.333,
+        "lng": 120.62
+      },
+      "initialState": {
+        "motion": false
+      }
+    },
+    {
+      "id": "cp-jinji-01",
+      "name": "特来电TCDZ-120直流充电桩（金鸡湖CBD）",
+      "type": "energy-meter",
+      "brand": "TELD",
+      "capabilities": [
+        "energy-monitoring",
+        "power-monitoring",
+        "charging-service",
+        "turn-off"
+      ],
+      "zoneId": "jinji-lake-cbd",
+      "position": {
+        "lat": 31.305,
+        "lng": 120.695
+      },
+      "initialState": {
+        "power": 0
+      }
+    },
+    {
+      "id": "cp-sip-02",
+      "name": "特来电TCDZ-120直流充电桩（园区）",
+      "type": "energy-meter",
+      "brand": "TELD",
+      "capabilities": [
+        "energy-monitoring",
+        "power-monitoring",
+        "charging-service"
+      ],
+      "zoneId": "sip-industrial",
+      "position": {
+        "lat": 31.308,
+        "lng": 120.748
+      },
+      "initialState": {
+        "power": 0
+      }
+    },
+    {
+      "id": "mh-wuzhong-01",
+      "name": "NB-IoT智能井盖传感器（吴中城南）",
+      "type": "motion-sensor",
+      "brand": "Generic",
+      "capabilities": [
+        "motion-detection",
+        "tilt-alarm"
+      ],
+      "zoneId": "wuzhong-south",
+      "position": {
+        "lat": 31.266,
+        "lng": 120.645
+      },
+      "initialState": {
+        "motion": false
+      }
+    },
+    {
+      "id": "mh-taihu-02",
+      "name": "NB-IoT智能井盖传感器（太湖新城）",
+      "type": "motion-sensor",
+      "brand": "Generic",
+      "capabilities": [
+        "motion-detection",
+        "tilt-alarm"
+      ],
+      "zoneId": "taihu-new-town",
+      "position": {
+        "lat": 31.158,
+        "lng": 120.605
+      },
+      "initialState": {
+        "motion": false
+      }
+    },
+    {
+      "id": "pa-jinji-01",
+      "name": "应急广播音柱（金鸡湖城市广场）",
+      "type": "smart-plug",
+      "brand": "Generic",
+      "capabilities": [
+        "power-control",
+        "turn-on",
+        "turn-off",
+        "emergency-broadcast"
+      ],
+      "zoneId": "jinji-lake-cbd",
+      "position": {
+        "lat": 31.3,
+        "lng": 120.69
+      },
+      "initialState": {
+        "power": false
+      }
+    },
+    {
+      "id": "pa-station-02",
+      "name": "应急广播音柱（苏州站北广场）",
+      "type": "smart-plug",
+      "brand": "Generic",
+      "capabilities": [
+        "power-control",
+        "turn-on",
+        "turn-off",
+        "emergency-broadcast"
+      ],
+      "zoneId": "suzhou-station",
+      "position": {
+        "lat": 31.338,
+        "lng": 120.615
+      },
+      "initialState": {
+        "power": false
+      }
+    },
+    {
+      "id": "lc-sip-01",
+      "name": "国网负控终端（园区负荷聚合网关）",
+      "type": "energy-meter",
+      "brand": "State Grid",
+      "capabilities": [
+        "energy-monitoring",
+        "power-monitoring",
+        "demand-response",
+        "turn-off"
+      ],
+      "zoneId": "sip-industrial",
+      "position": {
+        "lat": 31.322,
+        "lng": 120.76
+      },
+      "initialState": {
+        "power": 0
+      }
+    }
+  ],
+  "agents": [
+    {
+      "id": "transport-bureau",
+      "name": "苏州市交通管理局",
+      "capabilities": [
+        "traffic-monitoring",
+        "motion-detection",
+        "traffic-signal-control",
+        "fleet-management"
+      ],
+      "managesZoneIds": [
+        "suzhou-station",
+        "jinji-lake-cbd"
+      ],
+      "boundDeviceIds": [
+        "td-station-01",
+        "td-jinji-02",
+        "td-sip-03",
+        "td-gusu-04",
+        "sc-station-01",
+        "sc-jinji-02"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "power-grid",
+      "name": "国网苏州供电公司",
+      "capabilities": [
+        "energy-monitoring",
+        "power-monitoring",
+        "load-balancing",
+        "load-shedding",
+        "demand-response",
+        "generator-control"
+      ],
+      "managesZoneIds": [
+        "xiangcheng-residential",
+        "sip-industrial"
+      ],
+      "boundDeviceIds": [
+        "em-xiangcheng-01",
+        "em-sip-02",
+        "em-gusu-03",
+        "lc-sip-01"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "env-monitor",
+      "name": "苏州市环境监测中心",
+      "capabilities": [
+        "air-quality-monitoring",
+        "pm25-monitoring",
+        "co2-monitoring",
+        "temperature-monitoring",
+        "humidity-monitoring"
+      ],
+      "managesZoneIds": [
+        "gusu-old-town",
+        "snd-industrial",
+        "taihu-new-town",
+        "dushu-lake-edu"
+      ],
+      "boundDeviceIds": [
+        "aq-gusu-01",
+        "aq-snd-02",
+        "aq-taihu-03",
+        "aq-sip-04"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "municipal-lighting",
+      "name": "苏州市政照明管理所",
+      "capabilities": [
+        "lighting-control",
+        "brightness-control",
+        "turn-on",
+        "turn-off",
+        "set-brightness"
+      ],
+      "managesZoneIds": [
+        "gusu-old-town",
+        "jinji-lake-cbd",
+        "xiangcheng-residential",
+        "dushu-lake-edu",
+        "suzhou-station"
+      ],
+      "boundDeviceIds": [
+        "sl-gusu-01",
+        "sl-jinji-02",
+        "sl-station-03",
+        "sl-dushu-04",
+        "sl-xiangcheng-05"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "public-security",
+      "name": "苏州公安交管指挥中心",
+      "capabilities": [
+        "video-surveillance",
+        "motion-detection",
+        "emergency-alert",
+        "access-control"
+      ],
+      "managesZoneIds": [
+        "gusu-old-town",
+        "xiangcheng-residential"
+      ],
+      "boundDeviceIds": [
+        "cam-gusu-01",
+        "cam-xiangcheng-02",
+        "cam-station-03"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "sip-property",
+      "name": "工业园区物业集团",
+      "capabilities": [
+        "facility-management",
+        "ventilation-control",
+        "co2-monitoring",
+        "security-monitoring"
+      ],
+      "managesZoneIds": [
+        "sip-industrial",
+        "dushu-lake-edu"
+      ],
+      "boundDeviceIds": [
+        "sp-sip-02"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "emergency-mgmt",
+      "name": "苏州应急管理中心",
+      "capabilities": [
+        "emergency-alert",
+        "dispatch",
+        "fire-alert",
+        "smoke-detection",
+        "pollution-response"
+      ],
+      "managesZoneIds": [
+        "snd-industrial",
+        "taihu-new-town",
+        "wuzhong-south"
+      ],
+      "boundDeviceIds": [
+        "wl-taihu-01",
+        "wl-wuzhong-02",
+        "mh-wuzhong-01",
+        "mh-taihu-02",
+        "pa-jinji-01",
+        "pa-station-02"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "didi-suzhou",
+      "name": "滴滴出行（苏州运力中心）",
+      "capabilities": [
+        "fleet-dispatch",
+        "ride-matching",
+        "traffic-data-consumption"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "meituan-sip",
+      "name": "美团配送（园区站）",
+      "capabilities": [
+        "instant-delivery",
+        "rider-dispatch"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "teld-ops",
+      "name": "特来电充电运营",
+      "capabilities": [
+        "charging-management",
+        "load-scheduling"
+      ],
+      "boundDeviceIds": [
+        "cp-jinji-01",
+        "cp-sip-02"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "hellobike-suzhou",
+      "name": "哈啰出行",
+      "capabilities": [
+        "micromobility-fleet"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    },
+    {
+      "id": "wanda-property",
+      "name": "万达广场商业物业",
+      "capabilities": [
+        "building-energy-management",
+        "hvac-control",
+        "lighting-control"
+      ],
+      "managesZoneIds": [
+        "jinji-lake-cbd"
+      ],
+      "boundDeviceIds": [
+        "em-jinji-04",
+        "sp-jinji-01"
+      ],
+      "llm": {
+        "provider": "openai-compatible",
+        "model": "ac-decision-v5"
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-rush-hour",
+      "type": "traffic-surge",
+      "zoneId": "suzhou-station",
+      "parameter": "traffic",
+      "value": 480,
+      "atSimTimeSec": 30,
+      "severity": "high",
+      "requiredCapabilities": [
+        "traffic-signal-control",
+        "traffic-monitoring",
+        "fleet-dispatch"
+      ]
+    },
+    {
+      "id": "evt-pm25-exceed",
+      "type": "pm25-anomaly",
+      "zoneId": "snd-industrial",
+      "parameter": "pm2_5",
+      "value": 158,
+      "atSimTimeSec": 60,
+      "severity": "high",
+      "requiredCapabilities": [
+        "air-quality-monitoring",
+        "pollution-response",
+        "emergency-alert"
+      ]
+    },
+    {
+      "id": "evt-power-peak",
+      "type": "power-overload",
+      "zoneId": "sip-industrial",
+      "parameter": "power",
+      "value": 9600,
+      "atSimTimeSec": 120,
+      "severity": "critical",
+      "requiredCapabilities": [
+        "load-shedding",
+        "demand-response",
+        "load-scheduling",
+        "building-energy-management"
+      ]
+    },
+    {
+      "id": "evt-rainstorm",
+      "type": "humidity-spike",
+      "zoneId": "taihu-new-town",
+      "parameter": "humidity",
+      "value": 96,
+      "atSimTimeSec": 180,
+      "severity": "high",
+      "requiredCapabilities": [
+        "water-level-monitoring",
+        "dispatch",
+        "traffic-signal-control",
+        "emergency-broadcast"
+      ]
+    },
+    {
+      "id": "evt-accident",
+      "type": "intrusion-detected",
+      "zoneId": "jinji-lake-cbd",
+      "atSimTimeSec": 240,
+      "severity": "critical",
+      "requiredCapabilities": [
+        "traffic-signal-control",
+        "video-surveillance",
+        "fleet-dispatch",
+        "instant-delivery",
+        "emergency-broadcast"
+      ]
+    },
+    {
+      "id": "evt-concert-exit",
+      "type": "traffic-surge",
+      "zoneId": "jinji-lake-cbd",
+      "parameter": "traffic",
+      "value": 620,
+      "atSimTimeSec": 300,
+      "severity": "medium",
+      "requiredCapabilities": [
+        "fleet-dispatch",
+        "micromobility-fleet",
+        "traffic-signal-control"
+      ]
+    },
+    {
+      "id": "evt-flood-warning",
+      "type": "humidity-spike",
+      "zoneId": "wuzhong-south",
+      "parameter": "humidity",
+      "value": 94,
+      "atSimTimeSec": 360,
+      "severity": "high",
+      "requiredCapabilities": [
+        "water-level-monitoring",
+        "tilt-alarm",
+        "dispatch",
+        "traffic-signal-control"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "suzhou-power-peak-dr",
+      "name": "用电高峰确定性需求响应",
+      "description": "园区负荷冲顶（power-overload 事件）时自动执行三线削峰：国网负控终端启动需求响应、金鸡湖 CBD 景观照明（万达楼宇灯杆）关闭、特来电充电桩转入有序充电——不经过 LLM 决策的确定性联动，跨工业园区与金鸡湖 CBD 两区",
+      "enabled": true,
+      "trigger": {
+        "kind": "event",
+        "eventType": "power-overload",
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "用电高峰确定性削峰：需求响应 + 景观照明关闭 + 充电桩有序充电",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "turn-off",
+            "assigneeAgentId": "power-grid",
+            "deviceId": "lc-sip-01",
+            "params": {}
+          },
+          {
+            "id": "n2",
+            "capability": "turn-off",
+            "assigneeAgentId": "wanda-property",
+            "deviceId": "sp-jinji-01",
+            "params": {}
+          },
+          {
+            "id": "n3",
+            "capability": "turn-off",
+            "assigneeAgentId": "teld-ops",
+            "deviceId": "cp-jinji-01",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "suzhou-traffic-green-wave",
+      "name": "突发车流自动绿波联动",
+      "description": "突发车流联动：两路口信号机降级黄闪放行（turn-off）+ 火车站北广场高杆灯开启，保障晚高峰疏散车流（不经过 LLM 决策）",
+      "enabled": true,
+      "trigger": {
+        "kind": "event",
+        "eventType": "traffic-surge",
+        "cooldownSimSec": 600
+      },
+      "plan": {
+        "goal": "突发车流确定性疏导：枢纽与 CBD 信号绿波 + 枢纽照明开启",
+        "nodes": [
+          {
+            "id": "n1",
+            "capability": "turn-off",
+            "assigneeAgentId": "transport-bureau",
+            "deviceId": "sc-station-01",
+            "params": {}
+          },
+          {
+            "id": "n2",
+            "capability": "turn-off",
+            "assigneeAgentId": "transport-bureau",
+            "deviceId": "sc-jinji-02",
+            "params": {}
+          },
+          {
+            "id": "n3",
+            "capability": "turn-on",
+            "assigneeAgentId": "municipal-lighting",
+            "deviceId": "sl-station-03",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ]
+}

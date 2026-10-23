@@ -1,0 +1,64 @@
+{
+  "id": "ceiling-fan-v1",
+  "name": "Ceiling Fan",
+  "description": "Ceiling-mounted fan for air circulation",
+  "category": "actuator",
+  "type": "ceiling-fan",
+  "capabilities": [
+    {
+      "name": "set-speed",
+      "type": "write",
+      "description": "Set fan speed",
+      "parameters": [
+        {
+          "name": "speed",
+          "type": "number",
+          "required": true,
+          "description": "Speed level (0-100%)"
+        }
+      ]
+    },
+    {
+      "name": "turn-on",
+      "type": "write",
+      "description": "Turn on the fan",
+      "parameters": []
+    },
+    {
+      "name": "turn-off",
+      "type": "write",
+      "description": "Turn off the fan",
+      "parameters": []
+    },
+    {
+      "name": "set-direction",
+      "type": "write",
+      "description": "Set rotation direction",
+      "parameters": [
+        {
+          "name": "direction",
+          "type": "string",
+          "required": true,
+          "description": "Direction: forward or reverse"
+        }
+      ]
+    }
+  ],
+  "defaultState": {
+    "status": "off",
+    "power": false,
+    "speed": 50,
+    "direction": "forward"
+  },
+  "physicalEffects": [
+    {
+      "parameter": "temperature",
+      "effect": "cooling",
+      "magnitude": 0.2,
+      "radius": 8,
+      "condition": "power == true"
+    }
+  ],
+  "semanticDescription": "A ceiling fan that improves air circulation and cooling through evaporation. Works with HVAC for efficient climate control.",
+  "tags": ["climate", "hvac", "actuator", "fan"]
+}

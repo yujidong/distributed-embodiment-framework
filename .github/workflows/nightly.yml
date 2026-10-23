@@ -1,0 +1,68 @@
+# plan-r84 F4-2/F4-3 夜间道 —— 真 LLM + GPU 的语义与统计门禁。
+#
+# 与 ci.yml（PR 全量 vitest 门禁）的分工见 docs/ci.md：
+#   PR 快道（本地 test:fast）→ ci.yml 全量 vitest → 本文件（夜间 LLM 道）→ weekly.yml（周级 soak）。
+#
+# 本道的每个门禁都需要真 vLLM 后端（GPU）：
+#   - scripts/eval/decision-regression.mjs   F3-1 六块 heldout 回归（threshold 1.0）
+#   - scripts/nl-metamorphic-llm.mjs         F2-2 蜕变关系库 LLM 道
+#   - scripts/eval/acceptance-gate.mjs       F3-3 统计验收（persona 旅程 ×N）
+# GitHub hosted runner 没有 GPU，因此 llm-gates 标记为 self-hosted（需要一台
+# 能访问 vLLM 的机器，runner label 自定为 [self-hosted, gpu]），并从本
+# workflow 拆出为 llm-gates.yml（仅 workflow_dispatch）：没有 self-hosted
+# runner 时它会在 nightly 并发组里永久 queued，把后续每一次 nightly 全部
+# 堵死（cancel-in-progress: false；2026-09-29 两次僵尸 run 实锤）。
+#
+# fault-injection 不需要 GPU（自带可控假后端），放在 hosted job 里每晚跑。
+#
+# 环境变量（self-hosted runner 的 env / repository variables 提供）：
+#   LLM_BASE_URL  vLLM OpenAI 兼容端点（如 http://172.17.x.x:8000/v1）
+#   LLM_MODEL     部署模型名（如 ac-decision-v5）
+
+name: Nightly
+
+on:
+  schedule:
+    - cron: '0 18 * * *' # 每天 UTC 18:00 = 北京 02:00
+  workflow_dispatch:
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+jobs:
+  # 全量 vitest（含重型 MBT、flaky 隔离区，以及 plan-r84 Wave D 从 PR 快道
+  # 移出的 HEAVY_FULL_APP_SUITES 重启动成本组 —— 见
+  # apps/server/vitest.fast.config.ts；该组在 ci.yml 的 PR 全量道与本 job
+  # 照常门禁，快道只是不等它们）：ci.yml 只在 push/PR 上跑，
+  # 这里每晚对 main 复跑一次 —— 隔离区里的 flake 若变成确定红，第二天就知道。
+  full-vitest:
+    runs-on: ubuntu-latest
+    # Same headroom argument as ci.yml (90): slow simulation tests with
+    # explicit per-test budgets run full duration instead of failing fast.
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+
+  # 故障注入矩阵（F4-4）：不需要 GPU，hosted runner 每晚跑。
+  fault-injection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Fault injection — LLM 不可用时的降级与恢复
+        run: node scripts/eval/fault-injection.mjs
+

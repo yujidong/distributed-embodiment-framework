@@ -1,0 +1,64 @@
+{
+  "id": "irrigation-controller-v1",
+  "name": "Irrigation Controller",
+  "description": "Controls water sprinklers for irrigation",
+  "category": "actuator",
+  "type": "irrigation-controller",
+  "capabilities": [
+    {
+      "name": "turn-on",
+      "type": "write",
+      "description": "Start irrigation",
+      "parameters": []
+    },
+    {
+      "name": "turn-off",
+      "type": "write",
+      "description": "Stop irrigation",
+      "parameters": []
+    },
+    {
+      "name": "set-flow-rate",
+      "type": "write",
+      "description": "Set water flow rate",
+      "parameters": [
+        {
+          "name": "rate",
+          "type": "number",
+          "required": true,
+          "description": "Flow rate (0-100%)"
+        }
+      ]
+    },
+    {
+      "name": "set-duration",
+      "type": "write",
+      "description": "Set irrigation duration in minutes",
+      "parameters": [
+        {
+          "name": "minutes",
+          "type": "number",
+          "required": true,
+          "description": "Duration in minutes"
+        }
+      ]
+    }
+  ],
+  "defaultState": {
+    "status": "off",
+    "power": false,
+    "flowRate": 50,
+    "remainingTime": 0
+  },
+  "physicalEffects": [
+    {
+      "parameter": "soil_moisture",
+      "effect": "humidity",
+      "magnitude": 0.5,
+      "radius": 3,
+      "condition": "power == true"
+    }
+  ],
+  "semanticDescription": "An irrigation controller for managing water sprinklers. Essential for agricultural and garden automation based on soil moisture and weather conditions.",
+  "tags": ["agriculture", "water", "actuator", "irrigation"]
+}

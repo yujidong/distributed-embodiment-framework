@@ -1,0 +1,64 @@
+# LLM 语义门禁（F2-2 / F3-1 / F3-3）：需要 GPU/vLLM 与 [self-hosted, gpu]
+# runner，仅 workflow_dispatch —— 远程 GPU 机器可用时手动触发。
+#
+# 为什么从 nightly.yml 拆出：self-hosted job 在没有 runner 时永远 queued，
+# 而 job 超时不计排队时间——它会以「queued」形态挂在 nightly 并发组里
+# （cancel-in-progress: false），把后续每一次 nightly 全部堵死
+# （2026-09-29 两次僵尸 run 实锤）。拆出后 nightly = full-vitest +
+# fault-injection，hosted runner 每晚完整闭环；本 workflow 在 GPU 机器
+# 恢复后用 `gh workflow run llm-gates.yml` 触发。
+#
+# 环境变量（repository variables 提供）：
+#   LLM_BASE_URL  vLLM OpenAI 兼容端点（如 http://172.17.x.x:8000/v1）
+#   LLM_MODEL     部署模型名（如 ac-decision-v5）
+
+name: LLM Gates
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: llm-gates
+  cancel-in-progress: false
+
+jobs:
+  llm-gates:
+    runs-on: [self-hosted, gpu]
+    timeout-minutes: 180
+    env:
+      LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
+      LLM_MODEL: ${{ vars.LLM_MODEL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+      - name: F3-1 decision regression (heldout 全量, threshold 1.0)
+        run: node scripts/eval/decision-regression.mjs --base "$LLM_BASE_URL" --model "$LLM_MODEL"
+
+      - name: Boot API server for journey gates
+        run: |
+          EAF_DB_PATH="$RUNNER_TEMP/nightly.db" \
+          SCENARIO_USER_DIR="$RUNNER_TEMP/scenarios" \
+          EAF_TRAJECTORY_DIR="$RUNNER_TEMP/trajectories" \
+          PORT=8100 HOST=127.0.0.1 \
+          node apps/server/dist/index.js &
+          for i in $(seq 1 60); do
+            curl -sf http://127.0.0.1:8100/api/health >/dev/null && break
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:8100/api/health | grep -q '"mode":"llm"'
+
+      - name: F2-2 NL metamorphic (LLM 道)
+        run: node scripts/nl-metamorphic-llm.mjs
+
+      - name: F3-3 acceptance gate (persona-r82 ×3)
+        run: |
+          node scripts/eval/acceptance-gate.mjs \
+            --script data/campus-e2e/ui/persona-r82.mjs \
+            --runs 3 --threshold 1.0 --label nightly-r82 \
+            --summary data/devloop/r82-verify/summary.json
