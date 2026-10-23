@@ -14,6 +14,10 @@ build, run the tutorial world, and reproduce the paper's experiments (see
 [REPRODUCING.md](REPRODUCING.md)). Development history lives in a separate
 private repository; this snapshot is intentionally flattened.
 
+> **Provenance.** `main` always tracks the latest release. The frozen code
+> state cited by the original submission is preserved on branch
+> [`archive/v1-iotj-submission`](../../tree/archive/v1-iotj-submission).
+
 ## Quick start
 
 ```bash
